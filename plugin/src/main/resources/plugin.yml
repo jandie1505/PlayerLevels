@@ -1,0 +1,4 @@
+main: net.jandie1505.playerlevels.PlayerLevels
+name: PlayerLevels
+version: 1.0
+api-version: 1.19
