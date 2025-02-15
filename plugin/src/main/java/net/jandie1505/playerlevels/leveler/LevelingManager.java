@@ -3,6 +3,7 @@ package net.jandie1505.playerlevels.leveler;
 import net.jandie1505.playerlevels.PlayerLevels;
 import net.jandie1505.playerlevels.api.LevelManager;
 import net.jandie1505.playerlevels.api.LevelPlayer;
+import net.jandie1505.playerlevels.database.DatabaseSource;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -12,6 +13,8 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
@@ -21,13 +24,17 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class LevelingManager implements LevelManager, Listener {
     @NotNull private final PlayerLevels plugin;
+    @NotNull private final DatabaseSource databaseSource;
     @NotNull private ConcurrentHashMap<UUID, Leveler> cachedLevelers;
-    private final AtomicBoolean cachingTaskActive;
+    @NotNull private final AtomicBoolean cachingTaskActive;
 
-    public LevelingManager(@NotNull PlayerLevels plugin) {
+    public LevelingManager(@NotNull PlayerLevels plugin, @NotNull DatabaseSource databaseSource) {
         this.plugin = plugin;
+        this.databaseSource = databaseSource;
         this.cachedLevelers = new ConcurrentHashMap<>();
         this.cachingTaskActive = new AtomicBoolean(false);
+
+        this.createTable();
     }
 
     // ----- MANAGE -----
@@ -52,7 +59,12 @@ public class LevelingManager implements LevelManager, Listener {
         new BukkitRunnable() {
             @Override
             public void run() {
-                Leveler leveler = new Leveler(playerUUID);
+                Leveler leveler = new Leveler(playerUUID, databaseSource, runnable -> new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        runnable.run();
+                    }
+                }.runTaskAsynchronously(plugin));
                 leveler.update();
                 cachedLevelers.put(playerUUID, leveler);
                 future.complete(leveler);
@@ -99,6 +111,24 @@ public class LevelingManager implements LevelManager, Listener {
     @EventHandler
     public void onPlayerQuit(@NotNull PlayerQuitEvent event) {
         this.cachedLevelers.remove(event.getPlayer().getUniqueId());
+    }
+
+    // ----- UTILITIES -----
+
+    public void createTable() {
+        try {
+            String sql = "CREATE TABLE IF NOT EXISTS playerlevels_players (" +
+                    "player_uuid VARCHAR(36) NOT NULL PRIMARY KEY," +
+                    "data LONGTEXT NOT NULL," +
+                    "update_id VARCHAR(36) NOT NULL," +
+                    "last_updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP" +
+                    ")";
+
+            PreparedStatement statement = this.databaseSource.getConnection().prepareStatement(sql);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 }
