@@ -2,7 +2,7 @@ package net.jandie1505.playerlevels;
 
 import net.chaossquad.mclib.storage.DataStorage;
 import net.jandie1505.playerlevels.api.PlayerLevelsAPI;
-import net.jandie1505.playerlevels.leveler.Leveler;
+import net.jandie1505.playerlevels.leveler_old.Leveler;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;

@@ -1,6 +1,10 @@
 package net.jandie1505.playerlevels.leveler;
 
+import net.jandie1505.playerlevels.api.LevelPlayer;
+import net.jandie1505.playerlevels.database.DatabaseSource;
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -8,77 +12,72 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-public class Leveler {
-    @NotNull private final UUID playerId;
+public final class Leveler implements LevelPlayer {
+    @NotNull private final UUID playerUUID;
+    @NotNull private final DatabaseSource databaseSource;
+    @NotNull private final Leveler.TaskSupplier asyncTaskSupplier;
     @NotNull private final LevelerData data;
+    @NotNull private final AtomicBoolean valid;
+    @NotNull private String updateId;
 
-    private String updateId;
-    private boolean valid;
-
-    public Leveler(@NotNull UUID playerId) {
-        this.playerId = playerId;
+    public Leveler(@NotNull UUID playerUUID, @NotNull DatabaseSource databaseSource, @NotNull TaskSupplier asyncTaskSupplier) {
+        this.playerUUID = playerUUID;
+        this.databaseSource = databaseSource;
+        this.asyncTaskSupplier = asyncTaskSupplier;
         this.data = new LevelerData();
-        this.valid = true;
+        this.valid = new AtomicBoolean(true);
+        this.updateId = UUID.randomUUID().toString();
     }
 
-    // ----- DATA -----
+    // ----- GET VALUES -----
 
-    /**
-     * Returns the player id.
-     * @return player id
-     */
-    public final @NotNull UUID playerId() {
-        return this.playerId;
+    public @NotNull UUID getPlayerUUID() {
+        return this.playerUUID;
     }
 
-    /**
-     * Returns the data.
-     * @return data
-     */
-    public final @NotNull LevelerData data() {
-        return this.data;
+    public @NotNull LevelerData getData() {
+        return data;
     }
 
-    // ----- VALIDATION -----
+    public @NotNull String getUpdateId() {
+        return updateId;
+    }
 
-    /**
-     * Returns true if the object is valid.
-     * @return valid
-     */
     public boolean isValid() {
-        return this.valid;
-    }
-
-    /**
-     * Invalidate this Leveler.
-     */
-    public void invalidate() {
-        this.valid = false;
+        return valid.get();
     }
 
     // ----- DATABASE SYNC -----
 
     /**
      * Updates the Leveler asynchronously.<br/>
-     * @param connection connection
-     * @return asynchronous result
+     * The recommended way for updating.
+     * @return future result
      */
-    public CompletableFuture<UpdateResult> updateAsync(final @NotNull Connection connection) {
-        return CompletableFuture.supplyAsync(() -> this.update(connection));
+    public CompletableFuture<UpdateResult> updateAsync() {
+        CompletableFuture<UpdateResult> future = new CompletableFuture<>();
+        this.asyncTaskSupplier.run(() -> future.complete(this.update()));
+        return future;
     }
 
     /**
      * Updates the Leveler.<br/>
      * Don't use this from the servers main thread.
-     * @param connection connection
      * @return result
      */
-    private UpdateResult update(Connection connection) {
+    public @NotNull UpdateResult update() {
         if (!this.isValid()) throw new IllegalStateException("Leveler has already been invalidated");
 
+        Connection connection = this.databaseSource.getConnection();
+        if (connection == null) {
+            this.valid.set(false);
+            return UpdateResult.ERROR;
+        }
+
         try {
-            LevelerDataPullResult pullResult = this.getDataFromDatabase(connection);
+            LevelDataPullResult pullResult = this.getDataFromDatabase(connection);
 
             if (pullResult != null) {
 
@@ -91,19 +90,18 @@ public class Leveler {
 
                 // Remote data is outdated, push changes
                 if (!this.data.equals(pullResult.data())) {
-                    this.updateDataInDatabase(connection, this.data);
+                    this.updateDataInDatabase(connection);
                     return UpdateResult.REMOTE_OUTDATED_AVAIL;
                 }
 
-
             } else {
-                this.insertDataIntoDatabase(connection, this.data);
+                this.insertDataIntoDatabase(connection);
                 return UpdateResult.REMOTE_OUTDATED_MISSING;
             }
 
             return UpdateResult.UP_TO_DATE;
-        } catch (SQLException e) {
-            this.invalidate();
+        } catch (SQLException | JSONException e) {
+            this.valid.set(false);
             return UpdateResult.ERROR;
         }
 
@@ -114,30 +112,26 @@ public class Leveler {
     /**
      * Updates the database record with the locally stored data.<br/>
      * Only works if there is already an entry for this player.<br/>
-     * If not, use {@link Leveler#insertDataIntoDatabase(Connection, LevelerData)}<br/>
-     * Should only be called from {@link Leveler#update(Connection)}
+     * If not, use {@link Leveler#insertDataIntoDatabase(Connection)} <br/>
+     * Should only be called from {@link Leveler#update()}.
      * @param c connection
-     * @param data data
      * @return {@link PreparedStatement#executeUpdate()} result
      * @throws SQLException exception
      */
-    private int updateDataInDatabase(Connection c, LevelerData data) throws SQLException {
+    private int updateDataInDatabase(Connection c) throws SQLException {
 
         // Generate a new update id to invalidate the cached data on all other instances
         this.updateId = UUID.randomUUID().toString();
 
         // Update data
-        String updateSql = "UPDATE players " +
-                "SET " + Keys.LEVEL + " = ?, " + Keys.XP + " = ?, " + Keys.UPDATE_ID + " = ?" +
-                "WHERE " + Keys.PLAYER_ID + " = ?";
+        String updateSql = "UPDATE playerlevels_players SET data = ?, update_id = ? WHERE player_uuid = ?";
 
         PreparedStatement updateStatement = c.prepareStatement(updateSql);
 
-        updateStatement.setInt(1, data.level());
-        updateStatement.setDouble(2, data.xp());
+        updateStatement.setString(1, this.data.toJSON().toString());
 
-        updateStatement.setString(3, this.updateId);
-        updateStatement.setString(3, this.playerId.toString());
+        updateStatement.setString(2, this.updateId);
+        updateStatement.setString(3, this.playerUUID.toString());
 
         return updateStatement.executeUpdate();
     }
@@ -145,27 +139,24 @@ public class Leveler {
     /**
      * Inserts a new database record with the locally stored data.<br/>
      * Only works if the player has no entry.<br/>
-     * If not, use {@link Leveler#updateDataInDatabase(Connection, LevelerData)}<br/>
-     * Should only be called from {@link Leveler#update(Connection)}
+     * If not, use {@link Leveler#updateDataInDatabase(Connection)}.<br/>
+     * Should only be called from {@link Leveler#update()}.
      * @param c connection
-     * @param data data
      * @return {@link PreparedStatement#executeUpdate()} result
      * @throws SQLException exception
      */
-    private int insertDataIntoDatabase(Connection c, LevelerData data) throws SQLException {
+    private int insertDataIntoDatabase(Connection c) throws SQLException {
 
         // Generate a new update id to invalidate the cached data on all other instances
         this.updateId = UUID.randomUUID().toString();
 
         // Insert data
-        String insertSql = "INSERT INTO players (" + Keys.PLAYER_ID + ", " + Keys.LEVEL + ", " + Keys.XP + ", " + Keys.UPDATE_ID + ") " +
-                "VALUES (?, ?, ?, ?)";
+        String insertSql = "INSERT INTO playerlevels_players (player_uuid, data, update_id) VALUES (?, ?, ?)";
 
         PreparedStatement insertStatement = c.prepareStatement(insertSql);
-        insertStatement.setString(1, this.playerId.toString());
-        insertStatement.setInt(2, this.data.level());
-        insertStatement.setDouble(3, this.data.xp());
-        insertStatement.setString(4, this.updateId);
+        insertStatement.setString(1, this.playerUUID.toString());
+        insertStatement.setString(2, this.data.toJSON().toString());
+        insertStatement.setString(3, this.updateId);
 
         return insertStatement.executeUpdate();
     }
@@ -175,22 +166,20 @@ public class Leveler {
      * @param c connection
      * @return result
      * @throws SQLException exception
+     * @throws JSONException when data json is invalid
      */
-    private LevelerDataPullResult getDataFromDatabase(Connection c) throws SQLException {
+    private LevelDataPullResult getDataFromDatabase(Connection c) throws SQLException, JSONException {
 
-        String pullSql = "SELECT * FROM " + Keys.LEVEL + " WHERE " + Keys.PLAYER_ID + " = ?";
+        String pullSql = "SELECT * FROM playerlevels_players WHERE player_uuid = ?";
         PreparedStatement pullStatement = c.prepareStatement(pullSql);
-        pullStatement.setString(1, this.playerId.toString());
+        pullStatement.setString(1, this.playerUUID.toString());
         ResultSet pullResultSet = pullStatement.executeQuery();
 
         if (pullResultSet.next()) {
-            String updateId = pullResultSet.getString(Keys.UPDATE_ID);
+            String updateId = pullResultSet.getString("update_id");
 
-            return new LevelerDataPullResult(
-                    new LevelerData(
-                            pullResultSet.getInt(Keys.LEVEL),
-                            pullResultSet.getDouble(Keys.XP)
-                    ),
+            return new LevelDataPullResult(
+                    LevelerData.fromJSON(new JSONObject(pullResultSet.getString("data"))),
                     updateId
             );
         } else {
@@ -199,16 +188,9 @@ public class Leveler {
 
     }
 
-    // ----- UTILITY CLASSES -----
+    // ----- INNER CLASSES -----
 
-    private record LevelerDataPullResult(@NotNull LevelerData data, @NotNull String updateId) {}
-
-    private interface Keys {
-        String PLAYER_ID = "player_id";
-        String LEVEL = "level";
-        String XP = "xp";
-        String UPDATE_ID = "update_id";
-    }
+    private record LevelDataPullResult(@NotNull LevelerData data, @NotNull String updateId) {}
 
     public enum UpdateResult {
         LOCAL_OUTDATED(true, false),
@@ -233,6 +215,10 @@ public class Leveler {
             return remoteChanged;
         }
 
+    }
+
+    public interface TaskSupplier {
+        void run(Runnable runnable);
     }
 
 }
