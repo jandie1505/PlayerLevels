@@ -13,6 +13,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Iterator;
@@ -21,11 +22,12 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Level;
 
 public class LevelingManager implements LevelManager, Listener {
     @NotNull private final PlayerLevels plugin;
     @NotNull private final DatabaseSource databaseSource;
-    @NotNull private ConcurrentHashMap<UUID, Leveler> cachedLevelers;
+    @NotNull private final ConcurrentHashMap<UUID, Leveler> cachedLevelers;
     @NotNull private final AtomicBoolean cachingTaskActive;
 
     public LevelingManager(@NotNull PlayerLevels plugin, @NotNull DatabaseSource databaseSource) {
@@ -74,6 +76,10 @@ public class LevelingManager implements LevelManager, Listener {
         return future;
     }
 
+    public Map<UUID, Leveler> getCache() {
+        return cachedLevelers;
+    }
+
     // ----- TASKS -----
 
     public void updateCacheTask() {
@@ -105,7 +111,7 @@ public class LevelingManager implements LevelManager, Listener {
 
     @EventHandler
     public void onPlayerJoin(@NotNull PlayerJoinEvent event) {
-
+        this.loadLeveler(event.getPlayer().getUniqueId());
     }
 
     @EventHandler
@@ -116,6 +122,13 @@ public class LevelingManager implements LevelManager, Listener {
     // ----- UTILITIES -----
 
     public void createTable() {
+
+        Connection connection = this.databaseSource.getConnection();
+        if (connection == null) {
+            this.plugin.getLogger().log(Level.WARNING, "Failed to create table: connection is null");
+            return;
+        }
+
         try {
             String sql = "CREATE TABLE IF NOT EXISTS playerlevels_players (" +
                     "player_uuid VARCHAR(36) NOT NULL PRIMARY KEY," +
@@ -124,10 +137,10 @@ public class LevelingManager implements LevelManager, Listener {
                     "last_updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP" +
                     ")";
 
-            PreparedStatement statement = this.databaseSource.getConnection().prepareStatement(sql);
+            PreparedStatement statement = connection.prepareStatement(sql);
             statement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            this.plugin.getLogger().log(Level.WARNING, "Failed to create table", e);
         }
     }
 

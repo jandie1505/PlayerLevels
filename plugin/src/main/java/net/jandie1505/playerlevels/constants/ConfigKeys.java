@@ -1,0 +1,9 @@
+package net.jandie1505.playerlevels.constants;
+
+public interface ConfigKeys {
+    String DATABASE_HOST = "database.host";
+    String DATABASE_NAME = "database.name";
+    String DATABASE_USER = "database.user";
+    String DATABASE_PASSWORD = "database.password";
+    String DATABASE_PORT = "database.port";
+}

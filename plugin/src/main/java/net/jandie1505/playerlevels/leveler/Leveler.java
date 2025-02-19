@@ -73,6 +73,7 @@ public final class Leveler implements LevelPlayer {
         Connection connection = this.databaseSource.getConnection();
         if (connection == null) {
             this.valid.set(false);
+            System.out.println("Error: No database connection available");
             return UpdateResult.ERROR;
         }
 
@@ -85,23 +86,28 @@ public final class Leveler implements LevelPlayer {
                 if (!this.updateId.equals(pullResult.updateId())) {
                     this.data.merge(pullResult.data());
                     this.updateId = pullResult.updateId();
+                    System.out.println("Local outdated");
                     return UpdateResult.LOCAL_OUTDATED;
                 }
 
                 // Remote data is outdated, push changes
                 if (!this.data.equals(pullResult.data())) {
                     this.updateDataInDatabase(connection);
+                    System.out.println("Remote outdated");
                     return UpdateResult.REMOTE_OUTDATED_AVAIL;
                 }
 
             } else {
                 this.insertDataIntoDatabase(connection);
+                System.out.println("Remote not avail");
                 return UpdateResult.REMOTE_OUTDATED_MISSING;
             }
 
             return UpdateResult.UP_TO_DATE;
         } catch (SQLException | JSONException e) {
             this.valid.set(false);
+            System.out.println("Exception: ");
+            e.printStackTrace();
             return UpdateResult.ERROR;
         }
 
