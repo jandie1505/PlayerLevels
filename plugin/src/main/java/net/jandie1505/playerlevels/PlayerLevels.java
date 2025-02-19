@@ -58,6 +58,7 @@ public class PlayerLevels extends JavaPlugin implements PlayerLevelsAPI {
         this.command.addSubcommand("cache", SubcommandEntry.of(new CacheSubCommand(this)));
         this.command.addSubcommand("info", SubcommandEntry.of(new InfoSubCommand(this)));
         this.command.addSubcommand("level", SubcommandEntry.of(new LevelSubCommand(this)));
+        this.command.addSubcommand("xp", SubcommandEntry.of(new XPSubCommand(this)));
         this.command.addSubcommand("database", SubcommandEntry.of(new DatabaseSubcommand(this)));
 
         this.getCommand("playerlevels").setExecutor(this.command);

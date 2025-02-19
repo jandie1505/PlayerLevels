@@ -68,7 +68,7 @@ public final class Leveler implements LevelPlayer {
      * @return result
      */
     public @NotNull UpdateResult update() {
-        if (!this.isValid()) throw new IllegalStateException("Leveler has already been invalidated");
+        if (!this.isValid()) return UpdateResult.INVALID;
 
         Connection connection = this.databaseSource.getConnection();
         if (connection == null) {
@@ -199,18 +199,21 @@ public final class Leveler implements LevelPlayer {
     private record LevelDataPullResult(@NotNull LevelerData data, @NotNull String updateId) {}
 
     public enum UpdateResult {
-        LOCAL_OUTDATED(true, false),
-        REMOTE_OUTDATED_AVAIL(false, true),
-        REMOTE_OUTDATED_MISSING(false, true),
-        UP_TO_DATE(false, false),
-        ERROR(true, false);
+        LOCAL_OUTDATED(true, false, false),
+        REMOTE_OUTDATED_AVAIL(false, true, false),
+        REMOTE_OUTDATED_MISSING(false, true, false),
+        UP_TO_DATE(false, false, false),
+        ERROR(true, false, true),
+        INVALID(false, false, true);
 
         private final boolean localChanged;
         private final boolean remoteChanged;
+        private final boolean fail;
 
-        UpdateResult(boolean localChanged, boolean remoteChanged) {
+        UpdateResult(boolean localChanged, boolean remoteChanged, boolean fail) {
             this.localChanged = localChanged;
             this.remoteChanged = remoteChanged;
+            this.fail = fail;
         }
 
         public boolean isLocalChanged() {
@@ -219,6 +222,10 @@ public final class Leveler implements LevelPlayer {
 
         public boolean isRemoteChanged() {
             return remoteChanged;
+        }
+
+        public boolean isFail() {
+            return fail;
         }
 
     }

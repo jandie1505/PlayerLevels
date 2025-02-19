@@ -27,7 +27,7 @@ public class CacheSubCommand implements TabCompletingCommandExecutor {
         sender.sendMessage(Component.text("Cached players:", NamedTextColor.GRAY));
 
         for (Map.Entry<UUID, Leveler> entry : this.plugin.getLevelManager().getCache().entrySet()) {
-            sender.sendMessage(Component.text(entry.getKey().toString() + ": " + entry.getValue().getPlayerUUID() + " " + entry.getValue().getData().level() + " " + entry.getValue().getData().xp(), NamedTextColor.GRAY));
+            sender.sendMessage(Component.text(entry.getValue().getPlayerUUID() + " " + entry.getValue().getData().level() + " " + entry.getValue().getData().xp(), NamedTextColor.GRAY));
         }
 
         return true;

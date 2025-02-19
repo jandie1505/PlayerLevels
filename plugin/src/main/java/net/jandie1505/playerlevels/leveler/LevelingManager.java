@@ -41,6 +41,11 @@ public class LevelingManager implements LevelManager, Listener {
 
     // ----- MANAGE -----
 
+    /**
+     * Returns a cached leveler.
+     * @param playerUUID player uuid
+     * @return leveler if cached, else null
+     */
     @Override
     public @Nullable Leveler getLeveler(@NotNull UUID playerUUID) {
         Leveler leveler = this.cachedLevelers.get(playerUUID);
@@ -49,15 +54,35 @@ public class LevelingManager implements LevelManager, Listener {
         return leveler;
     }
 
-    @Override
-    public @NotNull CompletableFuture<LevelPlayer> loadLeveler(@NotNull UUID playerUUID) {
+    /**
+     * Loads a leveler either from cache or from database.
+     * @param playerUUID player uuid
+     * @param update update even when cached
+     * @return future of leveler
+     */
+    public @NotNull CompletableFuture<Leveler> loadLeveler(@NotNull UUID playerUUID, boolean update) {
 
         Leveler leveler = this.cachedLevelers.get(playerUUID);
         if (leveler != null && leveler.isValid()) {
-            return CompletableFuture.completedFuture(leveler);
+
+            // Update the leveler when required, if not just return it
+            if (update) {
+                CompletableFuture<Leveler> future = new CompletableFuture<>();
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        leveler.update();
+                        future.complete(leveler);
+                    }
+                }.runTaskAsynchronously(this.plugin);
+                return future;
+            } else {
+                return CompletableFuture.completedFuture(leveler);
+            }
         }
 
-        CompletableFuture<LevelPlayer> future = new CompletableFuture<>();
+        // Create a new leveler when not cached
+        CompletableFuture<Leveler> future = new CompletableFuture<>();
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -76,8 +101,72 @@ public class LevelingManager implements LevelManager, Listener {
         return future;
     }
 
+    /**
+     * Calls {@link LevelingManager#loadLeveler(UUID, boolean)} with update set to false.
+     * @param playerUUID player uuid
+     * @return future of level manager
+     */
+    @Override
+    public @NotNull CompletableFuture<LevelPlayer> loadLeveler(@NotNull UUID playerUUID) {
+        return this.loadLeveler(playerUUID, false).thenApply(leveler -> leveler);
+    }
+
+    /**
+     * Returns the cache.
+     * @return cache
+     */
     public Map<UUID, Leveler> getCache() {
         return cachedLevelers;
+    }
+
+    /**
+     * Drops the cache for all levelers.
+     * @param update sync with database before dropping
+     */
+    public void dropCaches(boolean update) {
+        Iterator<Map.Entry<UUID, Leveler>> iterator = this.cachedLevelers.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Map.Entry<UUID, Leveler> entry = iterator.next();
+            iterator.remove();
+            if (update) entry.getValue().updateAsync();
+        }
+    }
+
+    /**
+     * Drops the cache for the specified leveler.
+     * @param playerUUID player uuid
+     * @param update sync with database before dropping
+     */
+    public void dropCache(@NotNull UUID playerUUID, boolean update) {
+        Leveler leveler = this.cachedLevelers.remove(playerUUID);
+        if (leveler == null) return;
+        if (update) leveler.updateAsync();
+    }
+
+    /**
+     * Erases the player from the database and from the cache.
+     * @param playerUUID player uuid
+     * @return success
+     */
+    public boolean erasePlayer(@NotNull UUID playerUUID) {
+
+        Connection connection = this.databaseSource.getConnection();
+        if (connection == null) {
+            this.plugin.getLogger().warning("Failed to erase player " + playerUUID + ": connection is null");
+            return false;
+        }
+
+        try {
+            String sql = "DELETE FROM playerlevels_players WHERE player_uuid = ?";
+            PreparedStatement statement = connection.prepareStatement(sql);
+            statement.setString(1, playerUUID.toString());
+
+            this.cachedLevelers.remove(playerUUID);
+            return true;
+        } catch (SQLException e) {
+            this.plugin.getLogger().log(Level.WARNING, "Failed to erase player " + playerUUID, e);
+            return false;
+        }
     }
 
     // ----- TASKS -----
@@ -98,6 +187,7 @@ public class LevelingManager implements LevelManager, Listener {
             Player player = this.plugin.getServer().getPlayer(entry.getKey());
             if (player == null) {
                 iterator.remove();
+                entry.getValue().updateAsync();
                 continue;
             }
 
@@ -116,7 +206,8 @@ public class LevelingManager implements LevelManager, Listener {
 
     @EventHandler
     public void onPlayerQuit(@NotNull PlayerQuitEvent event) {
-        this.cachedLevelers.remove(event.getPlayer().getUniqueId());
+        Leveler leveler = this.cachedLevelers.remove(event.getPlayer().getUniqueId());
+        leveler.updateAsync();
     }
 
     // ----- UTILITIES -----

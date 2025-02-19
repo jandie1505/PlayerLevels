@@ -51,7 +51,7 @@ public class InfoSubCommand implements TabCompletingCommandExecutor {
                         .append(Component.text("XP: " + levelPlayer.getData().xp(), NamedTextColor.GRAY))
                 );
             }
-        }.runTask(plugin));
+        }.runTaskLater(plugin, 1));
 
         return true;
     }
