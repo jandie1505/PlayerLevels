@@ -70,18 +70,16 @@ public final class Leveler implements LevelPlayer {
     public @NotNull UpdateResult update() {
         if (!this.isValid()) return UpdateResult.INVALID;
 
-        Connection connection = this.databaseSource.getConnection();
-        if (connection == null) {
-            this.valid.set(false);
-            System.out.println("Error: No database connection available");
-            return UpdateResult.ERROR;
-        }
+        try (Connection connection = this.databaseSource.getConnection()) {
+            if (connection == null) {
+                this.valid.set(false);
+                System.out.println("Error: No database connection available");
+                return UpdateResult.ERROR;
+            }
 
-        try {
             LevelDataPullResult pullResult = this.getDataFromDatabase(connection);
 
             if (pullResult != null) {
-
                 // Current data is outdated, replace it with database data
                 if (!this.updateId.equals(pullResult.updateId())) {
                     this.data.merge(pullResult.data());
@@ -110,7 +108,6 @@ public final class Leveler implements LevelPlayer {
             e.printStackTrace();
             return UpdateResult.ERROR;
         }
-
     }
 
     // ----- DATA SERIALIZATION -----
@@ -125,21 +122,20 @@ public final class Leveler implements LevelPlayer {
      * @throws SQLException exception
      */
     private int updateDataInDatabase(Connection c) throws SQLException {
-
         // Generate a new update id to invalidate the cached data on all other instances
         this.updateId = UUID.randomUUID().toString();
 
         // Update data
         String updateSql = "UPDATE playerlevels_players SET data = ?, update_id = ? WHERE player_uuid = ?";
 
-        PreparedStatement updateStatement = c.prepareStatement(updateSql);
+        try (PreparedStatement updateStatement = c.prepareStatement(updateSql)) {
 
-        updateStatement.setString(1, this.data.toJSON().toString());
+            updateStatement.setString(1, this.data.toJSON().toString());
+            updateStatement.setString(2, this.updateId);
+            updateStatement.setString(3, this.playerUUID.toString());
 
-        updateStatement.setString(2, this.updateId);
-        updateStatement.setString(3, this.playerUUID.toString());
-
-        return updateStatement.executeUpdate();
+            return updateStatement.executeUpdate();
+        }
     }
 
     /**
@@ -159,12 +155,14 @@ public final class Leveler implements LevelPlayer {
         // Insert data
         String insertSql = "INSERT INTO playerlevels_players (player_uuid, data, update_id) VALUES (?, ?, ?)";
 
-        PreparedStatement insertStatement = c.prepareStatement(insertSql);
-        insertStatement.setString(1, this.playerUUID.toString());
-        insertStatement.setString(2, this.data.toJSON().toString());
-        insertStatement.setString(3, this.updateId);
+        try (PreparedStatement insertStatement = c.prepareStatement(insertSql)) {
 
-        return insertStatement.executeUpdate();
+            insertStatement.setString(1, this.playerUUID.toString());
+            insertStatement.setString(2, this.data.toJSON().toString());
+            insertStatement.setString(3, this.updateId);
+
+            return insertStatement.executeUpdate();
+        }
     }
 
     /**
@@ -177,21 +175,25 @@ public final class Leveler implements LevelPlayer {
     private LevelDataPullResult getDataFromDatabase(Connection c) throws SQLException, JSONException {
 
         String pullSql = "SELECT * FROM playerlevels_players WHERE player_uuid = ?";
-        PreparedStatement pullStatement = c.prepareStatement(pullSql);
-        pullStatement.setString(1, this.playerUUID.toString());
-        ResultSet pullResultSet = pullStatement.executeQuery();
 
-        if (pullResultSet.next()) {
-            String updateId = pullResultSet.getString("update_id");
+        try (PreparedStatement pullStatement = c.prepareStatement(pullSql)) {
 
-            return new LevelDataPullResult(
-                    LevelerData.fromJSON(new JSONObject(pullResultSet.getString("data"))),
-                    updateId
-            );
-        } else {
-            return null;
+            pullStatement.setString(1, this.playerUUID.toString());
+
+            ResultSet pullResultSet = pullStatement.executeQuery();
+
+            if (pullResultSet.next()) {
+                String updateId = pullResultSet.getString("update_id");
+
+                return new LevelDataPullResult(
+                        LevelerData.fromJSON(new JSONObject(pullResultSet.getString("data"))),
+                        updateId
+                );
+            } else {
+                return null;
+            }
+
         }
-
     }
 
     // ----- INNER CLASSES -----

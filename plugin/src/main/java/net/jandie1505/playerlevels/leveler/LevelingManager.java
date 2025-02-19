@@ -149,20 +149,23 @@ public class LevelingManager implements LevelManager, Listener {
      * @return success
      */
     public boolean erasePlayer(@NotNull UUID playerUUID) {
+        String sql = "DELETE FROM playerlevels_players WHERE player_uuid = ?";
 
-        Connection connection = this.databaseSource.getConnection();
-        if (connection == null) {
-            this.plugin.getLogger().warning("Failed to erase player " + playerUUID + ": connection is null");
-            return false;
-        }
+        try (Connection connection = this.databaseSource.getConnection();
+             PreparedStatement statement = connection != null ? connection.prepareStatement(sql) : null
+        ) {
 
-        try {
-            String sql = "DELETE FROM playerlevels_players WHERE player_uuid = ?";
-            PreparedStatement statement = connection.prepareStatement(sql);
+            if (connection == null || statement == null) {
+                this.plugin.getLogger().warning("Failed to erase player " + playerUUID + ": connection is null");
+                return false;
+            }
+
             statement.setString(1, playerUUID.toString());
+            statement.executeUpdate(); // 🔥 Vergessen? Hier wird das DELETE ausgeführt!
 
             this.cachedLevelers.remove(playerUUID);
             return true;
+
         } catch (SQLException e) {
             this.plugin.getLogger().log(Level.WARNING, "Failed to erase player " + playerUUID, e);
             return false;
@@ -220,19 +223,19 @@ public class LevelingManager implements LevelManager, Listener {
             return;
         }
 
-        try {
-            String sql = "CREATE TABLE IF NOT EXISTS playerlevels_players (" +
-                    "player_uuid VARCHAR(36) NOT NULL PRIMARY KEY," +
-                    "data LONGTEXT NOT NULL," +
-                    "update_id VARCHAR(36) NOT NULL," +
-                    "last_updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP" +
-                    ")";
+        String sql = "CREATE TABLE IF NOT EXISTS playerlevels_players (" +
+                "player_uuid VARCHAR(36) NOT NULL PRIMARY KEY," +
+                "data LONGTEXT NOT NULL," +
+                "update_id VARCHAR(36) NOT NULL," +
+                "last_updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP" +
+                ")";
 
-            PreparedStatement statement = connection.prepareStatement(sql);
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.executeUpdate();
         } catch (SQLException e) {
             this.plugin.getLogger().log(Level.WARNING, "Failed to create table", e);
         }
     }
+
 
 }
