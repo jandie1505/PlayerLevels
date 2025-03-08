@@ -1,7 +1,10 @@
 package net.jandie1505.playerlevels.leveler;
 
 import net.jandie1505.playerlevels.api.LevelPlayer;
+import net.jandie1505.playerlevels.api.LevelUpEvent;
 import net.jandie1505.playerlevels.database.DatabaseSource;
+import org.bukkit.Bukkit;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,19 +18,26 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public final class Leveler implements LevelPlayer {
+    @NotNull private final LevelingManager manager;
     @NotNull private final UUID playerUUID;
     @NotNull private final DatabaseSource databaseSource;
-    @NotNull private final Leveler.TaskSupplier asyncTaskSupplier;
+    @NotNull private final AtomicBoolean databaseUpdateInProgress;
+    @NotNull private final AtomicBoolean manageValuesInProgress;
     @NotNull private final LevelerData data;
-    @NotNull private final AtomicBoolean valid;
     @NotNull private String updateId;
 
-    public Leveler(@NotNull UUID playerUUID, @NotNull DatabaseSource databaseSource, @NotNull TaskSupplier asyncTaskSupplier) {
+    public Leveler(@NotNull LevelingManager manager, @NotNull UUID playerUUID, @NotNull DatabaseSource databaseSource) {
+        this.manager = manager;
         this.playerUUID = playerUUID;
         this.databaseSource = databaseSource;
-        this.asyncTaskSupplier = asyncTaskSupplier;
-        this.data = new LevelerData();
-        this.valid = new AtomicBoolean(true);
+        this.databaseUpdateInProgress = new AtomicBoolean(false);
+        this.manageValuesInProgress = new AtomicBoolean(false);
+        this.data = new LevelerData(data -> new BukkitRunnable() {
+            @Override
+            public void run() {
+                Leveler.this.manageValues();
+            }
+        }.runTaskAsynchronously(this.manager.getPlugin()));
         this.updateId = UUID.randomUUID().toString();
     }
 
@@ -45,8 +55,58 @@ public final class Leveler implements LevelPlayer {
         return updateId;
     }
 
-    public boolean isValid() {
-        return valid.get();
+    public boolean isCached() {
+        return this.manager.getLeveler(this.playerUUID) == this;
+    }
+
+    // ----- MANAGE VALUES -----
+
+    public void manageValuesAsync() {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                Leveler.this.manageValues();
+            }
+        }.runTaskAsynchronously(this.manager.getPlugin());
+    }
+
+    public void manageValues() {
+        if (this.manageValuesInProgress.getAndSet(true)) return;
+
+        this.levelUp();
+
+        this.manageValuesInProgress.set(false);
+    }
+
+    /**
+     * Level up a player when the required amount of xp for the new level has been reached.
+     */
+    private void levelUp() {
+        final int levelAtStart = this.data.level();
+        final double xpAtStart = this.data.xp();
+
+        int level = levelAtStart;
+        double xp = xpAtStart;
+        double requiredXP = this.manager.getXPForNextLevel(level, level + 1);
+        int maxIterations = 100;
+        while (maxIterations-- > 0 && xp >= requiredXP) {
+            level++;
+            xp -= requiredXP;
+            requiredXP = this.manager.getXPForNextLevel(level, level + 1);
+        }
+
+        this.data.level(level, false);
+        this.data.xp(xp, false);
+
+        final int levelToPush = level;
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                Bukkit.getServer().getPluginManager().callEvent(new LevelUpEvent(Leveler.this, levelAtStart, levelToPush));
+            }
+        }.runTask(this.manager.getPlugin());
+
     }
 
     // ----- DATABASE SYNC -----
@@ -58,7 +118,13 @@ public final class Leveler implements LevelPlayer {
      */
     public CompletableFuture<UpdateResult> updateAsync() {
         CompletableFuture<UpdateResult> future = new CompletableFuture<>();
-        this.asyncTaskSupplier.run(() -> future.complete(this.update()));
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                UpdateResult result = Leveler.this.update();
+                future.complete(result);
+            }
+        }.runTaskAsynchronously(this.manager.getPlugin());
         return future;
     }
 
@@ -68,11 +134,10 @@ public final class Leveler implements LevelPlayer {
      * @return result
      */
     public @NotNull UpdateResult update() {
-        if (!this.isValid()) return UpdateResult.INVALID;
+        if (this.databaseUpdateInProgress.getAndSet(true)) return UpdateResult.ALREADY_IN_PROGRESS;
 
         try (Connection connection = this.databaseSource.getConnection()) {
             if (connection == null) {
-                this.valid.set(false);
                 System.out.println("Error: No database connection available");
                 return UpdateResult.ERROR;
             }
@@ -82,7 +147,7 @@ public final class Leveler implements LevelPlayer {
             if (pullResult != null) {
                 // Current data is outdated, replace it with database data
                 if (!this.updateId.equals(pullResult.updateId())) {
-                    this.data.merge(pullResult.data());
+                    this.data.merge(pullResult.data(), true);
                     this.updateId = pullResult.updateId();
                     System.out.println("Local outdated");
                     return UpdateResult.LOCAL_OUTDATED;
@@ -103,10 +168,11 @@ public final class Leveler implements LevelPlayer {
 
             return UpdateResult.UP_TO_DATE;
         } catch (SQLException | JSONException e) {
-            this.valid.set(false);
             System.out.println("Exception: ");
             e.printStackTrace();
             return UpdateResult.ERROR;
+        } finally {
+            this.databaseUpdateInProgress.set(false);
         }
     }
 
@@ -186,7 +252,7 @@ public final class Leveler implements LevelPlayer {
                 String updateId = pullResultSet.getString("update_id");
 
                 return new LevelDataPullResult(
-                        LevelerData.fromJSON(new JSONObject(pullResultSet.getString("data"))),
+                        LevelerData.fromJSON(new JSONObject(pullResultSet.getString("data")), null),
                         updateId
                 );
             } else {
@@ -206,7 +272,7 @@ public final class Leveler implements LevelPlayer {
         REMOTE_OUTDATED_MISSING(false, true, false),
         UP_TO_DATE(false, false, false),
         ERROR(true, false, true),
-        INVALID(false, false, true);
+        ALREADY_IN_PROGRESS(false, false, true);
 
         private final boolean localChanged;
         private final boolean remoteChanged;
@@ -230,10 +296,6 @@ public final class Leveler implements LevelPlayer {
             return fail;
         }
 
-    }
-
-    public interface TaskSupplier {
-        void run(Runnable runnable);
     }
 
 }

@@ -60,6 +60,7 @@ public class PlayerLevels extends JavaPlugin implements PlayerLevelsAPI {
         this.command.addSubcommand("level", SubcommandEntry.of(new LevelSubCommand(this)));
         this.command.addSubcommand("xp", SubcommandEntry.of(new XPSubCommand(this)));
         this.command.addSubcommand("database", SubcommandEntry.of(new DatabaseSubcommand(this)));
+        this.command.addSubcommand("erase", SubcommandEntry.of(new EraseSubcommand(this)));
 
         this.getCommand("playerlevels").setExecutor(this.command);
         this.getCommand("playerlevels").setTabCompleter(this.command);
@@ -67,9 +68,9 @@ public class PlayerLevels extends JavaPlugin implements PlayerLevelsAPI {
         new BukkitRunnable() {
             @Override
             public void run() {
-                PlayerLevels.this.levelingManager.updateCacheTask();
+                PlayerLevels.this.levelingManager.updateCacheAsyncTask();
             }
-        }.runTaskTimer(this, 20, 10*60*20);
+        }.runTaskTimerAsynchronously(this, 20, 10*60*20);
         this.getServer().getPluginManager().registerEvents(this.levelingManager, this);
     }
 

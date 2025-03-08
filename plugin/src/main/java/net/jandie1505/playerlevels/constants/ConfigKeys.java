@@ -6,4 +6,5 @@ public interface ConfigKeys {
     String DATABASE_USER = "database.user";
     String DATABASE_PASSWORD = "database.password";
     String DATABASE_PORT = "database.port";
+    String XP_FORMULA = "xp_formula";
 }

@@ -12,6 +12,7 @@ public interface DefaultConfigValues {
         config.set(ConfigKeys.DATABASE_USER, "playerlevels");
         config.set(ConfigKeys.DATABASE_PASSWORD, "insert_a_secure_password_here");
         config.set(ConfigKeys.DATABASE_NAME, "playerlevels");
+        config.set(ConfigKeys.XP_FORMULA, "level * 10");
 
         return config;
     }

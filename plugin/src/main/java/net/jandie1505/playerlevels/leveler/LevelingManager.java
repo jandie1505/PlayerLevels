@@ -3,7 +3,10 @@ package net.jandie1505.playerlevels.leveler;
 import net.jandie1505.playerlevels.PlayerLevels;
 import net.jandie1505.playerlevels.api.LevelManager;
 import net.jandie1505.playerlevels.api.LevelPlayer;
+import net.jandie1505.playerlevels.constants.ConfigKeys;
 import net.jandie1505.playerlevels.database.DatabaseSource;
+import net.objecthunter.exp4j.Expression;
+import net.objecthunter.exp4j.ExpressionBuilder;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -21,20 +24,17 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 
 public class LevelingManager implements LevelManager, Listener {
     @NotNull private final PlayerLevels plugin;
     @NotNull private final DatabaseSource databaseSource;
     @NotNull private final ConcurrentHashMap<UUID, Leveler> cachedLevelers;
-    @NotNull private final AtomicBoolean cachingTaskActive;
 
     public LevelingManager(@NotNull PlayerLevels plugin, @NotNull DatabaseSource databaseSource) {
         this.plugin = plugin;
         this.databaseSource = databaseSource;
         this.cachedLevelers = new ConcurrentHashMap<>();
-        this.cachingTaskActive = new AtomicBoolean(false);
 
         this.createTable();
     }
@@ -50,7 +50,6 @@ public class LevelingManager implements LevelManager, Listener {
     public @Nullable Leveler getLeveler(@NotNull UUID playerUUID) {
         Leveler leveler = this.cachedLevelers.get(playerUUID);
         if (leveler == null) return null;
-        if (!leveler.isValid()) return null;
         return leveler;
     }
 
@@ -63,7 +62,7 @@ public class LevelingManager implements LevelManager, Listener {
     public @NotNull CompletableFuture<Leveler> loadLeveler(@NotNull UUID playerUUID, boolean update) {
 
         Leveler leveler = this.cachedLevelers.get(playerUUID);
-        if (leveler != null && leveler.isValid()) {
+        if (leveler != null) {
 
             // Update the leveler when required, if not just return it
             if (update) {
@@ -86,12 +85,7 @@ public class LevelingManager implements LevelManager, Listener {
         new BukkitRunnable() {
             @Override
             public void run() {
-                Leveler leveler = new Leveler(playerUUID, databaseSource, runnable -> new BukkitRunnable() {
-                    @Override
-                    public void run() {
-                        runnable.run();
-                    }
-                }.runTaskAsynchronously(plugin));
+                Leveler leveler = new Leveler(LevelingManager.this, playerUUID, databaseSource);
                 leveler.update();
                 cachedLevelers.put(playerUUID, leveler);
                 future.complete(leveler);
@@ -174,37 +168,29 @@ public class LevelingManager implements LevelManager, Listener {
 
     // ----- TASKS -----
 
-    public void updateCacheTask() {
-        if (this.cachingTaskActive.get()) return;
-        this.cachingTaskActive.set(true);
+    public void updateCacheAsyncTask() {
 
         Iterator<Map.Entry<UUID, Leveler>> iterator = this.cachedLevelers.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<UUID, Leveler> entry = iterator.next();
 
-            if (!entry.getValue().isValid()) {
-                iterator.remove();
-                continue;
-            }
-
             Player player = this.plugin.getServer().getPlayer(entry.getKey());
             if (player == null) {
                 iterator.remove();
-                entry.getValue().updateAsync();
+                entry.getValue().update();
                 continue;
             }
 
-            entry.getValue().updateAsync();
+            entry.getValue().update();
         }
 
-        this.cachingTaskActive.set(false);
     }
 
     // ----- EVENTS -----
 
     @EventHandler
     public void onPlayerJoin(@NotNull PlayerJoinEvent event) {
-        this.loadLeveler(event.getPlayer().getUniqueId());
+        this.loadLeveler(event.getPlayer().getUniqueId(), true).thenAccept(Leveler::manageValues);
     }
 
     @EventHandler
@@ -237,5 +223,29 @@ public class LevelingManager implements LevelManager, Listener {
         }
     }
 
+    public double getXPForLevel(int level) throws NullPointerException, IllegalArgumentException, ArithmeticException {
 
+        String formula = this.plugin.config().optString(ConfigKeys.XP_FORMULA, null);
+        if (formula == null) throw new NullPointerException("XP formula is not set");
+
+        Expression expression = new ExpressionBuilder(formula)
+                .variables("level")
+                .build()
+                .setVariable("level", level);
+
+        return (int) expression.evaluate();
+    }
+
+    public double getXPForNextLevel(int currentLevel, int level) throws NullPointerException, IllegalArgumentException, ArithmeticException {
+        double currentXP = getXPForLevel(currentLevel);
+        double nextXP = this.getXPForLevel(level);
+        return nextXP - currentXP;
+    }
+
+    // ----- OTHER -----
+
+
+    public @NotNull PlayerLevels getPlugin() {
+        return plugin;
+    }
 }
