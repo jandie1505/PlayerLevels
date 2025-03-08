@@ -1,9 +1,8 @@
-package net.jandie1505.playerlevels.commands;
+package net.jandie1505.playerlevels.commands.manage;
 
 import net.chaossquad.mclib.PlayerUtils;
 import net.chaossquad.mclib.command.TabCompletingCommandExecutor;
 import net.jandie1505.playerlevels.PlayerLevels;
-import net.jandie1505.playerlevels.api.LevelPlayer;
 import net.jandie1505.playerlevels.leveler.Leveler;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -18,10 +17,10 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
-public class LevelSubCommand implements TabCompletingCommandExecutor {
+public class LevelSubcommand implements TabCompletingCommandExecutor {
     @NotNull private final PlayerLevels plugin;
 
-    public LevelSubCommand(@NotNull PlayerLevels plugin) {
+    public LevelSubcommand(@NotNull PlayerLevels plugin) {
         this.plugin = plugin;
     }
 

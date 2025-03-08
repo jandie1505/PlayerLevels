@@ -6,6 +6,8 @@ import net.chaossquad.mclib.storage.DSSerializer;
 import net.chaossquad.mclib.storage.DataStorage;
 import net.jandie1505.playerlevels.api.PlayerLevelsAPI;
 import net.jandie1505.playerlevels.commands.*;
+import net.jandie1505.playerlevels.commands.manage.LevelSubcommand;
+import net.jandie1505.playerlevels.commands.manage.XPSubcommand;
 import net.jandie1505.playerlevels.constants.DefaultConfigValues;
 import net.jandie1505.playerlevels.database.DatabaseManager;
 import net.jandie1505.playerlevels.leveler.LevelingManager;
@@ -20,7 +22,7 @@ public class PlayerLevels extends JavaPlugin implements PlayerLevelsAPI {
     @NotNull private final DataStorage config;
     private LevelingManager levelingManager;
     private DatabaseManager databaseManager;
-    private SubcommandCommand command;
+    private PlayerLevelsCommand command;
 
     public PlayerLevels() {
         this.config = new DataStorage();
@@ -53,14 +55,7 @@ public class PlayerLevels extends JavaPlugin implements PlayerLevelsAPI {
         this.databaseManager.setupDatabase();
         this.levelingManager = new LevelingManager(this, this.databaseManager);
 
-        this.command = new SubcommandCommand(this);
-        this.command.addSubcommand("config", SubcommandEntry.of(new ConfigSubCommand(this)));
-        this.command.addSubcommand("cache", SubcommandEntry.of(new CacheSubCommand(this)));
-        this.command.addSubcommand("info", SubcommandEntry.of(new InfoSubCommand(this)));
-        this.command.addSubcommand("level", SubcommandEntry.of(new LevelSubCommand(this)));
-        this.command.addSubcommand("xp", SubcommandEntry.of(new XPSubCommand(this)));
-        this.command.addSubcommand("database", SubcommandEntry.of(new DatabaseSubcommand(this)));
-        this.command.addSubcommand("erase", SubcommandEntry.of(new EraseSubcommand(this)));
+        this.command = new PlayerLevelsCommand(this);
 
         this.getCommand("playerlevels").setExecutor(this.command);
         this.getCommand("playerlevels").setTabCompleter(this.command);
