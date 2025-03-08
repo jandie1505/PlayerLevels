@@ -131,10 +131,11 @@ public class LevelingManager implements LevelManager, Listener {
      * @param playerUUID player uuid
      * @param update sync with database before dropping
      */
-    public void dropCache(@NotNull UUID playerUUID, boolean update) {
+    public boolean dropCache(@NotNull UUID playerUUID, boolean update) {
         Leveler leveler = this.cachedLevelers.remove(playerUUID);
-        if (leveler == null) return;
+        if (leveler == null) return false;
         if (update) leveler.updateAsync();
+        return true;
     }
 
     /**
@@ -168,7 +169,16 @@ public class LevelingManager implements LevelManager, Listener {
 
     // ----- TASKS -----
 
-    public void updateCacheAsyncTask() {
+    public void updateCacheAsync() {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                LevelingManager.this.updateCache();
+            }
+        }.runTaskAsynchronously(this.plugin);
+    }
+
+    public void updateCache() {
 
         Iterator<Map.Entry<UUID, Leveler>> iterator = this.cachedLevelers.entrySet().iterator();
         while (iterator.hasNext()) {

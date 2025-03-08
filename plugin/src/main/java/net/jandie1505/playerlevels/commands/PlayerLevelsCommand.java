@@ -4,9 +4,10 @@ import net.chaossquad.mclib.command.SubcommandCommand;
 import net.chaossquad.mclib.command.SubcommandEntry;
 import net.chaossquad.mclib.command.TabCompletingCommandExecutor;
 import net.jandie1505.playerlevels.PlayerLevels;
-import net.jandie1505.playerlevels.commands.subcommands.CacheSubCommand;
+import net.jandie1505.playerlevels.commands.subcommands.DebugSubcommand;
+import net.jandie1505.playerlevels.commands.subcommands.debug.CacheSubCommand;
 import net.jandie1505.playerlevels.commands.subcommands.ConfigSubCommand;
-import net.jandie1505.playerlevels.commands.subcommands.DatabaseSubcommand;
+import net.jandie1505.playerlevels.commands.subcommands.debug.DatabaseSubcommand;
 import net.jandie1505.playerlevels.commands.subcommands.ManageSubcommand;
 import net.jandie1505.playerlevels.leveler.Leveler;
 import org.bukkit.command.Command;
@@ -39,9 +40,8 @@ public class PlayerLevelsCommand extends SubcommandCommand {
         }));
 
         this.addSubcommand("config", SubcommandEntry.of(new ConfigSubCommand(this.plugin)));
-        this.addSubcommand("cache", SubcommandEntry.of(new CacheSubCommand(this.plugin)));
         this.addSubcommand("manage", SubcommandEntry.of(new ManageSubcommand(this.plugin)));
-        this.addSubcommand("database", SubcommandEntry.of(new DatabaseSubcommand(this.plugin)));
+        this.addSubcommand("debug", SubcommandEntry.of(new DebugSubcommand(this.plugin)));
     }
 
     @Override

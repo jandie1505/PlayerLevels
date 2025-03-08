@@ -6,7 +6,8 @@ import org.jetbrains.annotations.NotNull;
 
 public interface Permissions {
     String ADMIN = "playerlevels.admin";
-    String MANAGE_PLAYERS = "playerlevels.manage.players";
+    String DEBUG = "playerlevels.debug";
+    String MANAGE_PLAYERS = "playerlevels.manage_players";
     String USE = "playerlevels.use";
 
     static boolean hasPermission(@NotNull CommandSender sender, @NotNull String... permission) {

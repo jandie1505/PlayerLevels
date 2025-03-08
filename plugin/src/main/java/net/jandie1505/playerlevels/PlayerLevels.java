@@ -59,7 +59,7 @@ public class PlayerLevels extends JavaPlugin implements PlayerLevelsAPI {
         new BukkitRunnable() {
             @Override
             public void run() {
-                PlayerLevels.this.levelingManager.updateCacheAsyncTask();
+                PlayerLevels.this.levelingManager.updateCache();
             }
         }.runTaskTimerAsynchronously(this, 20, 10*60*20);
         this.getServer().getPluginManager().registerEvents(this.levelingManager, this);
