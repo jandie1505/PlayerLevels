@@ -1,12 +1,12 @@
-package net.jandie1505.playerlevels.commands;
+package net.jandie1505.playerlevels.commands.subcommands;
 
 import net.chaossquad.mclib.command.SubcommandCommand;
 import net.chaossquad.mclib.command.SubcommandEntry;
 import net.jandie1505.playerlevels.PlayerLevels;
-import net.jandie1505.playerlevels.commands.manage.EraseSubcommand;
-import net.jandie1505.playerlevels.commands.manage.InfoSubcommand;
-import net.jandie1505.playerlevels.commands.manage.LevelSubcommand;
-import net.jandie1505.playerlevels.commands.manage.XPSubcommand;
+import net.jandie1505.playerlevels.commands.subcommands.manage.EraseSubcommand;
+import net.jandie1505.playerlevels.commands.subcommands.manage.InfoSubcommand;
+import net.jandie1505.playerlevels.commands.subcommands.manage.LevelSubcommand;
+import net.jandie1505.playerlevels.commands.subcommands.manage.XPSubcommand;
 import net.jandie1505.playerlevels.constants.Permissions;
 import org.jetbrains.annotations.NotNull;
 

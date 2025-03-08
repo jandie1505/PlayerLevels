@@ -1,4 +1,4 @@
-package net.jandie1505.playerlevels.commands.utils;
+package net.jandie1505.playerlevels.commands.subcommands.utils;
 
 import org.jetbrains.annotations.NotNull;
 

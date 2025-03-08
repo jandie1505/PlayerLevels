@@ -1,9 +1,9 @@
-package net.jandie1505.playerlevels.commands.manage;
+package net.jandie1505.playerlevels.commands.subcommands.manage;
 
 import net.chaossquad.mclib.PlayerUtils;
 import net.chaossquad.mclib.command.TabCompletingCommandExecutor;
 import net.jandie1505.playerlevels.PlayerLevels;
-import net.jandie1505.playerlevels.commands.utils.OptionParser;
+import net.jandie1505.playerlevels.commands.subcommands.utils.OptionParser;
 import net.jandie1505.playerlevels.constants.Permissions;
 import net.jandie1505.playerlevels.leveler.Leveler;
 import net.kyori.adventure.text.Component;

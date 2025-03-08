@@ -1,4 +1,4 @@
-package net.jandie1505.playerlevels.commands;
+package net.jandie1505.playerlevels.commands.subcommands;
 
 import com.zaxxer.hikari.HikariDataSource;
 import net.chaossquad.mclib.command.TabCompletingCommandExecutor;

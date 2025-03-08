@@ -1,13 +1,9 @@
 package net.jandie1505.playerlevels;
 
-import net.chaossquad.mclib.command.SubcommandCommand;
-import net.chaossquad.mclib.command.SubcommandEntry;
 import net.chaossquad.mclib.storage.DSSerializer;
 import net.chaossquad.mclib.storage.DataStorage;
 import net.jandie1505.playerlevels.api.PlayerLevelsAPI;
-import net.jandie1505.playerlevels.commands.*;
-import net.jandie1505.playerlevels.commands.manage.LevelSubcommand;
-import net.jandie1505.playerlevels.commands.manage.XPSubcommand;
+import net.jandie1505.playerlevels.commands.PlayerLevelsCommand;
 import net.jandie1505.playerlevels.constants.DefaultConfigValues;
 import net.jandie1505.playerlevels.database.DatabaseManager;
 import net.jandie1505.playerlevels.leveler.LevelingManager;
