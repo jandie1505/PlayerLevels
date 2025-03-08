@@ -74,6 +74,7 @@ public final class Leveler implements LevelPlayer {
         if (this.manageValuesInProgress.getAndSet(true)) return;
 
         this.levelUp();
+        this.manager.getPlugin().getRewardsManager().processPlayer(this);
 
         this.manageValuesInProgress.set(false);
     }

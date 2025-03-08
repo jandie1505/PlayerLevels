@@ -8,6 +8,7 @@ import net.jandie1505.playerlevels.constants.ConfigKeys;
 import net.jandie1505.playerlevels.constants.DefaultConfigValues;
 import net.jandie1505.playerlevels.database.DatabaseManager;
 import net.jandie1505.playerlevels.leveler.LevelingManager;
+import net.jandie1505.playerlevels.rewards.RewardsManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
@@ -19,6 +20,7 @@ import java.util.logging.Level;
 public class PlayerLevels extends JavaPlugin implements PlayerLevelsAPI {
     @NotNull private final DataStorage config;
     private LevelingManager levelingManager;
+    private RewardsManager rewardsManager;
     private DatabaseManager databaseManager;
     private PlayerLevelsCommand command;
 
@@ -52,6 +54,7 @@ public class PlayerLevels extends JavaPlugin implements PlayerLevelsAPI {
         this.databaseManager = new DatabaseManager(this);
         this.databaseManager.setupDatabase();
         this.levelingManager = new LevelingManager(this, this.databaseManager);
+        this.rewardsManager = new RewardsManager(this);
 
         this.command = new PlayerLevelsCommand(this);
 
@@ -84,6 +87,11 @@ public class PlayerLevels extends JavaPlugin implements PlayerLevelsAPI {
     @Override
     public LevelingManager getLevelManager() {
         return this.levelingManager;
+    }
+
+    @Override
+    public RewardsManager getRewardsManager() {
+        return this.rewardsManager;
     }
 
     public DatabaseManager getDatabaseManager() {

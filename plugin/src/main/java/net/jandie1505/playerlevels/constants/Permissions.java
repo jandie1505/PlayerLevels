@@ -8,6 +8,7 @@ public interface Permissions {
     String ADMIN = "playerlevels.admin";
     String DEBUG = "playerlevels.debug";
     String MANAGE_PLAYERS = "playerlevels.manage_players";
+    String MANAGE_REWARDS = "playerlevels.manage_rewards";
     String USE = "playerlevels.use";
 
     static boolean hasPermission(@NotNull CommandSender sender, @NotNull String... permission) {
