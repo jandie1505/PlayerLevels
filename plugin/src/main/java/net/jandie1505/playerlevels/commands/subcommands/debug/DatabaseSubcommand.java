@@ -23,7 +23,7 @@ public class DatabaseSubcommand implements TabCompletingCommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
 
         if (args.length < 1) {
-            sender.sendMessage(Component.text("Usage: /playerlevels database (connect|disconnect|info)"));
+            sender.sendMessage(Component.text("Usage: /playerlevels database (connect|disconnect|info)", NamedTextColor.RED));
             return true;
         }
 

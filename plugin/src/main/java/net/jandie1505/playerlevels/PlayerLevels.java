@@ -4,6 +4,7 @@ import net.chaossquad.mclib.storage.DSSerializer;
 import net.chaossquad.mclib.storage.DataStorage;
 import net.jandie1505.playerlevels.api.PlayerLevelsAPI;
 import net.jandie1505.playerlevels.commands.PlayerLevelsCommand;
+import net.jandie1505.playerlevels.constants.ConfigKeys;
 import net.jandie1505.playerlevels.constants.DefaultConfigValues;
 import net.jandie1505.playerlevels.database.DatabaseManager;
 import net.jandie1505.playerlevels.leveler.LevelingManager;
@@ -12,6 +13,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.util.Objects;
 import java.util.logging.Level;
 
 public class PlayerLevels extends JavaPlugin implements PlayerLevelsAPI {
@@ -86,6 +88,17 @@ public class PlayerLevels extends JavaPlugin implements PlayerLevelsAPI {
 
     public DatabaseManager getDatabaseManager() {
         return this.databaseManager;
+    }
+
+    public @NotNull String getServerId() {
+
+        String serverId = System.getProperty(this.getName() + ".server-id");
+        if (serverId != null) return serverId;
+
+        serverId = System.getenv(this.getName() + ".server-id");
+        if (serverId != null) return serverId;
+
+        return Objects.requireNonNullElse(this.config.optString(ConfigKeys.SERVER_ID, ""), "");
     }
 
 }
