@@ -37,6 +37,7 @@ public class RewardsListSubcommand implements TabCompletingCommandExecutor {
                 sender.sendMessage(reward.getId() + " " + reward.getLevel() + " " + reward.getServerId() + " " + reward.isEnabled());
             }
         } else {
+            sender.sendRichMessage("<gold>Rewards:");
             for (Reward reward : this.plugin.getRewardsManager().getRewardsInternal().values()) {
                 sender.sendRichMessage("<gold>----- Reward " + reward.getId() + " -----");
                 sender.sendRichMessage("<gold>Name: " + reward.getName());

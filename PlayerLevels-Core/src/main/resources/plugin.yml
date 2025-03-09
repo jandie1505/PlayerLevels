@@ -5,4 +5,4 @@ api-version: 1.19
 commands:
   levels:
     description: Plugin command
-    aliases: ['playerlevels']
+    aliases: ['playerlevels','level']
