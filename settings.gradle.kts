@@ -1,3 +1,3 @@
 rootProject.name = "PlayerLevels"
 
-include("plugin", "api")
+include("PlayerLevels-Core", "PlayerLevels-API")
