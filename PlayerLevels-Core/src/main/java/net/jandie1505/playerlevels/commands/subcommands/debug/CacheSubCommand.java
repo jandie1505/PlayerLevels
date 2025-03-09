@@ -31,7 +31,7 @@ public class CacheSubCommand implements TabCompletingCommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] a) {
 
-        if (!Permissions.hasPermission(sender, Permissions.MANAGE_PLAYERS)) {
+        if (sender != Bukkit.getConsoleSender()) {
             sender.sendRichMessage("<red>No permission");
             return true;
         }

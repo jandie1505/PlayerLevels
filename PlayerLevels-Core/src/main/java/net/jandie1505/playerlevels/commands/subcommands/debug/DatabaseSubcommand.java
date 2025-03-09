@@ -5,6 +5,7 @@ import net.chaossquad.mclib.command.TabCompletingCommandExecutor;
 import net.jandie1505.playerlevels.PlayerLevels;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -21,6 +22,11 @@ public class DatabaseSubcommand implements TabCompletingCommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
+
+        if (sender != Bukkit.getConsoleSender()) {
+            sender.sendRichMessage("<red>No permission");
+            return true;
+        }
 
         if (args.length < 1) {
             sender.sendMessage(Component.text("Usage: /playerlevels database (connect|disconnect|info)", NamedTextColor.RED));
