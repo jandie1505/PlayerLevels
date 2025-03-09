@@ -97,12 +97,14 @@ public class LevelerData implements LevelData {
     public static LevelerData fromJSON(JSONObject json, @Nullable Callback callback) throws JSONException {
         LevelerData levelerData = new LevelerData(callback);
 
-        levelerData.level = json.getInt("level");
-        levelerData.xp = json.getDouble("xp");
+        levelerData.level = json.optInt("level", 0);
+        levelerData.xp = json.optDouble("xp", 0);
 
-        JSONArray receivedRewards = json.getJSONArray("receivedRewards");
-        for (Object reward : receivedRewards) {
-            levelerData.receivedRewards.getDelegate().add(reward.toString());
+        JSONArray receivedRewards = json.optJSONArray("receivedRewards", null);
+        if (receivedRewards != null) {
+            for (Object reward : receivedRewards) {
+                levelerData.receivedRewards.getDelegate().add(reward.toString());
+            }
         }
 
         return levelerData;

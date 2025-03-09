@@ -46,6 +46,10 @@ public class Reward implements PlayerReward {
         this.enabled = true;
     }
 
+    protected Reward(@NotNull RewardsManager manager, @NotNull RewardConfig config, @NotNull RewardData data) {
+        this(manager, config.id(), config.serverId(), config.level(), data.executor(), data.condition(), data.requiresOnlinePlayer(), config.name(), config.description());
+    }
+
     // ----- REWARD -----
 
     /**
@@ -56,16 +60,19 @@ public class Reward implements PlayerReward {
     public final CompletableFuture<Boolean> apply(@NotNull Leveler leveler) {
         if (!this.isApplicable(leveler)) return CompletableFuture.completedFuture(false); // Check conditions
 
-        // Fire event and don't apply the reward when it's cancelled
-        RewardApplyEvent event = new RewardApplyEvent(leveler, this);
-        Bukkit.getPluginManager().callEvent(event);
-        if (event.isCancelled()) return CompletableFuture.completedFuture(false);
-
         CompletableFuture<Boolean> future = new CompletableFuture<>();
 
         new BukkitRunnable() {
             @Override
             public void run() {
+
+                // Fire event and don't apply the reward when it's cancelled
+                RewardApplyEvent event = new RewardApplyEvent(leveler, Reward.this);
+                Bukkit.getPluginManager().callEvent(event);
+                if (event.isCancelled()) {
+                    future.complete(false);
+                    return;
+                }
 
                 boolean success;
 

@@ -35,12 +35,14 @@ public class RewardsManager implements RewardManager {
 
     // ----- CREATE REWARDS -----
 
-    public @NotNull RewardCreator create(@NotNull String rewardId) {
-        return new RewardCreator(this, rewardId);
+    public @NotNull Reward addReward(@NotNull RewardConfig rewardConfig, @NotNull RewardData rewardData) {
+        Reward reward = new Reward(this, rewardConfig, rewardData);
+        this.addReward(reward);
+        return reward;
     }
 
-    public @NotNull TemplateRewardsCreator createByTemplate() {
-        return new TemplateRewardsCreator(this);
+    public @NotNull RewardCreator create(@NotNull String rewardId) {
+        return new RewardCreator(this, rewardId);
     }
 
     // ----- MANAGE REWARDS -----
@@ -50,6 +52,7 @@ public class RewardsManager implements RewardManager {
     }
 
     public final void addReward(@NotNull Reward reward) {
+        if (this.rewards.containsKey(reward.getId())) throw new IllegalArgumentException("Reward with id " + reward.getId() + " already exists");
         this.rewards.put(reward.getId(), reward);
     }
 
