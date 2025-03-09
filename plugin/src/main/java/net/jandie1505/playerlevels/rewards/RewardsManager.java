@@ -41,10 +41,6 @@ public class RewardsManager implements RewardManager {
         return reward;
     }
 
-    public @NotNull RewardCreator create(@NotNull String rewardId) {
-        return new RewardCreator(this, rewardId);
-    }
-
     // ----- MANAGE REWARDS -----
 
     public final @NotNull Map<String, PlayerReward> getRewards() {

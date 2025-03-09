@@ -11,13 +11,6 @@ import java.util.Map;
 public interface RewardManager {
 
     /**
-     * Returns a Builder which can be used to create new rewards.
-     * @param rewardId reward id
-     * @return reward builder
-     */
-    @NotNull RewardBuilder create(@NotNull String rewardId);
-
-    /**
      * Returns an unmodifiable map of all registered rewards.
      * @return rewards map
      */
