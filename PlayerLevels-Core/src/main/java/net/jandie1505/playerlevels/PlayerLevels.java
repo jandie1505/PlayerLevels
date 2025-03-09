@@ -68,6 +68,8 @@ public class PlayerLevels extends JavaPlugin implements PlayerLevelsAPI {
             }
         }.runTaskTimerAsynchronously(this, 20, 10*60*20);
         this.getServer().getPluginManager().registerEvents(this.levelingManager, this);
+
+        PlayerLevelsAPIProvider.setApi(this);
     }
 
     @Override
@@ -76,6 +78,7 @@ public class PlayerLevels extends JavaPlugin implements PlayerLevelsAPI {
         this.databaseManager.shutdownDatabase();
         this.databaseManager = null;
         this.config.clear();
+        PlayerLevelsAPIProvider.setApi(null);
     }
 
     // ----- OTHER -----
