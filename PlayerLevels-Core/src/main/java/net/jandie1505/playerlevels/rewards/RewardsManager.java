@@ -8,6 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 
 public class RewardsManager implements RewardManager {
     @NotNull private final PlayerLevels plugin;
@@ -26,9 +27,15 @@ public class RewardsManager implements RewardManager {
      */
     public void processPlayer(@NotNull Leveler leveler) {
 
-        for (Reward reward : this.rewards.values()) {
-            if (!reward.isApplicable(leveler)) continue;
-            reward.apply(leveler);
+        for (Map.Entry<String, Reward> entry : this.rewards.entrySet()) {
+
+            try {
+                if (!entry.getValue().isApplicable(leveler)) continue;
+                entry.getValue().apply(leveler);
+            } catch (Exception e) {
+                this.plugin.getLogger().log(Level.SEVERE, "Failed to check and apply reward " + entry.getKey() + " for player " + leveler.getPlayerUUID(), e);
+            }
+
         }
 
     }
