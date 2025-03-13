@@ -16,7 +16,7 @@ public class ReceivedReward implements ReceivedRewardData {
     public ReceivedReward(@Nullable Callback callback) {
         this.blocked = false;
         this.level = 0;
-        this.callback = callback != null ? callback : _ -> {};
+        this.callback = callback != null ? callback : reward -> {};
     }
 
     // ----- DATA -----

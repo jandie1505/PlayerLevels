@@ -12,7 +12,7 @@ public class IntervalReward extends Reward {
     private final int interval;
     @NotNull private final RewardCondition customCondition;
 
-    protected IntervalReward(@NotNull RewardsManager manager, @NotNull String id, @Nullable String serverId, int interval, @NotNull RewardExecutor executor, @Nullable RewardCondition customCondition, boolean requireOnlinePlayer, @NotNull String name, @Nullable String description) {
+    public IntervalReward(@NotNull RewardsManager manager, @NotNull String id, @Nullable String serverId, int interval, @NotNull RewardExecutor executor, @Nullable RewardCondition customCondition, boolean requireOnlinePlayer, @NotNull String name, @Nullable String description) {
         super(manager, id, serverId, executor, requireOnlinePlayer, name, description);
         this.interval = interval;
         this.customCondition = customCondition != null ? customCondition : IntervalPlayerReward.DEFAULT_CONDITION;

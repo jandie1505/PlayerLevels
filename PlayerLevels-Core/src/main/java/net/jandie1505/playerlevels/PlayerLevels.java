@@ -8,9 +8,12 @@ import net.jandie1505.playerlevels.constants.ConfigKeys;
 import net.jandie1505.playerlevels.constants.DefaultConfigValues;
 import net.jandie1505.playerlevels.database.DatabaseManager;
 import net.jandie1505.playerlevels.leveler.LevelingManager;
+import net.jandie1505.playerlevels.rewards.IntervalReward;
 import net.jandie1505.playerlevels.rewards.RewardConfig;
 import net.jandie1505.playerlevels.rewards.RewardsManager;
 import net.jandie1505.playerlevels.rewards.types.CommandReward;
+import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
@@ -82,6 +85,11 @@ public class PlayerLevels extends JavaPlugin implements PlayerLevelsAPI {
                 new RewardConfig("test2", null, 50, "Test Reward 2", null),
                 CommandReward.create("say <player_name> has unlocked <reward_name>", true, CommandReward.SenderType.CONSOLE)
         );
+
+        this.getRewardsManager().addReward(new IntervalReward(this.getRewardsManager(), "test3", null, 1, (reward, player) -> {
+            Bukkit.broadcast(Component.text(player.getPlayerUUID() + " has received the interval reward " + reward.getName() + " with id " + reward.getId()));
+            return true;
+        }, null, true, "Interval Test", "Test"));
     }
 
     @Override

@@ -24,7 +24,7 @@ public class LevelerData implements LevelData {
         this.xp = 0;
         this.receivedRewards = new TrackedMap<>(
                 new HashMap<>(),
-                (_, _, _, _, _) -> this.callback.onUpdate(this)
+                (map, action, key, value, result) -> this.callback.onUpdate(this)
         );
         this.callback = callback != null ? callback : data -> {};
     }
@@ -64,9 +64,9 @@ public class LevelerData implements LevelData {
     @ApiStatus.Internal
     public @NotNull ReceivedReward getOrCreateReceivedReward(@NotNull String id, boolean call) {
         AtomicBoolean modified = new AtomicBoolean(false);
-        ReceivedReward reward = this.receivedRewards.computeIfAbsent(id, _ -> {
+        ReceivedReward reward = this.receivedRewards.computeIfAbsent(id, k -> {
             modified.set(true);
-            return new ReceivedReward(_ -> this.callback.onUpdate(this));
+            return new ReceivedReward(r -> this.callback.onUpdate(this));
         });
         if (modified.get()) this.callback.onUpdate(this);
         return reward;
@@ -138,7 +138,7 @@ public class LevelerData implements LevelData {
         if (receivedRewards != null) {
             for (Map.Entry<String, Object> entry : receivedRewards.toMap().entrySet()) {
                 if (!(entry.getValue() instanceof JSONObject jsonEntry)) continue;
-                levelerData.receivedRewards.getDelegate().put(entry.getKey(), ReceivedReward.fromJSON(jsonEntry, _ -> levelerData.callback.onUpdate(levelerData)));
+                levelerData.receivedRewards.getDelegate().put(entry.getKey(), ReceivedReward.fromJSON(jsonEntry, reward -> levelerData.callback.onUpdate(levelerData)));
             }
         }
 

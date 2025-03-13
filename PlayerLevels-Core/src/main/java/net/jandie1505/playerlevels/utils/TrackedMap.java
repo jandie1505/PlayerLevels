@@ -68,7 +68,7 @@ public class TrackedMap<K,V> implements Map<K,V> {
 
     @Override
     public @NotNull Set<K> keySet() {
-        return new TrackedSet<>(this.delegate.keySet(), (_, action, t, result) -> {
+        return new TrackedSet<>(this.delegate.keySet(), (set, action, t, result) -> {
             this.callback.onUpdate(this, Action.fromTrackedSet(action), t, null, result);
         });
     }
@@ -80,7 +80,7 @@ public class TrackedMap<K,V> implements Map<K,V> {
 
     @Override
     public @NotNull Set<Entry<K, V>> entrySet() {
-        return new TrackedSet<>(this.delegate.entrySet(), (_, action, t, result) -> {
+        return new TrackedSet<>(this.delegate.entrySet(), (set, action, t, result) -> {
             this.callback.onUpdate(this, Action.fromTrackedSet(action), t, null, result);
         });
     }
