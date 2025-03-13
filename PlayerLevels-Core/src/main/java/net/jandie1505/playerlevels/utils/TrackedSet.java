@@ -120,6 +120,18 @@ public class TrackedSet<T> implements Set<T> {
         return delegate;
     }
 
+    // ----- HASH -----
+
+    @Override
+    public int hashCode() {
+        return this.delegate.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return this.delegate.equals(obj);
+    }
+
     // ----- INNER CLASSES -----
 
     public interface Callback<T> {
