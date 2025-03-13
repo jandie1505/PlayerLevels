@@ -72,6 +72,7 @@ public class ReceivedReward implements ReceivedRewardData {
     public @NotNull JSONObject toJSON() {
         JSONObject json = new JSONObject();
 
+        json.put("blocked", this.blocked);
         json.put("level", this.level);
 
         return json;
@@ -80,7 +81,8 @@ public class ReceivedReward implements ReceivedRewardData {
     public static @NotNull ReceivedReward fromJSON(@NotNull JSONObject json, @Nullable Callback callback) {
         ReceivedReward reward = new ReceivedReward(callback);
 
-        reward.level = json.getInt("level");
+        reward.blocked = json.optBoolean("blocked", true);
+        reward.level = json.optInt("level", 0);
 
         return reward;
     }
@@ -94,7 +96,7 @@ public class ReceivedReward implements ReceivedRewardData {
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.level);
+        return Objects.hash(this.blocked, this.level);
     }
 
     @Override

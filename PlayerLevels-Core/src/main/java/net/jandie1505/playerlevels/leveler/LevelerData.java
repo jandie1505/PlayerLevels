@@ -68,7 +68,7 @@ public class LevelerData implements LevelData {
             modified.set(true);
             return new ReceivedReward(r -> this.callback.onUpdate(this));
         });
-        if (modified.get()) this.callback.onUpdate(this);
+        if (call && modified.get()) this.callback.onUpdate(this);
         return reward;
     }
 
@@ -136,9 +136,10 @@ public class LevelerData implements LevelData {
 
         JSONObject receivedRewards = json.optJSONObject("receivedRewards", null);
         if (receivedRewards != null) {
-            for (Map.Entry<String, Object> entry : receivedRewards.toMap().entrySet()) {
-                if (!(entry.getValue() instanceof JSONObject jsonEntry)) continue;
-                levelerData.receivedRewards.getDelegate().put(entry.getKey(), ReceivedReward.fromJSON(jsonEntry, reward -> levelerData.callback.onUpdate(levelerData)));
+            for (String key : receivedRewards.keySet()) {
+                JSONObject entry = receivedRewards.optJSONObject(key, null);
+                if (entry == null) continue;
+                levelerData.receivedRewards.getDelegate().put(key, ReceivedReward.fromJSON(entry, reward -> levelerData.callback.onUpdate(levelerData)));
             }
         }
 
