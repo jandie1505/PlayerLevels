@@ -7,12 +7,6 @@ import org.jetbrains.annotations.NotNull;
 public interface RewardCondition {
 
     /**
-     * The default RewardCondition.<br/>
-     * It returns true when the reward is listed as applied in the LevelData.
-     */
-    RewardCondition DEFAULT = (reward, player) -> player.getData().getOrCreateReceivedReward(reward.getId()).level() > 0;
-
-    /**
      * Returns if the reward has been already applied.<br/>
      * The default is when the player has
      * @param player player

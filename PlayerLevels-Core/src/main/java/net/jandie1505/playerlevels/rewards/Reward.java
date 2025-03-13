@@ -65,26 +65,54 @@ public abstract class Reward implements PlayerReward {
                     return;
                 }
 
-                boolean success;
+                boolean failure = false;
 
-                // Apply event and catch errors
-                try {
-                    success = Reward.this.executor.onApply(Reward.this, leveler);
-                } catch (Exception e) {
-                    Reward.this.getManager().getPlugin().getLogger().log(Level.WARNING, "Exception while applying reward " + Reward.this.id + " to player " + leveler.getPlayerUUID(), e);
+                int maxIterations = 100;
+                while (maxIterations-- > 0) {
+
+                    boolean success;
+
+                    // Apply event and catch errors
+                    try {
+                        success = Reward.this.executor.onApply(Reward.this, leveler);
+                    } catch (Exception e) {
+                        Reward.this.getManager().getPlugin().getLogger().log(Level.WARNING, "Exception while applying reward " + Reward.this.id + " to player " + leveler.getPlayerUUID(), e);
+                        future.complete(false);
+                        failure = true;
+                        break;
+                    }
+
+                    // Do not mark the event as applied when it was unsuccessful
+                    if (!success) {
+                        Reward.this.getManager().getPlugin().getLogger().log(Level.WARNING, "Failed to apply reward " + Reward.this.id + " to player " + leveler.getPlayerUUID() + ": Executor returned null");
+                        future.complete(false);
+                        failure = true;
+                        break;
+                    }
+
+                    Reward.this.onApplySuccess(leveler);
+
+                    if (!Reward.this.isApplicable(leveler)) {
+                        break;
+                    }
+
+                }
+
+                if (maxIterations <= 0) {
+                    Reward.this.getManager().getPlugin().getLogger().warning(
+                            "Reward " + Reward.this.id + " has exceeded the maximum number of iterations\n"
+                    );
                     future.complete(false);
                     return;
                 }
 
-                // Do not mark the event as applied when it was unsuccessful
-                if (!success) {
-                    Reward.this.getManager().getPlugin().getLogger().log(Level.WARNING, "Failed to apply reward " + Reward.this.id + " to player " + leveler.getPlayerUUID() + ": Executor returned null");
+                if (failure) {
                     future.complete(false);
+                    Reward.this.getManager().getPlugin().getLogger().warning("Reward " + Reward.this.id + " could not be applied to player " + leveler.getPlayerUUID() + ". Check for warnings/errors before this log message.");
                     return;
                 }
 
-                Reward.this.onApplySuccess(leveler);
-
+                future.complete(true);
             }
         }.runTask(this.manager.getPlugin());
 

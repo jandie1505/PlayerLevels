@@ -73,7 +73,7 @@ public class CommandReward implements RewardExecutor {
             boolean requiresOnlinePlayer,
             @NotNull SenderType senderType
     ) {
-        return new RewardData(new CommandReward(command, senderType), RewardCondition.DEFAULT, requiresOnlinePlayer);
+        return new RewardData(new CommandReward(command, senderType), MilestonePlayerReward.DEFAULT_CONDITION, requiresOnlinePlayer);
     }
 
 }

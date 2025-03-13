@@ -12,7 +12,7 @@ public class MilestoneReward extends Reward implements MilestonePlayerReward {
     protected MilestoneReward(@NotNull RewardsManager manager, @NotNull String id, @Nullable String serverId, int level, @NotNull RewardExecutor executor, @Nullable RewardCondition condition, boolean requireOnlinePlayer, @NotNull String name, @Nullable String description) {
         super(manager, id, serverId, executor, requireOnlinePlayer, name, description);
         this.level = level;
-        this.condition = condition != null ? condition : RewardCondition.DEFAULT;
+        this.condition = condition != null ? condition : MilestonePlayerReward.DEFAULT_CONDITION;
     }
 
     protected MilestoneReward(@NotNull RewardsManager manager, @NotNull RewardConfig config, @NotNull RewardData data) {

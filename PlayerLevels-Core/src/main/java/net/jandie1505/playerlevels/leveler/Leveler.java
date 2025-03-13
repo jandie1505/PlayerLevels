@@ -16,6 +16,7 @@ import java.sql.SQLException;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Level;
 
 public final class Leveler implements LevelPlayer {
     @NotNull private final LevelingManager manager;
@@ -71,10 +72,19 @@ public final class Leveler implements LevelPlayer {
     }
 
     public void manageValues() {
-        if (this.manageValuesInProgress.getAndSet(true)) return;
 
-        this.levelUp();
-        this.manager.getPlugin().getRewardsManager().processPlayer(this);
+        // Prevent executing this more than once at the same time
+        if (this.manageValuesInProgress.getAndSet(true)) {
+            this.manager.getPlugin().getLogger().warning("Manage values task of " + this.playerUUID + " has been called again while it is still in progress.\nThis can be caused by unsupported API usage.");
+            return;
+        }
+
+        try {
+            this.levelUp();
+            this.manager.getPlugin().getRewardsManager().processPlayer(this);
+        } catch (Exception e) {
+            this.manager.getPlugin().getLogger().log(Level.SEVERE, "Manage values task of " + this.playerUUID + " threw an exception", e);
+        }
 
         this.manageValuesInProgress.set(false);
     }
@@ -135,7 +145,12 @@ public final class Leveler implements LevelPlayer {
      * @return result
      */
     public @NotNull UpdateResult update() {
-        if (this.databaseUpdateInProgress.getAndSet(true)) return UpdateResult.ALREADY_IN_PROGRESS;
+
+        // Prevent executing this more than once at the same time
+        if (this.databaseUpdateInProgress.getAndSet(true)) {
+            this.manager.getPlugin().getLogger().warning("Database update task of " + this.playerUUID + " has been called again while it is still in progress.\nThis can be caused by unsupported API usage.");
+            return UpdateResult.ALREADY_IN_PROGRESS;
+        }
 
         try (Connection connection = this.databaseSource.getConnection()) {
             if (connection == null) {
