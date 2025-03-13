@@ -55,15 +55,14 @@ public class ReceivedReward implements ReceivedRewardData {
      * @param call callback
      */
     public void merge(ReceivedReward reward, boolean call) {
+        this.blocked(reward.blocked(), false);
         this.level(reward.level(), false);
         if (call) this.callback.onUpdate(this);
     }
 
     public ReceivedReward clone(@Nullable Callback callback) {
         ReceivedReward reward = new ReceivedReward(callback);
-
-        reward.level = this.level;
-
+        reward.merge(this, false);
         return reward;
     }
 

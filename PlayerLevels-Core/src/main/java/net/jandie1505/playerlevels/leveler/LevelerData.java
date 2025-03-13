@@ -105,8 +105,20 @@ public class LevelerData implements LevelData {
 
         this.level(levelerData.level(), false);
         this.xp(levelerData.xp(), false);
+
         this.receivedRewards.getDelegate().clear();
+        for (Map.Entry<String, ReceivedReward> entry : levelerData.receivedRewards.entrySet()) {
+
+            ReceivedReward reward = this.receivedRewards.getDelegate().get(entry.getKey());
+            if (reward != null) {
+                reward.merge(entry.getValue(), false);
+                continue;
+            }
+
+            this.receivedRewards.getDelegate().put(entry.getKey(), entry.getValue().clone(r -> this.callback.onUpdate(this)));
+        }
         this.receivedRewards.getDelegate().putAll(levelerData.receivedRewards.getDelegate());
+
         if (call) this.callback.onUpdate(this);
     }
 
