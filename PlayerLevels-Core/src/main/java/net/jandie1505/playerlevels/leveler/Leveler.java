@@ -36,7 +36,7 @@ public final class Leveler implements LevelPlayer {
         this.data = new LevelerData(data -> new BukkitRunnable() {
             @Override
             public void run() {
-                Leveler.this.manageValues();
+                Leveler.this.manageValues(); // TODO: Here is the damn issue
             }
         }.runTaskAsynchronously(this.manager.getPlugin()));
         this.updateId = UUID.randomUUID().toString();
