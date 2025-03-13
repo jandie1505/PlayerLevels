@@ -3,6 +3,7 @@ package net.jandie1505.playerlevels.rewards;
 import net.jandie1505.playerlevels.api.PlayerReward;
 import net.jandie1505.playerlevels.events.RewardApplyEvent;
 import net.jandie1505.playerlevels.leveler.Leveler;
+import net.jandie1505.playerlevels.leveler.ReceivedReward;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
@@ -39,7 +40,7 @@ public class Reward implements PlayerReward {
         this.serverId = serverId;
         this.level = level;
         this.executor = executor;
-        this.condition = condition != null ? condition : (reward, player) -> player.getData().receivedRewards().contains(reward.getId());
+        this.condition = condition != null ? condition : RewardCondition.DEFAULT;
         this.requireOnlinePlayer = requireOnlinePlayer;
         this.name = name;
         this.description = description != null ? description : "";
@@ -57,6 +58,7 @@ public class Reward implements PlayerReward {
      * @param leveler leveler
      * @return success
      */
+    @SuppressWarnings("UnusedReturnValue")
     public final CompletableFuture<Boolean> apply(@NotNull Leveler leveler) {
         if (!this.isApplicable(leveler)) return CompletableFuture.completedFuture(false); // Check conditions
 
@@ -92,7 +94,7 @@ public class Reward implements PlayerReward {
                     return;
                 }
 
-                leveler.getData().receivedRewards().add(Reward.this.id); // Mark as applied
+                leveler.getData().getOrCreateReceivedReward(Reward.this.id, false); // Mark as applied
 
             }
         }.runTask(this.manager.getPlugin());
@@ -105,6 +107,7 @@ public class Reward implements PlayerReward {
      * @param leveler leveler
      * @return applicable
      */
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public final boolean isApplicable(@NotNull Leveler leveler) {
         if (!this.enabled) return false;
         if (leveler.getData().level() < this.level) return false;

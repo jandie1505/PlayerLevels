@@ -10,7 +10,7 @@ public interface RewardCondition {
      * The default RewardCondition.<br/>
      * It returns true when the reward is listed as applied in the LevelData.
      */
-    RewardCondition DEFAULT = (reward, player) -> player.getData().receivedRewards().contains(reward.getId());
+    RewardCondition DEFAULT = (reward, player) -> player.getData().getOrCreateReceivedReward(reward.getId()).level() >= player.getData().level();
 
     /**
      * Returns if the reward has been already applied.<br/>

@@ -1,28 +1,31 @@
 package net.jandie1505.playerlevels.leveler;
 
 import net.jandie1505.playerlevels.api.LevelData;
-import net.jandie1505.playerlevels.utils.TrackedSet;
+import net.jandie1505.playerlevels.api.ReceivedRewardData;
+import net.jandie1505.playerlevels.utils.TrackedMap;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class LevelerData implements LevelData {
+    private static final LevelerData DEFAULT = new LevelerData(null);
     private int level;
     private double xp;
-    @NotNull private TrackedSet<String> receivedRewards;
+    @NotNull private TrackedMap<String, ReceivedReward> receivedRewards;
     @NotNull private Callback callback;
 
     public LevelerData(@Nullable Callback callback) {
         this.level = 0;
         this.xp = 0;
-        this.receivedRewards = new TrackedSet<>(new HashSet<>(), (set, action, s, result) -> this.callback.onUpdate(this));
+        this.receivedRewards = new TrackedMap<>(
+                new HashMap<>(),
+                (_, _, _, _, _) -> this.callback.onUpdate(this)
+        );
         this.callback = callback != null ? callback : data -> {};
     }
 
@@ -54,8 +57,37 @@ public class LevelerData implements LevelData {
         if (call) this.callback.onUpdate(this);
     }
 
-    public Set<String> receivedRewards() {
-        return this.receivedRewards;
+    public @NotNull Map<String, ReceivedRewardData> getReceivedRewards() {
+        return Collections.unmodifiableMap(this.receivedRewards);
+    }
+
+    @ApiStatus.Internal
+    public @NotNull ReceivedReward getOrCreateReceivedReward(@NotNull String id, boolean call) {
+        AtomicBoolean modified = new AtomicBoolean(false);
+        ReceivedReward reward = this.receivedRewards.computeIfAbsent(id, _ -> {
+            modified.set(true);
+            return new ReceivedReward(_ -> this.callback.onUpdate(this));
+        });
+        if (modified.get()) this.callback.onUpdate(this);
+        return reward;
+    }
+
+    public @NotNull ReceivedReward getOrCreateReceivedReward(@NotNull String id) {
+        return this.getOrCreateReceivedReward(id, true);
+    }
+
+    @ApiStatus.Internal
+    public void removeReceivedReward(@NotNull String id, boolean call) {
+        ReceivedRewardData out = this.receivedRewards.remove(id);
+        if (call && out != null) this.callback.onUpdate(this);
+    }
+
+    public void removeReceivedReward(@NotNull String id) {
+        this.removeReceivedReward(id, true);
+    }
+
+    public @Nullable ReceivedReward getReceivedReward(@NotNull String id) {
+        return this.receivedRewards.get(id);
     }
 
     /**
@@ -63,21 +95,22 @@ public class LevelerData implements LevelData {
      * @return delegate of the tracked set
      */
     @ApiStatus.Internal
-    public Set<String> untrackedReceivedRewards() {
-        return this.receivedRewards.getDelegate();
+    public TrackedMap<String, ReceivedReward> internalReceivedRewards() {
+        return this.receivedRewards;
     }
 
     // ----- MERGE -----
 
     public void merge(LevelerData levelerData, boolean call) {
+
         this.level(levelerData.level(), false);
         this.xp(levelerData.xp(), false);
         this.receivedRewards.getDelegate().clear();
-        this.receivedRewards.getDelegate().addAll(levelerData.receivedRewards.getDelegate());
+        this.receivedRewards.getDelegate().putAll(levelerData.receivedRewards.getDelegate());
         if (call) this.callback.onUpdate(this);
     }
 
-    // ----- JSON -----
+    // ----- SERIALIZATION -----
 
     public JSONObject toJSON() {
         JSONObject json = new JSONObject();
@@ -85,9 +118,10 @@ public class LevelerData implements LevelData {
         json.put("level", this.level);
         json.put("xp", this.xp);
 
-        JSONArray receivedRewards = new JSONArray();
-        for (String reward : this.receivedRewards) {
-            receivedRewards.put(reward);
+        JSONObject receivedRewards = new JSONObject();
+        for (Map.Entry<String, ReceivedReward> entry : this.receivedRewards.entrySet()) {
+            if (entry.getValue().isDefault()) continue;
+            receivedRewards.put(entry.getKey(), entry.getValue().toJSON());
         }
         json.put("receivedRewards", receivedRewards);
 
@@ -100,27 +134,37 @@ public class LevelerData implements LevelData {
         levelerData.level = json.optInt("level", 0);
         levelerData.xp = json.optDouble("xp", 0);
 
-        JSONArray receivedRewards = json.optJSONArray("receivedRewards", null);
+        JSONObject receivedRewards = json.optJSONObject("receivedRewards", null);
         if (receivedRewards != null) {
-            for (Object reward : receivedRewards) {
-                levelerData.receivedRewards.getDelegate().add(reward.toString());
+            for (Map.Entry<String, Object> entry : receivedRewards.toMap().entrySet()) {
+                if (!(entry.getValue() instanceof JSONObject jsonEntry)) continue;
+                levelerData.receivedRewards.getDelegate().put(entry.getKey(), ReceivedReward.fromJSON(jsonEntry, _ -> levelerData.callback.onUpdate(levelerData)));
             }
         }
 
         return levelerData;
     }
 
+    @Override
+    public String toString() {
+        return this.toJSON().toString();
+    }
+
     // ----- COMPARE -----
 
     @Override
     public int hashCode() {
-        return Objects.hash(level, xp);
+        return Objects.hash(level, xp, receivedRewards);
     }
 
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof LevelerData levelerData)) return false;
         return this.hashCode() == levelerData.hashCode();
+    }
+
+    public boolean isDefault() {
+        return this.equals(DEFAULT);
     }
 
     // ----- CALLBACK -----

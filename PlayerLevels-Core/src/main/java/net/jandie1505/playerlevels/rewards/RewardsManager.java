@@ -35,6 +35,7 @@ public class RewardsManager implements RewardManager {
 
     // ----- CREATE REWARDS -----
 
+    @SuppressWarnings("UnusedReturnValue")
     public @NotNull Reward addReward(@NotNull RewardConfig rewardConfig, @NotNull RewardData rewardData) {
         Reward reward = new Reward(this, rewardConfig, rewardData);
         this.addReward(reward);
