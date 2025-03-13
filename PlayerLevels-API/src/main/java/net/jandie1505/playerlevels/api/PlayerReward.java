@@ -22,12 +22,6 @@ public interface PlayerReward {
     @Nullable String getServerId();
 
     /**
-     * Returns the level that is required to get the reward.
-     * @return level
-     */
-    int getLevel();
-
-    /**
      * Returns if the player needs to be online that the reward can be applied.
      * @return true = the player must be online
      */

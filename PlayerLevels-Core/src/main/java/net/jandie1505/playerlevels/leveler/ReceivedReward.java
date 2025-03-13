@@ -10,14 +10,29 @@ import java.util.Objects;
 public class ReceivedReward implements ReceivedRewardData {
     private static final ReceivedReward DEFAULT = new ReceivedReward(null);
     @NotNull private final Callback callback;
+    private boolean blocked;
     private int level;
 
     public ReceivedReward(@Nullable Callback callback) {
+        this.blocked = false;
         this.level = 0;
         this.callback = callback != null ? callback : _ -> {};
     }
 
     // ----- DATA -----
+
+    public boolean blocked() {
+        return blocked;
+    }
+
+    public void blocked(boolean blocked, boolean call) {
+        this.blocked = blocked;
+        if (call) this.callback.onUpdate(this);
+    }
+
+    public void blocked(boolean blocked) {
+        this.blocked(blocked, true);
+    }
 
     public int level() {
         return level;

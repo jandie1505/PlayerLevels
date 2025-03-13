@@ -1,12 +1,38 @@
 package net.jandie1505.playerlevels.rewards;
 
+import net.jandie1505.playerlevels.api.MilestonePlayerReward;
+import net.jandie1505.playerlevels.leveler.Leveler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class MilestoneReward extends Reward {
+public class MilestoneReward extends Reward implements MilestonePlayerReward {
+    private final int level;
+    @NotNull private final RewardCondition condition;
 
     protected MilestoneReward(@NotNull RewardsManager manager, @NotNull String id, @Nullable String serverId, int level, @NotNull RewardExecutor executor, @Nullable RewardCondition condition, boolean requireOnlinePlayer, @NotNull String name, @Nullable String description) {
-        super(manager, id, serverId, level, executor, condition, requireOnlinePlayer, name, description);
+        super(manager, id, serverId, executor, requireOnlinePlayer, name, description);
+        this.level = level;
+        this.condition = condition != null ? condition : RewardCondition.DEFAULT;
+    }
+
+    protected MilestoneReward(@NotNull RewardsManager manager, @NotNull RewardConfig config, @NotNull RewardData data) {
+        this(manager, config.id(), config.serverId(), config.level(), data.executor(), data.condition(), data.requiresOnlinePlayer(), config.name(), config.description());
+    }
+
+    @Override
+    public boolean checkApplyCondition(@NotNull Leveler leveler) {
+        return !this.condition.isApplied(this, leveler);
+    }
+
+    @Override
+    public int getLevel() {
+        return this.level;
+    }
+
+    @Override
+    public void onApplySuccess(@NotNull Leveler leveler) {
+        super.onApplySuccess(leveler);
+        leveler.getData().getOrCreateReceivedReward(this.getId()).blocked(true, false);
     }
 
 }

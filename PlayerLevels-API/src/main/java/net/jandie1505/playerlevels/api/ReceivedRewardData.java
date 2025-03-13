@@ -6,6 +6,14 @@ package net.jandie1505.playerlevels.api;
 public interface ReceivedRewardData {
 
     /**
+     *
+     * @return
+     */
+    boolean blocked();
+
+    void blocked(boolean blocked);
+
+    /**
      * Returns he level the player received the reward on.<br/>
      * This is stored for interval rewards.<br/>
      * Setting this to a negative value will mark the reward as received for all levels.

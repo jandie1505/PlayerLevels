@@ -3,7 +3,6 @@ package net.jandie1505.playerlevels.rewards;
 import net.jandie1505.playerlevels.api.PlayerReward;
 import net.jandie1505.playerlevels.events.RewardApplyEvent;
 import net.jandie1505.playerlevels.leveler.Leveler;
-import net.jandie1505.playerlevels.leveler.ReceivedReward;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
@@ -12,13 +11,11 @@ import org.jetbrains.annotations.Nullable;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 
-public class Reward implements PlayerReward {
+public abstract class Reward implements PlayerReward {
     @NotNull private final RewardsManager manager;
     @NotNull private final String id;
     @Nullable private final String serverId;
-    private final int level;
     @NotNull private final RewardExecutor executor;
-    @NotNull private final RewardCondition condition;
     private final boolean requireOnlinePlayer;
     @NotNull private final String name;
     @NotNull private final String description;
@@ -28,9 +25,7 @@ public class Reward implements PlayerReward {
             @NotNull RewardsManager manager,
             @NotNull String id,
             @Nullable String serverId,
-            int level,
             @NotNull RewardExecutor executor,
-            @Nullable RewardCondition condition,
             boolean requireOnlinePlayer,
             @NotNull String name,
             @Nullable String description
@@ -38,17 +33,11 @@ public class Reward implements PlayerReward {
         this.manager = manager;
         this.id = id;
         this.serverId = serverId;
-        this.level = level;
         this.executor = executor;
-        this.condition = condition != null ? condition : RewardCondition.DEFAULT;
         this.requireOnlinePlayer = requireOnlinePlayer;
         this.name = name;
         this.description = description != null ? description : "";
         this.enabled = true;
-    }
-
-    protected Reward(@NotNull RewardsManager manager, @NotNull RewardConfig config, @NotNull RewardData data) {
-        this(manager, config.id(), config.serverId(), config.level(), data.executor(), data.condition(), data.requiresOnlinePlayer(), config.name(), config.description());
     }
 
     // ----- REWARD -----
@@ -94,7 +83,7 @@ public class Reward implements PlayerReward {
                     return;
                 }
 
-                leveler.getData().getOrCreateReceivedReward(Reward.this.id, false); // Mark as applied
+                Reward.this.onApplySuccess(leveler);
 
             }
         }.runTask(this.manager.getPlugin());
@@ -109,11 +98,23 @@ public class Reward implements PlayerReward {
      */
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public final boolean isApplicable(@NotNull Leveler leveler) {
-        if (!this.enabled) return false;
-        if (leveler.getData().level() < this.level) return false;
-        if (this.requireOnlinePlayer && Bukkit.getPlayer(leveler.getPlayerUUID()) == null) return false;
+        if (!this.enabled) return false; // Not applicable when reward disabled
+        if (leveler.getData().getOrCreateReceivedReward(this.id).blocked()) return false; // Not applicable when blocked
+        if (this.requireOnlinePlayer && Bukkit.getPlayer(leveler.getPlayerUUID()) == null) return false; // not applicable when player required online but is offline
         if (this.serverId != null && !this.serverId.equals(this.manager.getPlugin().getServerId())) return false; // Wrong server
-        return !this.condition.isApplied(this, leveler); // Already applied
+        return this.checkApplyCondition(leveler); // Applicable when apply condition of subclass is successful
+    }
+
+    // ----- ABSTRACT -----
+
+    public abstract boolean checkApplyCondition(@NotNull Leveler leveler);
+
+    /**
+     * Is called after the reward has been successfully applied.
+     * @param leveler leveler
+     */
+    public void onApplySuccess(@NotNull Leveler leveler) {
+        leveler.getData().getOrCreateReceivedReward(Reward.this.id, false);
     }
 
     // ----- GETTER -----
@@ -128,10 +129,6 @@ public class Reward implements PlayerReward {
 
     public final @Nullable String getServerId() {
         return serverId;
-    }
-
-    public final int getLevel() {
-        return level;
     }
 
     public final boolean requiresOnlinePlayer() {

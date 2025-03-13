@@ -1,6 +1,7 @@
 package net.jandie1505.playerlevels.rewards.types;
 
 import net.jandie1505.playerlevels.api.LevelPlayer;
+import net.jandie1505.playerlevels.api.MilestonePlayerReward;
 import net.jandie1505.playerlevels.api.PlayerReward;
 import net.jandie1505.playerlevels.rewards.RewardCondition;
 import net.jandie1505.playerlevels.rewards.RewardData;
@@ -27,7 +28,7 @@ public class CommandReward implements RewardExecutor {
 
         cmd = cmd.replace("<player_uuid>", player.getPlayerUUID().toString());
         cmd = cmd.replace("<reward_id>", reward.getId());
-        cmd = cmd.replace("<reward_level>", String.valueOf(reward.getLevel()));
+        if (reward instanceof MilestonePlayerReward r) cmd = cmd.replace("<reward_level>", String.valueOf(r.getLevel()));
         cmd = cmd.replace("<reward_name>", reward.getName());
         cmd = cmd.replace("<reward_requires_online_player>", String.valueOf(reward.requiresOnlinePlayer()));
         cmd = cmd.replace("<reward_command>", this.command);

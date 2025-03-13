@@ -4,6 +4,7 @@ import net.chaossquad.mclib.command.TabCompletingCommandExecutor;
 import net.jandie1505.playerlevels.PlayerLevels;
 import net.jandie1505.playerlevels.commands.subcommands.utils.OptionParser;
 import net.jandie1505.playerlevels.constants.Permissions;
+import net.jandie1505.playerlevels.rewards.MilestoneReward;
 import net.jandie1505.playerlevels.rewards.Reward;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -42,11 +43,12 @@ public class RewardsInfoSubcommand implements TabCompletingCommandExecutor {
         }
 
         if (unformatted) {
-            sender.sendMessage(reward.getId() + " " + reward.getLevel() + " " + reward.getServerId() + " " + reward.isEnabled() + reward.getDescription());
+            sender.sendMessage(reward.getId() + " " + reward.getClass().getSimpleName() + " " + reward.getServerId() + " " + reward.isEnabled() + reward.getDescription());
         } else {
             sender.sendRichMessage("<gold>----- Reward " + reward.getId() + " -----");
             sender.sendRichMessage("<gold>Name: " + reward.getName());
-            sender.sendRichMessage("<gold>Level: " + reward.getLevel());
+            sender.sendRichMessage("<gold>Type:" + reward.getClass().getSimpleName());
+            if (reward instanceof MilestoneReward r) sender.sendRichMessage("<gold>Level: " + r.getLevel());
             sender.sendRichMessage("<gold>ServerId: " + reward.getServerId());
             sender.sendRichMessage("<gold>Enabled: " + reward.isEnabled());
             sender.sendRichMessage("<gold>Description: " + reward.getDescription());
