@@ -74,7 +74,7 @@ public final class Leveler implements LevelPlayer {
     public void manageValues() {
 
         // Prevent executing this more than once at the same time
-        if (this.manageValuesInProgress.getAndSet(true)) {
+        if (!this.manageValuesInProgress.compareAndSet(false, true)) {
             this.manager.getPlugin().getLogger().warning("Manage values task of " + this.playerUUID + " has been called again while it is still in progress.\nThis can be caused by unsupported API usage.");
             return;
         }
@@ -147,7 +147,7 @@ public final class Leveler implements LevelPlayer {
     public @NotNull UpdateResult update() {
 
         // Prevent executing this more than once at the same time
-        if (this.databaseUpdateInProgress.getAndSet(true)) {
+        if (!this.databaseUpdateInProgress.compareAndSet(false, true)) {
             this.manager.getPlugin().getLogger().warning("Database update task of " + this.playerUUID + " has been called again while it is still in progress.\nThis can be caused by unsupported API usage.");
             return UpdateResult.ALREADY_IN_PROGRESS;
         }

@@ -29,11 +29,11 @@ public class EraseSubcommand implements TabCompletingCommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
 
         if (args.length < 1) {
-            sender.sendMessage(Component.text("Usage: /playerlevels level (get <player>|set <level> <level>)", NamedTextColor.RED));
+            sender.sendMessage(Component.text("Usage: /playerlevels manage erase <player>", NamedTextColor.RED));
             return true;
         }
 
-        UUID playerUUID = PlayerUtils.getPlayerUUIDFromString(args[1]);
+        UUID playerUUID = PlayerUtils.getPlayerUUIDFromString(args[0]);
         if (playerUUID == null) {
             sender.sendRichMessage("<red>Player not found");
             return true;

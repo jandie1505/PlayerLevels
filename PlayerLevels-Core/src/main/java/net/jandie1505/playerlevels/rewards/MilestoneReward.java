@@ -22,6 +22,7 @@ public class MilestoneReward extends Reward implements MilestonePlayerReward {
     @Override
     public boolean checkApplyCondition(@NotNull Leveler leveler) {
         return !this.condition.isApplied(this, leveler);
+        //return leveler.getData().level() >= this.level && !this.condition.isApplied(this, leveler); TODO
     }
 
     @Override
@@ -32,7 +33,7 @@ public class MilestoneReward extends Reward implements MilestonePlayerReward {
     @Override
     public void onApplySuccess(@NotNull Leveler leveler) {
         super.onApplySuccess(leveler);
-        leveler.getData().getOrCreateReceivedReward(this.getId()).blocked(true, false);
+        leveler.getData().getOrCreateReceivedReward(this.getId(), false).blocked(true, false);
     }
 
 }
