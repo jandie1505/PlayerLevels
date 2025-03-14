@@ -2,6 +2,7 @@ package net.jandie1505.playerlevels.rewards;
 
 import net.jandie1505.playerlevels.api.IntervalPlayerReward;
 import net.jandie1505.playerlevels.leveler.Leveler;
+import net.jandie1505.playerlevels.leveler.ReceivedReward;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -35,6 +36,12 @@ public class IntervalReward extends Reward {
 
         // Check if the reward has already been applied with the custom condition
         return !this.customCondition.isApplied(this, leveler);
+    }
+
+    @Override
+    public void onApplySuccess(@NotNull Leveler leveler) {
+        ReceivedReward reward = leveler.getData().getOrCreateReceivedReward(this.getId(), false);
+        reward.level(reward.level() + 1, false);
     }
 
     // ----- INTERVAL -----
