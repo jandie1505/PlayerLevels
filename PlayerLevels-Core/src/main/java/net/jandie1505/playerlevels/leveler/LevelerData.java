@@ -164,7 +164,15 @@ public class LevelerData implements LevelData {
 
     @Override
     public int hashCode() {
-        return Objects.hash(level, xp, receivedRewards);
+
+        // Filter default rewards since they will be removed when pushing to database
+        HashMap<String, ReceivedReward> receivedRewards = new HashMap<>();
+        for (Map.Entry<String, ReceivedReward> entry : this.receivedRewards.entrySet()) {
+            if (entry.getValue().isDefault()) continue;
+            receivedRewards.put(entry.getKey(), entry.getValue());
+        }
+
+        return Objects.hash(this.level, this.xp, receivedRewards);
     }
 
     @Override
