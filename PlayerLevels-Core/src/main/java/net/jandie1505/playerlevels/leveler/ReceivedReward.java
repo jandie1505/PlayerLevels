@@ -60,6 +60,18 @@ public class ReceivedReward implements ReceivedRewardData {
         if (call) this.callback.onUpdate(this);
     }
 
+    /**
+     * Resets this reward to the default values.<br/>
+     * An alternative to deleting the reward because default rewards will not get written to the database.
+     */
+    public void reset(boolean call) {
+        this.merge(DEFAULT, call);
+    }
+
+    public void reset() {
+        this.merge(DEFAULT, true);
+    }
+
     public ReceivedReward clone(@Nullable Callback callback) {
         ReceivedReward reward = new ReceivedReward(callback);
         reward.merge(this, false);
