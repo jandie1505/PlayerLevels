@@ -16,16 +16,13 @@ public class LevelerData implements LevelData {
     private static final LevelerData DEFAULT = new LevelerData(null);
     private int level;
     private double xp;
-    @NotNull private TrackedMap<String, ReceivedReward> receivedRewards;
+    @NotNull private HashMap<String, ReceivedReward> receivedRewards;
     @NotNull private Callback callback;
 
     public LevelerData(@Nullable Callback callback) {
         this.level = 0;
         this.xp = 0;
-        this.receivedRewards = new TrackedMap<>(
-                new HashMap<>(),
-                (map, action, key, value, result) -> this.callback.onUpdate(this)
-        );
+        this.receivedRewards = new HashMap<>();
         this.callback = callback != null ? callback : data -> {};
     }
 
@@ -95,7 +92,7 @@ public class LevelerData implements LevelData {
      * @return delegate of the tracked set
      */
     @ApiStatus.Internal
-    public TrackedMap<String, ReceivedReward> internalReceivedRewards() {
+    public HashMap<String, ReceivedReward> internalReceivedRewards() {
         return this.receivedRewards;
     }
 
@@ -106,18 +103,18 @@ public class LevelerData implements LevelData {
         this.level(levelerData.level(), false);
         this.xp(levelerData.xp(), false);
 
-        this.receivedRewards.getDelegate().clear();
+        this.receivedRewards.clear();
         for (Map.Entry<String, ReceivedReward> entry : levelerData.receivedRewards.entrySet()) {
 
-            ReceivedReward reward = this.receivedRewards.getDelegate().get(entry.getKey());
+            ReceivedReward reward = this.receivedRewards.get(entry.getKey());
             if (reward != null) {
                 reward.merge(entry.getValue(), false);
                 continue;
             }
 
-            this.receivedRewards.getDelegate().put(entry.getKey(), entry.getValue().clone(r -> this.callback.onUpdate(this)));
+            this.receivedRewards.put(entry.getKey(), entry.getValue().clone(r -> this.callback.onUpdate(this)));
         }
-        this.receivedRewards.getDelegate().putAll(levelerData.receivedRewards.getDelegate());
+        this.receivedRewards.putAll(levelerData.receivedRewards);
 
         if (call) this.callback.onUpdate(this);
     }
@@ -151,7 +148,7 @@ public class LevelerData implements LevelData {
             for (String key : receivedRewards.keySet()) {
                 JSONObject entry = receivedRewards.optJSONObject(key, null);
                 if (entry == null) continue;
-                levelerData.receivedRewards.getDelegate().put(key, ReceivedReward.fromJSON(entry, reward -> levelerData.callback.onUpdate(levelerData)));
+                levelerData.receivedRewards.put(key, ReceivedReward.fromJSON(entry, reward -> levelerData.callback.onUpdate(levelerData)));
             }
         }
 
