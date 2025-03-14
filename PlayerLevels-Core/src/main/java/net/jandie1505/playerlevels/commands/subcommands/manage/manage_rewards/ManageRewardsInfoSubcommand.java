@@ -13,10 +13,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class RewardsInfoSubcommand implements TabCompletingCommandExecutor {
+public class ManageRewardsInfoSubcommand implements TabCompletingCommandExecutor {
     @NotNull private final PlayerLevels plugin;
 
-    public RewardsInfoSubcommand(@NotNull PlayerLevels plugin) {
+    public ManageRewardsInfoSubcommand(@NotNull PlayerLevels plugin) {
         this.plugin = plugin;
     }
 
