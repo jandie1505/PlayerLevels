@@ -21,8 +21,7 @@ public class MilestoneReward extends Reward implements MilestonePlayerReward {
 
     @Override
     public boolean checkApplyCondition(@NotNull Leveler leveler) {
-        return !this.condition.isApplied(this, leveler);
-        //return leveler.getData().level() >= this.level && !this.condition.isApplied(this, leveler); TODO
+        return leveler.getData().level() >= this.level && !this.condition.isApplied(this, leveler);
     }
 
     @Override

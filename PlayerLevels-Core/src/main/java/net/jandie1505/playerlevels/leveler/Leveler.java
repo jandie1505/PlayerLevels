@@ -36,7 +36,7 @@ public final class Leveler implements LevelPlayer {
         this.data = new LevelerData(data -> new BukkitRunnable() {
             @Override
             public void run() {
-                Leveler.this.manageValues(); // TODO: Here is the damn issue
+                Leveler.this.manageValues(); // TODO: I don't know if this can stay like it is or if it should be called directly without the async task
             }
         }.runTaskAsynchronously(this.manager.getPlugin()));
         this.updateId = UUID.randomUUID().toString();
