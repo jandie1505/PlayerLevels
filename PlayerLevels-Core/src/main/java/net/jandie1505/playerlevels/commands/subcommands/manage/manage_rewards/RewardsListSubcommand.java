@@ -1,4 +1,4 @@
-package net.jandie1505.playerlevels.commands.subcommands.rewards;
+package net.jandie1505.playerlevels.commands.subcommands.manage.manage_rewards;
 
 import net.chaossquad.mclib.command.TabCompletingCommandExecutor;
 import net.jandie1505.playerlevels.PlayerLevels;
@@ -6,10 +6,8 @@ import net.jandie1505.playerlevels.commands.subcommands.utils.OptionParser;
 import net.jandie1505.playerlevels.constants.Permissions;
 import net.jandie1505.playerlevels.rewards.MilestoneReward;
 import net.jandie1505.playerlevels.rewards.Reward;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

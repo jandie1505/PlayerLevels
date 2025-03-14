@@ -1,4 +1,4 @@
-package net.jandie1505.playerlevels.commands.subcommands.rewards;
+package net.jandie1505.playerlevels.commands.subcommands.manage.manage_rewards;
 
 import net.chaossquad.mclib.command.TabCompletingCommandExecutor;
 import net.jandie1505.playerlevels.PlayerLevels;

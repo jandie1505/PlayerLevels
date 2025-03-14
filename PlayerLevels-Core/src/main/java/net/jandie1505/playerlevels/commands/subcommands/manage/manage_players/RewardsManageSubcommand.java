@@ -1,6 +1,5 @@
-package net.jandie1505.playerlevels.commands.subcommands.manage;
+package net.jandie1505.playerlevels.commands.subcommands.manage.manage_players;
 
-import net.chaossquad.mclib.MiscUtils;
 import net.chaossquad.mclib.PlayerUtils;
 import net.chaossquad.mclib.command.TabCompletingCommandExecutor;
 import net.jandie1505.playerlevels.PlayerLevels;
@@ -19,7 +18,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;

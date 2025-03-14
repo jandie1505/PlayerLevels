@@ -1,4 +1,4 @@
-package net.jandie1505.playerlevels.commands.subcommands.manage;
+package net.jandie1505.playerlevels.commands.subcommands.manage.manage_players;
 
 import net.chaossquad.mclib.PlayerUtils;
 import net.chaossquad.mclib.command.TabCompletingCommandExecutor;
