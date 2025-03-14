@@ -16,12 +16,12 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.UUID;
 
-public class EraseSubcommand implements TabCompletingCommandExecutor {
+public class ManagePlayersEraseSubcommand implements TabCompletingCommandExecutor {
 
     @NotNull
     private final PlayerLevels plugin;
 
-    public EraseSubcommand(@NotNull PlayerLevels plugin) {
+    public ManagePlayersEraseSubcommand(@NotNull PlayerLevels plugin) {
         this.plugin = plugin;
     }
 
@@ -42,7 +42,7 @@ public class EraseSubcommand implements TabCompletingCommandExecutor {
         new BukkitRunnable() {
             @Override
             public void run() {
-                boolean result = EraseSubcommand.this.plugin.getLevelManager().erasePlayer(playerUUID);
+                boolean result = ManagePlayersEraseSubcommand.this.plugin.getLevelManager().erasePlayer(playerUUID);
 
                 new BukkitRunnable() {
                     @Override
@@ -55,7 +55,7 @@ public class EraseSubcommand implements TabCompletingCommandExecutor {
                         }
 
                     }
-                }.runTask(EraseSubcommand.this.plugin);
+                }.runTask(ManagePlayersEraseSubcommand.this.plugin);
             }
         }.runTaskAsynchronously(this.plugin);
 

@@ -22,10 +22,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class RewardsManageSubcommand implements TabCompletingCommandExecutor {
+public class ManagePlayersRewardsSubcommand implements TabCompletingCommandExecutor {
     @NotNull private final PlayerLevels plugin;
 
-    public RewardsManageSubcommand(@NotNull PlayerLevels plugin) {
+    public ManagePlayersRewardsSubcommand(@NotNull PlayerLevels plugin) {
         this.plugin = plugin;
     }
 
@@ -73,7 +73,7 @@ public class RewardsManageSubcommand implements TabCompletingCommandExecutor {
         this.plugin.getLevelManager().loadLeveler(playerUUID, true).thenAccept(leveler -> new BukkitRunnable() {
             @Override
             public void run() {
-                RewardsManageSubcommand.this.command(sender, leveler, args);
+                ManagePlayersRewardsSubcommand.this.command(sender, leveler, args);
             }
         }.runTask(this.plugin));
     }

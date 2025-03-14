@@ -20,10 +20,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class InfoSubcommand implements TabCompletingCommandExecutor {
+public class ManagePlayersInfoSubcommand implements TabCompletingCommandExecutor {
     @NotNull private final PlayerLevels plugin;
 
-    public InfoSubcommand(@NotNull PlayerLevels plugin) {
+    public ManagePlayersInfoSubcommand(@NotNull PlayerLevels plugin) {
         this.plugin = plugin;
     }
 
@@ -71,7 +71,7 @@ public class InfoSubcommand implements TabCompletingCommandExecutor {
         this.plugin.getLevelManager().loadLeveler(playerUUID, true).thenAccept(leveler -> new BukkitRunnable() {
             @Override
             public void run() {
-                InfoSubcommand.this.resultCallSync(sender, leveler);
+                ManagePlayersInfoSubcommand.this.resultCallSync(sender, leveler);
             }
         }.runTask(this.plugin));
     }

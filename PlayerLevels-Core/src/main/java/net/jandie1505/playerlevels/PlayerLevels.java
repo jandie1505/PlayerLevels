@@ -7,6 +7,7 @@ import net.jandie1505.playerlevels.commands.PlayerLevelsCommand;
 import net.jandie1505.playerlevels.constants.ConfigKeys;
 import net.jandie1505.playerlevels.constants.DefaultConfigValues;
 import net.jandie1505.playerlevels.database.DatabaseManager;
+import net.jandie1505.playerlevels.leveler.LevelerData;
 import net.jandie1505.playerlevels.leveler.LevelingManager;
 import net.jandie1505.playerlevels.rewards.IntervalReward;
 import net.jandie1505.playerlevels.rewards.RewardConfig;
@@ -81,13 +82,8 @@ public class PlayerLevels extends JavaPlugin implements PlayerLevelsAPI {
                 CommandReward.create("say <player_name> has unlocked <reward_name>", true, CommandReward.SenderType.CONSOLE)
         );
 
-        this.getRewardsManager().addReward(
-                new RewardConfig("test2", null, 50, "Test Reward 2", null),
-                CommandReward.create("say <player_name> has unlocked <reward_name>", true, CommandReward.SenderType.CONSOLE)
-        );
-
         this.getRewardsManager().addReward(new IntervalReward(this.getRewardsManager(), "test3", null, 1, (reward, player) -> {
-            Bukkit.broadcast(Component.text(player.getPlayerUUID() + " has received the interval reward " + reward.getName() + " with id " + reward.getId()));
+            Bukkit.broadcast(Component.text(player.getPlayerUUID() + " has received the interval reward " + reward.getName() + " with id " + reward.getId() + " for level " + (((LevelerData) player.getData()).getOrCreateReceivedReward(reward.getId(), false).level() + 1)));
             return true;
         }, null, true, "Interval Test", "Test"));
     }

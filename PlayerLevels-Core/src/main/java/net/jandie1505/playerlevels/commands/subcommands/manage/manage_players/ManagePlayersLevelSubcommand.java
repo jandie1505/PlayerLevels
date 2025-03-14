@@ -17,10 +17,10 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
-public class LevelSubcommand implements TabCompletingCommandExecutor {
+public class ManagePlayersLevelSubcommand implements TabCompletingCommandExecutor {
     @NotNull private final PlayerLevels plugin;
 
-    public LevelSubcommand(@NotNull PlayerLevels plugin) {
+    public ManagePlayersLevelSubcommand(@NotNull PlayerLevels plugin) {
         this.plugin = plugin;
     }
 
