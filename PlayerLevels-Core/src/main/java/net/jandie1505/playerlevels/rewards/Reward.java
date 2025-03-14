@@ -3,8 +3,10 @@ package net.jandie1505.playerlevels.rewards;
 import net.jandie1505.playerlevels.api.PlayerReward;
 import net.jandie1505.playerlevels.events.RewardApplyEvent;
 import net.jandie1505.playerlevels.leveler.Leveler;
+import net.jandie1505.playerlevels.leveler.ReceivedReward;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -135,16 +137,23 @@ public abstract class Reward implements PlayerReward {
 
     // ----- ABSTRACT -----
 
+    /**
+     * The condition if the reward should be applied or not.
+     * @param leveler leveler
+     * @return true = reward should be applied
+     */
     public abstract boolean checkApplyCondition(@NotNull Leveler leveler);
 
     /**
-     * Is called after the reward has been successfully applied.
+     * Is called after the reward has been successfully applied.<br/>
+     * <b>This has to be overridden by the super class. If not, the reward will be blocked.</b>
      * @param leveler leveler
      */
+    @ApiStatus.OverrideOnly
     public void onApplySuccess(@NotNull Leveler leveler) {
-        leveler.getData().getOrCreateReceivedReward(Reward.this.id, false);
-        //ReceivedReward reward = leveler.getData().getOrCreateReceivedReward(Reward.this.id, false);
-        //reward.level(reward.level(), false); TODO
+        ReceivedReward reward = leveler.getData().getOrCreateReceivedReward(Reward.this.id, false);
+        reward.blocked(true, false);
+        reward.level(leveler.getData().level(), false);
     }
 
     // ----- GETTER -----

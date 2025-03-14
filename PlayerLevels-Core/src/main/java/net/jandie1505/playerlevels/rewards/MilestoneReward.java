@@ -29,10 +29,4 @@ public class MilestoneReward extends Reward implements MilestonePlayerReward {
         return this.level;
     }
 
-    @Override
-    public void onApplySuccess(@NotNull Leveler leveler) {
-        super.onApplySuccess(leveler);
-        leveler.getData().getOrCreateReceivedReward(this.getId(), false).blocked(true, false);
-    }
-
 }
