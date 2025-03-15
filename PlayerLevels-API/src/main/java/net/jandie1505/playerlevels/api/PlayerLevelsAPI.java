@@ -1,6 +1,6 @@
 package net.jandie1505.playerlevels.api;
 
-import net.jandie1505.playerlevels.api.level.LevelManager;
+import net.jandie1505.playerlevels.api.level.LevelingManager;
 import net.jandie1505.playerlevels.api.reward.RewardManager;
 
 public interface PlayerLevelsAPI {
@@ -10,7 +10,7 @@ public interface PlayerLevelsAPI {
      * Responsible for managing players.
      * @return LevelManager
      */
-    LevelManager getLevelManager();
+    LevelingManager getLevelManager();
 
     /**
      * Returns the rewards manager.<br/>
@@ -18,4 +18,5 @@ public interface PlayerLevelsAPI {
      * @return RewardManager
      */
     RewardManager getRewardsManager();
+
 }

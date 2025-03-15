@@ -1,7 +1,6 @@
 package net.jandie1505.playerlevels.leveler;
 
 import net.jandie1505.playerlevels.PlayerLevels;
-import net.jandie1505.playerlevels.api.level.LevelManager;
 import net.jandie1505.playerlevels.api.level.LevelPlayer;
 import net.jandie1505.playerlevels.constants.ConfigKeys;
 import net.jandie1505.playerlevels.database.DatabaseSource;
@@ -26,7 +25,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
-public class LevelingManager implements LevelManager, Listener {
+public class LevelingManager implements net.jandie1505.playerlevels.api.level.LevelingManager, Listener {
     @NotNull private final PlayerLevels plugin;
     @NotNull private final DatabaseSource databaseSource;
     @NotNull private final ConcurrentHashMap<UUID, Leveler> cachedLevelers;
