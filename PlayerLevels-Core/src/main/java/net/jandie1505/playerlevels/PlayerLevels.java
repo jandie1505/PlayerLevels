@@ -77,15 +77,15 @@ public class PlayerLevels extends JavaPlugin implements PlayerLevelsAPI {
 
         PlayerLevelsAPIProvider.setApi(this);
 
-        this.getRewardsManager().addReward(
-                new RewardConfig("test", null, 50, "Test Reward", null),
-                CommandReward.create("say <player_name> has unlocked <reward_name>", true, CommandReward.SenderType.CONSOLE)
+        this.getRewardsManager().addMilestoneReward(
+                new RewardConfig("test_milestone", null, "Test Reward", null),
+                CommandReward.createMilestone("say <player_name> has unlocked <reward_name>", true, CommandReward.SenderType.CONSOLE, 50)
         );
 
-        this.getRewardsManager().addReward(new IntervalReward(this.getRewardsManager(), "test3", null, 1, (reward, player) -> {
-            Bukkit.broadcast(Component.text(player.getPlayerUUID() + " has received the interval reward " + reward.getName() + " with id " + reward.getId() + " for level " + (((LevelerData) player.getData()).getOrCreateReceivedReward(reward.getId(), false).level() + 1)));
-            return true;
-        }, null, true, "Interval Test", "Test"));
+        this.getRewardsManager().addIntervalReward(
+                new RewardConfig("test_interval", null, "Interval Test Reward", null),
+                CommandReward.createInterval("say <player_name> has unlocked <reward_name>", true, CommandReward.SenderType.CONSOLE, 1)
+        );
     }
 
     @Override

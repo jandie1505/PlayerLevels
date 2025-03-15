@@ -1,10 +1,11 @@
 package net.jandie1505.playerlevels.rewards.types;
 
+import net.jandie1505.playerlevels.api.IntervalPlayerReward;
 import net.jandie1505.playerlevels.api.LevelPlayer;
 import net.jandie1505.playerlevels.api.MilestonePlayerReward;
 import net.jandie1505.playerlevels.api.PlayerReward;
-import net.jandie1505.playerlevels.rewards.RewardCondition;
-import net.jandie1505.playerlevels.rewards.RewardData;
+import net.jandie1505.playerlevels.rewards.IntervalRewardData;
+import net.jandie1505.playerlevels.rewards.MilestoneRewardData;
 import net.jandie1505.playerlevels.rewards.RewardExecutor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -26,22 +27,29 @@ public class CommandReward implements RewardExecutor {
 
         // PLACEHOLDERS
 
-        cmd = cmd.replace("<player_uuid>", player.getPlayerUUID().toString());
-        cmd = cmd.replace("<reward_id>", reward.getId());
-        if (reward instanceof MilestonePlayerReward r) cmd = cmd.replace("<reward_level>", String.valueOf(r.getLevel()));
-        cmd = cmd.replace("<reward_name>", reward.getName());
-        cmd = cmd.replace("<reward_requires_online_player>", String.valueOf(reward.requiresOnlinePlayer()));
-        cmd = cmd.replace("<reward_command>", this.command);
+        cmd = cmd.replace("{player_uuid}", player.getPlayerUUID().toString());
+        cmd = cmd.replace("{player_level}", String.valueOf(player.getData().level()));
+        cmd = cmd.replace("{player_xp}", String.valueOf(player.getData().xp()));
+
+        cmd = cmd.replace("{player_reward_blocked}", String.valueOf(player.getData().getOrCreateReceivedReward(reward.getId()).blocked()));
+        cmd = cmd.replace("{player_reward_level}", String.valueOf(player.getData().getOrCreateReceivedReward(reward.getId()).level()));
+
+        cmd = cmd.replace("{reward_id}", reward.getId());
+        if (reward instanceof MilestonePlayerReward r) cmd = cmd.replace("{reward_level}", String.valueOf(r.getLevel()));
+        if (reward instanceof IntervalPlayerReward r) cmd = cmd.replace("{reward_interval}", String.valueOf(r.getInterval()));
+        cmd = cmd.replace("{reward_name}", reward.getName());
+        cmd = cmd.replace("{reward_requires_online_player}", String.valueOf(reward.requiresOnlinePlayer()));
+        cmd = cmd.replace("{reward_command}", this.command);
 
         Player bukkitPlayer = Bukkit.getPlayer(player.getPlayerUUID());
-        cmd = cmd.replace("<player_name>", bukkitPlayer != null ? bukkitPlayer.getName() : " ");
+        cmd = cmd.replace("{player_name}", bukkitPlayer != null ? bukkitPlayer.getName() : " ");
 
         String serverId = reward.getServerId();
-        cmd = cmd.replace("<reward_server_id>", serverId != null ? serverId : " ");
+        cmd = cmd.replace("{reward_server_id}", serverId != null ? serverId : " ");
 
         // Prevents changing the command structure
         String description = reward.getDescription();
-        cmd = cmd.replace("<reward_description>", description.isEmpty() ? " " : description);
+        cmd = cmd.replace("{reward_description}", description.isEmpty() ? " " : description);
 
         // RUN COMMAND
 
@@ -68,12 +76,22 @@ public class CommandReward implements RewardExecutor {
 
     // ----- CREATE -----
 
-    public static RewardData create(
+    public static MilestoneRewardData createMilestone(
             @NotNull String command,
             boolean requiresOnlinePlayer,
-            @NotNull SenderType senderType
+            @NotNull SenderType senderType,
+            int level
     ) {
-        return new RewardData(new CommandReward(command, senderType), MilestonePlayerReward.DEFAULT_CONDITION, requiresOnlinePlayer);
+        return new MilestoneRewardData(new CommandReward(command, senderType), MilestonePlayerReward.DEFAULT_CONDITION, requiresOnlinePlayer, level);
+    }
+
+    public static IntervalRewardData createInterval(
+            @NotNull String command,
+            boolean requiresOnlinePlayer,
+            SenderType senderType,
+            int interval
+    ) {
+        return new IntervalRewardData(new CommandReward(command, senderType), MilestonePlayerReward.DEFAULT_CONDITION, requiresOnlinePlayer, interval);
     }
 
 }

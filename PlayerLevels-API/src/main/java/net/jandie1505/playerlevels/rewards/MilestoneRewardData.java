@@ -9,9 +9,10 @@ import org.jetbrains.annotations.Nullable;
  * @param condition this will check if the reward is already applied
  * @param requiresOnlinePlayer this indicates if the reward requires the player to be online to apply the reward
  */
-public record RewardData(
+public record MilestoneRewardData(
         @NotNull RewardExecutor executor,
         @Nullable RewardCondition condition,
-        boolean requiresOnlinePlayer
+        boolean requiresOnlinePlayer,
+        int level
 ) {
 }

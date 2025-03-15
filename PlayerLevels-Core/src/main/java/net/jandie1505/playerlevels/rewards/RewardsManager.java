@@ -43,8 +43,15 @@ public class RewardsManager implements RewardManager {
     // ----- CREATE REWARDS -----
 
     @SuppressWarnings("UnusedReturnValue")
-    public @NotNull Reward addReward(@NotNull RewardConfig rewardConfig, @NotNull RewardData rewardData) {
-        Reward reward = new MilestoneReward(this, rewardConfig, rewardData);
+    public @NotNull MilestoneReward addMilestoneReward(@NotNull RewardConfig config, @NotNull MilestoneRewardData data) {
+        MilestoneReward reward = new MilestoneReward(this, config, data, data.level());
+        this.addReward(reward);
+        return reward;
+    }
+
+    @SuppressWarnings("UnusedReturnValue")
+    public @NotNull IntervalReward addIntervalReward(@NotNull RewardConfig config, @NotNull IntervalRewardData data) {
+        IntervalReward reward = new IntervalReward(this, config, data, data.level());
         this.addReward(reward);
         return reward;
     }

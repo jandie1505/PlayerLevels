@@ -19,6 +19,10 @@ public class IntervalReward extends Reward {
         this.customCondition = customCondition != null ? customCondition : IntervalPlayerReward.DEFAULT_CONDITION;
     }
 
+    public IntervalReward(@NotNull RewardsManager manager, @NotNull RewardConfig config, @NotNull IntervalRewardData data, int interval) {
+        this(manager, config.id(), config.serverId(), interval, data.executor(), data.customCondition(), data.requiresPlayerOnline(), config.name(), config.description());
+    }
+
     // ----- CONDITIONS -----
 
     @Override

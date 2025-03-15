@@ -15,8 +15,8 @@ public class MilestoneReward extends Reward implements MilestonePlayerReward {
         this.condition = condition != null ? condition : MilestonePlayerReward.DEFAULT_CONDITION;
     }
 
-    protected MilestoneReward(@NotNull RewardsManager manager, @NotNull RewardConfig config, @NotNull RewardData data) {
-        this(manager, config.id(), config.serverId(), config.level(), data.executor(), data.condition(), data.requiresOnlinePlayer(), config.name(), config.description());
+    protected MilestoneReward(@NotNull RewardsManager manager, @NotNull RewardConfig config, @NotNull MilestoneRewardData data, int level) {
+        this(manager, config.id(), config.serverId(), level, data.executor(), data.condition(), data.requiresOnlinePlayer(), config.name(), config.description());
     }
 
     @Override
