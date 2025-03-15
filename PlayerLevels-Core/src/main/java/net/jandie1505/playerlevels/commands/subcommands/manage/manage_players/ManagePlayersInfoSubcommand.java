@@ -48,7 +48,7 @@ public class ManagePlayersInfoSubcommand extends ManagePlayersLevelerTemplateSub
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
 
         if (args.length > 1) {
-            return OptionParser.complete(OptionParser.parse(args), Set.of("use-cache"), Map.of());
+            return OptionParser.complete(sender, OptionParser.parse(args), Set.of("use-cache"), Map.of());
         }
 
         return switch (args.length) {

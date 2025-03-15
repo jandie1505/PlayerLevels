@@ -43,7 +43,7 @@ public class ManagePlayersUpdateSubcommand extends ManagePlayersLevelerTemplateS
 
         return switch (args.length) {
             case 1 -> Bukkit.getOnlinePlayers().stream().map(Player::getName).toList();
-            case 2, 3 -> OptionParser.complete(OptionParser.parse(args), Set.of("use-cache"), Map.of("push", (sender1, args1) -> List.of("false", "true")));
+            case 2, 3 -> OptionParser.complete(sender, OptionParser.parse(args), Set.of("use-cache"), Map.of("push", (sender1, args1) -> List.of("false", "true")));
             default -> List.of();
         };
 

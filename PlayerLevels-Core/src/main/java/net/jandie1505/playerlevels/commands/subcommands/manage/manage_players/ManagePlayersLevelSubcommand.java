@@ -80,11 +80,11 @@ public class ManagePlayersLevelSubcommand extends ManagePlayersLevelerTemplateSu
                 if (args[0].equalsIgnoreCase("set")) {
                     yield List.of("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100");
                 } else {
-                    yield OptionParser.complete(OptionParser.parse(args), Set.of("use-cache"), Map.of());
+                    yield OptionParser.complete(sender, OptionParser.parse(args), Set.of("use-cache"), Map.of());
                 }
 
             }
-            case 4, 5, 6 -> OptionParser.complete(OptionParser.parse(args), Set.of("use-cache", "no-update"), Map.of("push", (sender1, args1) -> List.of("false", "true")));
+            case 4, 5, 6 -> OptionParser.complete(sender, OptionParser.parse(args), Set.of("use-cache", "no-update"), Map.of("push", (sender1, args1) -> List.of("false", "true")));
             default -> List.of();
         };
     }

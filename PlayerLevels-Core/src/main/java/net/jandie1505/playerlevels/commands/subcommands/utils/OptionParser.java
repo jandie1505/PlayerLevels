@@ -58,28 +58,35 @@ public class OptionParser {
 
     }
 
-    public static List<String> complete(@NotNull Result args, @NotNull Set<String> uncompletedAvailableOptions, @NotNull Map<@NotNull String, @Nullable OptionCompleter> completedAvailableOptions) {
+    public static List<String> complete(@NotNull CommandSender sender, @NotNull Result args, @NotNull Set<String> uncompletedAvailableOptions, @NotNull Map<@NotNull String, @NotNull OptionCompleter> completedAvailableOptions) {
         Set<String> currentOptions = new HashSet<>(args.options().keySet());
 
         List<String> suggestions = new ArrayList<>();
 
-        // Uncompleted options should be added as --option
+        // Complete available options without a completer
         for (String option : uncompletedAvailableOptions) {
             if (!currentOptions.contains(option)) {
                 suggestions.add("--" + option);
             }
         }
 
-        // Completed options should be expanded with possible values
+        // Complete available options with a completer
         for (String option : completedAvailableOptions.keySet()) {
-            if (currentOptions.contains(option)) {
-                OptionCompleter completer = completedAvailableOptions.get(option);
-                if (completer != null) {
-                    for (String value : completer.onTabComplete(null, null)) { // sender und args müssten übergeben werden
+            if (currentOptions.contains(option)) continue;
+
+            OptionCompleter completer = completedAvailableOptions.get(option);
+            if (completer != null) {
+
+                try {
+                    for (String value : completer.onTabComplete(sender, args)) {
                         suggestions.add("--" + option + "=" + value);
                     }
+                } catch (Exception e) {
+                    suggestions.add(e.getClass().getSimpleName() + ": " + e.getMessage());
                 }
+
             }
+
         }
 
         return suggestions;

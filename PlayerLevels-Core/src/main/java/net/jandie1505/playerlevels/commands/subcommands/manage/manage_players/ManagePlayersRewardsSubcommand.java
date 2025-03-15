@@ -173,7 +173,7 @@ public class ManagePlayersRewardsSubcommand extends ManagePlayersLevelerTemplate
 
                 switch (args[1].toLowerCase()) {
                     case "list" -> {
-                        yield OptionParser.complete(OptionParser.parse(args), Set.of("use-cache"), Map.of());
+                        yield OptionParser.complete(sender, OptionParser.parse(args), Set.of("use-cache"), Map.of());
                     }
                     case "get", "set", "delete", "reset" -> {
                         yield List.copyOf(this.getPlugin().getRewardsManager().getRewards().keySet());
@@ -186,10 +186,10 @@ public class ManagePlayersRewardsSubcommand extends ManagePlayersLevelerTemplate
 
                 switch (args[1].toLowerCase()) {
                     case "get" -> {
-                        yield OptionParser.complete(OptionParser.parse(args), Set.of("use-cache"), Map.of());
+                        yield OptionParser.complete(sender, OptionParser.parse(args), Set.of("use-cache"), Map.of());
                     }
                     case "delete", "reset" -> {
-                        yield OptionParser.complete(OptionParser.parse(args), Set.of("use-cache", "no-update"), Map.of("push", (sender1, args1) -> List.of("false", "true")));
+                        yield OptionParser.complete(sender, OptionParser.parse(args), Set.of("use-cache", "no-update"), Map.of("push", (sender1, args1) -> List.of("false", "true")));
                     }
                     case "set" -> {
                         yield List.of("blocked", "level");
@@ -204,7 +204,7 @@ public class ManagePlayersRewardsSubcommand extends ManagePlayersLevelerTemplate
 
                 switch (args[1].toLowerCase()) {
                     case "delete", "reset" -> {
-                        yield OptionParser.complete(OptionParser.parse(args), Set.of("use-cache", "no-update"), Map.of("push", (sender1, args1) -> List.of("false", "true")));
+                        yield OptionParser.complete(sender, OptionParser.parse(args), Set.of("use-cache", "no-update"), Map.of("push", (sender1, args1) -> List.of("false", "true")));
                     }
                     case "set" -> {
 
@@ -230,7 +230,7 @@ public class ManagePlayersRewardsSubcommand extends ManagePlayersLevelerTemplate
             case 6, 7 -> {
 
                 if (args[1].equalsIgnoreCase("set")) {
-                    yield OptionParser.complete(OptionParser.parse(args), Set.of("use-cache", "no-update"), Map.of("push", (sender1, args1) -> List.of("false", "true")));
+                    yield OptionParser.complete(sender, OptionParser.parse(args), Set.of("use-cache", "no-update"), Map.of("push", (sender1, args1) -> List.of("false", "true")));
                 }
 
                 yield List.of();

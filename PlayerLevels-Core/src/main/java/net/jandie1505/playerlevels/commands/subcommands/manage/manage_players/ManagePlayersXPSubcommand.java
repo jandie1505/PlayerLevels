@@ -114,7 +114,7 @@ public class ManagePlayersXPSubcommand extends ManagePlayersLevelerTemplateSubco
 
                 switch (args[0]) {
                     case "get" -> {
-                        yield OptionParser.complete(OptionParser.parse(args), Set.of("use-cache"), Map.of());
+                        yield OptionParser.complete(sender, OptionParser.parse(args), Set.of("use-cache"), Map.of());
                     }
                     case "set" -> {
                         yield List.of("0", "100", "200", "300", "400", "500", "600", "700", "800", "900", "1000");
@@ -132,7 +132,7 @@ public class ManagePlayersXPSubcommand extends ManagePlayersLevelerTemplateSubco
 
                 switch (args[0]) {
                     case "set", "give", "take" -> {
-                        yield OptionParser.complete(OptionParser.parse(args), Set.of("use-cache", "no-update"), Map.of("push", (sender1, args1) -> List.of("false", "true")));
+                        yield OptionParser.complete(sender, OptionParser.parse(args), Set.of("use-cache", "no-update"), Map.of("push", (sender1, args1) -> List.of("false", "true")));
                     }
                     default -> {
                         yield List.of();
