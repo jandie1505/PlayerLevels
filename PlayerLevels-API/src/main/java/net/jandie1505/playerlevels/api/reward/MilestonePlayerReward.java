@@ -10,8 +10,8 @@ public interface MilestonePlayerReward extends PlayerReward {
      * It returns true when the reward is listed as applied in the LevelData.
      */
     RewardCondition DEFAULT_CONDITION = (reward, player) -> {
-        ReceivedReward data = player.getData().getOrCreateReceivedReward(reward.getId());
-        return data.blocked() || player.getData().getOrCreateReceivedReward(reward.getId()).level() > 0;
+        ReceivedReward data = player.getData().getOrCreateReceivedReward(reward.getId(), false);
+        return data.blocked() || player.getData().getOrCreateReceivedReward(reward.getId(), false).level() > 0;
     };
 
     /**
