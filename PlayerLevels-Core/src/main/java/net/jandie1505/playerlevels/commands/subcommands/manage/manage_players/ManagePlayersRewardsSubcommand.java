@@ -158,7 +158,7 @@ public class ManagePlayersRewardsSubcommand extends ManagePlayersLevelerTemplate
 
     @Override
     protected void onInvalidSyntax(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, OptionParser.@NotNull Result args) {
-        sender.sendRichMessage("<red>Usage: /levels manage players rewards <player> (list|get <reward>|set <reward> (blocked|level) <value>|reset <reward>|delete <reward>)");
+        sender.sendRichMessage("<red>Usage: /levels manage players rewards <player> (list|get <reward>|set <reward> (blocked|level) <value>|reset <reward>|delete <reward>) [--use-cache|--push=(true|false)|--no-update]");
     }
 
     // ----- TAB COMPLETER -----

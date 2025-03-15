@@ -67,7 +67,7 @@ public class ManagePlayersLevelSubcommand extends ManagePlayersLevelerTemplateSu
 
     @Override
     protected void onInvalidSyntax(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, OptionParser.@NotNull Result args) {
-        sender.sendMessage(Component.text("Usage: /playerlevels manage players level (get <player>|set <level> <level>) [--no-update|--cache-only|--use-cache]", NamedTextColor.RED));
+        sender.sendMessage(Component.text("Usage: /playerlevels manage players level (get <player>|set <level> <level>) [--use-cache|--push=(true|false)|--no-update]", NamedTextColor.RED));
     }
 
     @Override

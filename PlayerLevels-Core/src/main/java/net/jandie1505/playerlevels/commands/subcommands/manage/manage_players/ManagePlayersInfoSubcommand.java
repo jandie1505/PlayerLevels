@@ -41,7 +41,7 @@ public class ManagePlayersInfoSubcommand extends ManagePlayersLevelerTemplateSub
 
     @Override
     protected void onInvalidSyntax(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, OptionParser.@NotNull Result args) {
-        sender.sendRichMessage("<red>Usage: /levels manage players info <player>");
+        sender.sendRichMessage("<red>Usage: /levels manage players info <player> [--use-cache]");
     }
 
     @Override

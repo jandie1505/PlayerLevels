@@ -35,7 +35,7 @@ public class ManagePlayersUpdateSubcommand extends ManagePlayersLevelerTemplateS
 
     @Override
     protected void onInvalidSyntax(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, OptionParser.@NotNull Result args) {
-        sender.sendRichMessage("<red>Usage: /levels manage players update <player>");
+        sender.sendRichMessage("<red>Usage: /levels manage players update <player> [--use-cache|--push=(true|false)]");
     }
 
     @Override
