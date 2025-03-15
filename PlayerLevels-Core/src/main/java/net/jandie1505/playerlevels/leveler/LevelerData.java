@@ -1,6 +1,5 @@
 package net.jandie1505.playerlevels.leveler;
 
-import net.jandie1505.playerlevels.api.level.LevelData;
 import net.jandie1505.playerlevels.api.level.ReceivedRewardData;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -11,7 +10,7 @@ import org.json.JSONObject;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-public class LevelerData implements LevelData {
+public class LevelerData implements net.jandie1505.playerlevels.api.level.LevelerData {
     private static final LevelerData DEFAULT = new LevelerData(null);
     private int level;
     private double xp;
@@ -57,7 +56,6 @@ public class LevelerData implements LevelData {
         return Collections.unmodifiableMap(this.receivedRewards);
     }
 
-    @ApiStatus.Internal
     public @NotNull ReceivedReward getOrCreateReceivedReward(@NotNull String id, boolean call) {
         AtomicBoolean modified = new AtomicBoolean(false);
         ReceivedReward reward = this.receivedRewards.computeIfAbsent(id, k -> {
@@ -69,13 +67,12 @@ public class LevelerData implements LevelData {
     }
 
     public @NotNull ReceivedReward getOrCreateReceivedReward(@NotNull String id) {
-        return this.getOrCreateReceivedReward(id, true);
+        return this.getOrCreateReceivedReward(id, false);
     }
 
-    @ApiStatus.Internal
     public void removeReceivedReward(@NotNull String id, boolean call) {
-        ReceivedRewardData out = this.receivedRewards.remove(id);
-        if (call && out != null) this.callback.onUpdate(this);
+        ReceivedReward out = this.receivedRewards.remove(id);
+        if (call && out != null && !out.isDefault()) this.callback.onUpdate(this);
     }
 
     public void removeReceivedReward(@NotNull String id) {

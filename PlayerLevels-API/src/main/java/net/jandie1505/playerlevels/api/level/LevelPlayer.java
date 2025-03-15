@@ -6,5 +6,5 @@ import java.util.UUID;
 
 public interface LevelPlayer {
     @NotNull UUID getPlayerUUID();
-    @NotNull LevelData getData();
+    @NotNull LevelerData getData();
 }
