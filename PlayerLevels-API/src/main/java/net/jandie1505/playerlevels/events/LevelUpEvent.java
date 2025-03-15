@@ -1,24 +1,24 @@
 package net.jandie1505.playerlevels.events;
 
-import net.jandie1505.playerlevels.api.level.LevelPlayer;
+import net.jandie1505.playerlevels.api.level.Leveler;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
 public class LevelUpEvent extends Event {
     @NotNull private static final HandlerList handlers = new HandlerList();
-    @NotNull private final LevelPlayer levelPlayer;
+    @NotNull private final Leveler leveler;
     private int oldLevel;
     private int newLevel;
 
-    public LevelUpEvent(@NotNull LevelPlayer levelPlayer, int oldLevel, int newLevel) {
-        this.levelPlayer = levelPlayer;
+    public LevelUpEvent(@NotNull Leveler leveler, int oldLevel, int newLevel) {
+        this.leveler = leveler;
         this.oldLevel = oldLevel;
         this.newLevel = newLevel;
     }
 
-    public @NotNull LevelPlayer getLevelPlayer() {
-        return levelPlayer;
+    public @NotNull Leveler getLevelPlayer() {
+        return leveler;
     }
 
     public int getOldLevel() {

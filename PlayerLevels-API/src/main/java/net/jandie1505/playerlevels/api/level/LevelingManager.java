@@ -17,7 +17,7 @@ public interface LevelingManager {
      * @param playerUUID player uuid
      * @return leveler (or null if not cached)
      */
-    @Nullable LevelPlayer getLeveler(@NotNull UUID playerUUID);
+    @Nullable Leveler getLeveler(@NotNull UUID playerUUID);
 
     /**
      * Loads a leveler when it does not exist in cache.<br/>
@@ -26,6 +26,6 @@ public interface LevelingManager {
      * @param playerUUID player uuid
      * @return future of leveler
      */
-    @NotNull CompletableFuture<LevelPlayer> loadLeveler(@NotNull UUID playerUUID);
+    @NotNull CompletableFuture<Leveler> loadLeveler(@NotNull UUID playerUUID);
 
 }

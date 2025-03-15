@@ -23,7 +23,7 @@ public class ManagePlayersUpdateSubcommand extends ManagePlayersLevelerTemplateS
 
     @Override
     protected Result onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, OptionParser.@NotNull Result args, @NotNull Leveler leveler) {
-        leveler.manageValuesAsync();
+        leveler.processAsynchronously();
         sender.sendRichMessage("<green>Scheduled updating player values");
         return new Result(true);
     }

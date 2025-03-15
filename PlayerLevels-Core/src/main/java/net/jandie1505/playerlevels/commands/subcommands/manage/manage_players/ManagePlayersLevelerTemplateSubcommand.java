@@ -4,10 +4,7 @@ import net.chaossquad.mclib.PlayerUtils;
 import net.chaossquad.mclib.command.TabCompletingCommandExecutor;
 import net.jandie1505.playerlevels.PlayerLevels;
 import net.jandie1505.playerlevels.commands.subcommands.utils.OptionParser;
-import net.jandie1505.playerlevels.constants.Permissions;
 import net.jandie1505.playerlevels.leveler.Leveler;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -17,7 +14,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 
 /**
  * Template command for simple leveler-requiring management commands
@@ -89,7 +85,7 @@ public abstract class ManagePlayersLevelerTemplateSubcommand implements TabCompl
     }
 
     private void pushToDatabase(@NotNull final CommandSender sender, @NotNull final Command command, @NotNull final String label, @NotNull final OptionParser.Result args, @NotNull final Leveler leveler) {
-        leveler.updateAsync().thenAccept(result -> new BukkitRunnable() {
+        leveler.syncAsynchronously().thenAccept(result -> new BukkitRunnable() {
             @Override
             public void run() {
 

@@ -1,6 +1,5 @@
 package net.jandie1505.playerlevels.leveler;
 
-import net.jandie1505.playerlevels.api.level.LevelPlayer;
 import net.jandie1505.playerlevels.events.LevelUpEvent;
 import net.jandie1505.playerlevels.database.DatabaseSource;
 import org.bukkit.Bukkit;
@@ -18,7 +17,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.logging.Level;
 
-public final class Leveler implements LevelPlayer {
+public final class Leveler implements net.jandie1505.playerlevels.api.level.Leveler {
     @NotNull private final LevelingManager manager;
     @NotNull private final UUID playerUUID;
     @NotNull private final DatabaseSource databaseSource;
@@ -36,7 +35,7 @@ public final class Leveler implements LevelPlayer {
         this.data = new LevelerData(data -> new BukkitRunnable() {
             @Override
             public void run() {
-                Leveler.this.manageValues(); // TODO: I don't know if this can stay like it is or if it should be called directly without the async task
+                Leveler.this.process(); // TODO: I don't know if this can stay like it is or if it should be called directly without the async task
             }
         }.runTaskAsynchronously(this.manager.getPlugin()));
         this.updateId = UUID.randomUUID().toString();
@@ -62,21 +61,27 @@ public final class Leveler implements LevelPlayer {
 
     // ----- MANAGE VALUES -----
 
-    public void manageValuesAsync() {
+    /**
+     * Processes the leveler asynchronously.
+     */
+    public void processAsynchronously() {
         new BukkitRunnable() {
             @Override
             public void run() {
-                Leveler.this.manageValues();
+                Leveler.this.process();
             }
         }.runTaskAsynchronously(this.manager.getPlugin());
     }
 
-    public void manageValues() {
+    /**
+     * Processes the leveler.<br/>
+     * This means running the leveling process and applying rewards.
+     */
+    public void process() {
 
         // Prevent executing this more than once at the same time
         if (!this.manageValuesInProgress.compareAndSet(false, true)) {
-            this.manager.getPlugin().getLogger().warning("Manage values task of " + this.playerUUID + " has been called again while it is still in progress.\nThis can be caused by unsupported API usage.");
-            return;
+            throw new IllegalStateException("Process task of Leveler " + this.playerUUID + " has been called while still in progress. This can be caused by unsupported API usage.");
         }
 
         try {
@@ -123,16 +128,16 @@ public final class Leveler implements LevelPlayer {
     // ----- DATABASE SYNC -----
 
     /**
-     * Updates the Leveler asynchronously.<br/>
+     * Synchronizes the Leveler asynchronously with the database.<br/>
      * The recommended way for updating.
      * @return future result
      */
-    public CompletableFuture<UpdateResult> updateAsync() {
+    public CompletableFuture<UpdateResult> syncAsynchronously() {
         CompletableFuture<UpdateResult> future = new CompletableFuture<>();
         new BukkitRunnable() {
             @Override
             public void run() {
-                UpdateResult result = Leveler.this.update();
+                UpdateResult result = Leveler.this.sync();
                 future.complete(result);
             }
         }.runTaskAsynchronously(this.manager.getPlugin());
@@ -140,15 +145,16 @@ public final class Leveler implements LevelPlayer {
     }
 
     /**
-     * Updates the Leveler.<br/>
+     * Synchronizes the Leveler with the database.<br/>
+     * This is a blocking method.
      * Don't use this from the servers main thread.
      * @return result
      */
-    public @NotNull UpdateResult update() {
+    public @NotNull UpdateResult sync() {
 
         // Prevent executing this more than once at the same time
         if (!this.databaseUpdateInProgress.compareAndSet(false, true)) {
-            this.manager.getPlugin().getLogger().warning("Database update task of " + this.playerUUID + " has been called again while it is still in progress.\nThis can be caused by unsupported API usage.");
+            this.manager.getPlugin().getLogger().warning("Sync task of Leveler " + this.playerUUID + " has been called while still in progress. This can be caused by unsupported API usage.");
             return UpdateResult.ALREADY_IN_PROGRESS;
         }
 
@@ -198,7 +204,7 @@ public final class Leveler implements LevelPlayer {
      * Updates the database record with the locally stored data.<br/>
      * Only works if there is already an entry for this player.<br/>
      * If not, use {@link Leveler#insertDataIntoDatabase(Connection)} <br/>
-     * Should only be called from {@link Leveler#update()}.
+     * Should only be called from {@link Leveler#sync()}.
      * @param c connection
      * @return {@link PreparedStatement#executeUpdate()} result
      * @throws SQLException exception
@@ -224,7 +230,7 @@ public final class Leveler implements LevelPlayer {
      * Inserts a new database record with the locally stored data.<br/>
      * Only works if the player has no entry.<br/>
      * If not, use {@link Leveler#updateDataInDatabase(Connection)}.<br/>
-     * Should only be called from {@link Leveler#update()}.
+     * Should only be called from {@link Leveler#sync()}.
      * @param c connection
      * @return {@link PreparedStatement#executeUpdate()} result
      * @throws SQLException exception

@@ -1,7 +1,6 @@
 package net.jandie1505.playerlevels.leveler;
 
 import net.jandie1505.playerlevels.PlayerLevels;
-import net.jandie1505.playerlevels.api.level.LevelPlayer;
 import net.jandie1505.playerlevels.constants.ConfigKeys;
 import net.jandie1505.playerlevels.database.DatabaseSource;
 import net.objecthunter.exp4j.Expression;
@@ -69,7 +68,7 @@ public class LevelingManager implements net.jandie1505.playerlevels.api.level.Le
                 new BukkitRunnable() {
                     @Override
                     public void run() {
-                        leveler.update();
+                        leveler.sync();
                         future.complete(leveler);
                     }
                 }.runTaskAsynchronously(this.plugin);
@@ -85,7 +84,7 @@ public class LevelingManager implements net.jandie1505.playerlevels.api.level.Le
             @Override
             public void run() {
                 Leveler leveler = new Leveler(LevelingManager.this, playerUUID, databaseSource);
-                leveler.update();
+                leveler.sync();
                 cachedLevelers.put(playerUUID, leveler);
                 future.complete(leveler);
             }
@@ -100,7 +99,7 @@ public class LevelingManager implements net.jandie1505.playerlevels.api.level.Le
      * @return future of level manager
      */
     @Override
-    public @NotNull CompletableFuture<LevelPlayer> loadLeveler(@NotNull UUID playerUUID) {
+    public @NotNull CompletableFuture<net.jandie1505.playerlevels.api.level.Leveler> loadLeveler(@NotNull UUID playerUUID) {
         return this.loadLeveler(playerUUID, false).thenApply(leveler -> leveler);
     }
 
@@ -121,7 +120,7 @@ public class LevelingManager implements net.jandie1505.playerlevels.api.level.Le
         while (iterator.hasNext()) {
             Map.Entry<UUID, Leveler> entry = iterator.next();
             iterator.remove();
-            if (update) entry.getValue().updateAsync();
+            if (update) entry.getValue().syncAsynchronously();
         }
     }
 
@@ -133,7 +132,7 @@ public class LevelingManager implements net.jandie1505.playerlevels.api.level.Le
     public boolean dropCache(@NotNull UUID playerUUID, boolean update) {
         Leveler leveler = this.cachedLevelers.remove(playerUUID);
         if (leveler == null) return false;
-        if (update) leveler.updateAsync();
+        if (update) leveler.syncAsynchronously();
         return true;
     }
 
@@ -186,11 +185,11 @@ public class LevelingManager implements net.jandie1505.playerlevels.api.level.Le
             Player player = this.plugin.getServer().getPlayer(entry.getKey());
             if (player == null) {
                 iterator.remove();
-                entry.getValue().update();
+                entry.getValue().sync();
                 continue;
             }
 
-            entry.getValue().update();
+            entry.getValue().sync();
         }
 
     }
@@ -199,13 +198,13 @@ public class LevelingManager implements net.jandie1505.playerlevels.api.level.Le
 
     @EventHandler
     public void onPlayerJoin(@NotNull PlayerJoinEvent event) {
-        this.loadLeveler(event.getPlayer().getUniqueId(), true).thenAccept(Leveler::manageValues);
+        this.loadLeveler(event.getPlayer().getUniqueId(), true).thenAccept(Leveler::process);
     }
 
     @EventHandler
     public void onPlayerQuit(@NotNull PlayerQuitEvent event) {
         Leveler leveler = this.cachedLevelers.remove(event.getPlayer().getUniqueId());
-        leveler.updateAsync();
+        leveler.syncAsynchronously();
     }
 
     // ----- UTILITIES -----

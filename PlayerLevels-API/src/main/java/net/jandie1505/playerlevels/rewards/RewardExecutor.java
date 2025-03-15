@@ -1,6 +1,6 @@
 package net.jandie1505.playerlevels.rewards;
 
-import net.jandie1505.playerlevels.api.level.LevelPlayer;
+import net.jandie1505.playerlevels.api.level.Leveler;
 import net.jandie1505.playerlevels.api.reward.PlayerReward;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,6 +14,6 @@ public interface RewardExecutor {
      * @param player player
      * @return success
      */
-    boolean onApply(@NotNull PlayerReward reward, @NotNull LevelPlayer player);
+    boolean onApply(@NotNull PlayerReward reward, @NotNull Leveler player);
 
 }

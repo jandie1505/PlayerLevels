@@ -1,6 +1,6 @@
 package net.jandie1505.playerlevels.events;
 
-import net.jandie1505.playerlevels.api.level.LevelPlayer;
+import net.jandie1505.playerlevels.api.level.Leveler;
 import net.jandie1505.playerlevels.api.reward.PlayerReward;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
@@ -12,16 +12,16 @@ import org.jetbrains.annotations.NotNull;
  */
 public class RewardApplyEvent extends Event implements Cancellable {
     @NotNull private static final HandlerList handlers = new HandlerList();
-    @NotNull private final LevelPlayer player;
+    @NotNull private final Leveler player;
     @NotNull private final PlayerReward reward;
     private boolean cancelled;
 
-    public RewardApplyEvent(@NotNull LevelPlayer player, @NotNull PlayerReward reward) {
+    public RewardApplyEvent(@NotNull Leveler player, @NotNull PlayerReward reward) {
         this.player = player;
         this.reward = reward;
     }
 
-    public @NotNull LevelPlayer getPlayer() {
+    public @NotNull Leveler getPlayer() {
         return player;
     }
 

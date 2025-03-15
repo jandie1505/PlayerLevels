@@ -47,7 +47,7 @@ public class ManagePlayersSyncSubcommand implements TabCompletingCommandExecutor
         Leveler leveler = this.plugin.getLevelManager().getLeveler(playerUUID);
 
         if (leveler != null) {
-            leveler.updateAsync().thenAccept(result -> new BukkitRunnable() {
+            leveler.syncAsynchronously().thenAccept(result -> new BukkitRunnable() {
                 @Override
                 public void run() {
 
