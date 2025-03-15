@@ -82,6 +82,7 @@ public abstract class ManagePlayersLevelerTemplateSubcommand implements TabCompl
             @Override
             public void run() {
                 Result result = ManagePlayersLevelerTemplateSubcommand.this.onCommand(sender, command, label, args, leveler);
+                if (result == null) result = new Result(false);
                 if (pushToDatabase != null ? pushToDatabase : result.pushToDatabase()) ManagePlayersLevelerTemplateSubcommand.this.pushToDatabase(sender, command, label, args, leveler); // Push to database if enabled
             }
         }.runTask(this.plugin));
@@ -108,7 +109,7 @@ public abstract class ManagePlayersLevelerTemplateSubcommand implements TabCompl
         return Boolean.parseBoolean(option);
     }
 
-    protected abstract Result onCommand(@NotNull final CommandSender sender, @NotNull final Command command, @NotNull final String label, @NotNull final OptionParser.Result args, @NotNull final Leveler leveler);
+    protected abstract @Nullable Result onCommand(@NotNull final CommandSender sender, @NotNull final Command command, @NotNull final String label, @NotNull final OptionParser.Result args, @NotNull final Leveler leveler);
 
     protected abstract boolean hasPermission(@NotNull CommandSender sender);
 
