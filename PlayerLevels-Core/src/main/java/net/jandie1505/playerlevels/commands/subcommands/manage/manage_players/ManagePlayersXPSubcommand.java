@@ -1,7 +1,5 @@
 package net.jandie1505.playerlevels.commands.subcommands.manage.manage_players;
 
-import net.chaossquad.mclib.PlayerUtils;
-import net.chaossquad.mclib.command.TabCompletingCommandExecutor;
 import net.jandie1505.playerlevels.PlayerLevels;
 import net.jandie1505.playerlevels.commands.subcommands.utils.OptionParser;
 import net.jandie1505.playerlevels.constants.Permissions;
@@ -11,15 +9,12 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 
 public class ManagePlayersXPSubcommand extends ManagePlayersLevelerTemplateSubcommand {
 
@@ -30,9 +25,14 @@ public class ManagePlayersXPSubcommand extends ManagePlayersLevelerTemplateSubco
     @Override
     protected Result onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, OptionParser.@NotNull Result args, @NotNull Leveler leveler) {
 
+        if (args.args().length < 2) {
+            this.onInvalidSyntax(sender, command, label, args);
+            return new Result(false);
+        }
+
         try {
 
-            switch (args.args()[0].toLowerCase()) {
+            switch (args.args()[1].toLowerCase()) {
                 case "get" -> {
                     sender.sendMessage(Component.text("XP: " + leveler.getData().xp(), NamedTextColor.GRAY));
                     return new Result(false);
@@ -83,7 +83,7 @@ public class ManagePlayersXPSubcommand extends ManagePlayersLevelerTemplateSubco
 
                 }
                 default -> {
-                    sender.sendRichMessage("<red>Unknown subcommand");
+                    this.onInvalidSyntax(sender, command, label, args);
                     return new Result(false);
                 }
             }
@@ -108,11 +108,11 @@ public class ManagePlayersXPSubcommand extends ManagePlayersLevelerTemplateSubco
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
         return switch (args.length) {
-            case 1 -> List.of("get", "set", "give", "take");
-            case 2 -> this.getPlugin().getServer().getOnlinePlayers().stream().map(Player::getName).toList();
+            case 1 -> this.getPlugin().getServer().getOnlinePlayers().stream().map(Player::getName).toList();
+            case 2 -> List.of("get", "set", "give", "take");
             case 3 -> {
 
-                switch (args[0]) {
+                switch (args[1]) {
                     case "get" -> {
                         yield OptionParser.complete(sender, OptionParser.parse(args), Set.of("use-cache"), Map.of());
                     }
@@ -130,7 +130,7 @@ public class ManagePlayersXPSubcommand extends ManagePlayersLevelerTemplateSubco
             }
             case 4, 5, 6 -> {
 
-                switch (args[0]) {
+                switch (args[1]) {
                     case "set", "give", "take" -> {
                         yield OptionParser.complete(sender, OptionParser.parse(args), Set.of("use-cache", "no-update"), Map.of("push", (sender1, args1) -> List.of("false", "true")));
                     }

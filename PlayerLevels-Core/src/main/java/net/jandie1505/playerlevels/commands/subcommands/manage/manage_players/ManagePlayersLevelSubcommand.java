@@ -30,32 +30,45 @@ public class ManagePlayersLevelSubcommand extends ManagePlayersLevelerTemplateSu
     @Override
     public Result onCommand(@NotNull final CommandSender sender, @NotNull final Command command, @NotNull final String label, @NotNull final OptionParser.Result args, @NotNull final Leveler leveler) {
 
-        switch (args.args()[0].toLowerCase()) {
-            case "get" -> {
-                sender.sendMessage(Component.text("Level: " + leveler.getData().level(), NamedTextColor.GRAY));
-                return new Result(false);
-            }
-            case "set" -> {
+        if (args.args().length < 2) {
+            this.onInvalidSyntax(sender, command, label, args);
+            return new Result(false);
+        }
 
-                if (args.args().length > 2) {
-                    int level = Integer.parseInt(args.args()[2]);
-                    if (level < 0) {
-                        sender.sendMessage(Component.text("Level must be a positive (or zero) integer", NamedTextColor.RED));
+        try {
+
+            switch (args.args()[1].toLowerCase()) {
+                case "get" -> {
+                    sender.sendMessage(Component.text("Level: " + leveler.getData().level(), NamedTextColor.GRAY));
+                    return new Result(false);
+                }
+                case "set" -> {
+
+                    if (args.args().length > 2) {
+                        int level = Integer.parseInt(args.args()[2]);
+                        if (level < 1) {
+                            sender.sendMessage(Component.text("Level must be a positive (or zero) integer", NamedTextColor.RED));
+                            return new Result(false);
+                        }
+
+                        leveler.getData().level(level, !args.hasOption("no-update"));
+                        sender.sendMessage(Component.text("Updated level to " + leveler.getData().level(), NamedTextColor.GRAY));
+                        return new Result(true);
+                    } else {
+                        sender.sendMessage(Component.text("You need to specify a level", NamedTextColor.RED));
                         return new Result(false);
                     }
 
-                    leveler.getData().level(level, !args.hasOption("no-update"));
-                    sender.sendMessage(Component.text("Updated level to " + leveler.getData().level(), NamedTextColor.GRAY));
-                    return new Result(true);
-                } else {
-                    sender.sendMessage(Component.text("You need to specify a level", NamedTextColor.RED));
+                }
+                default -> {
+                    this.onInvalidSyntax(sender, command, label, args);
                     return new Result(false);
                 }
+            }
 
-            }
-            default -> {
-                return new Result(false);
-            }
+        } catch (IllegalArgumentException e) {
+            sender.sendRichMessage("<red>Illegal argument: " + e.getMessage());
+            return new Result(false);
         }
 
     }
@@ -73,11 +86,11 @@ public class ManagePlayersLevelSubcommand extends ManagePlayersLevelerTemplateSu
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
         return switch (args.length) {
-            case 1 -> List.of("get", "set");
-            case 2 -> this.getPlugin().getServer().getOnlinePlayers().stream().map(Player::getName).toList();
+            case 1 -> this.getPlugin().getServer().getOnlinePlayers().stream().map(Player::getName).toList();
+            case 2 -> List.of("get", "set");
             case 3 -> {
 
-                if (args[0].equalsIgnoreCase("set")) {
+                if (args[1].equalsIgnoreCase("set")) {
                     yield List.of("0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "20", "30", "40", "50", "60", "70", "80", "90", "100");
                 } else {
                     yield OptionParser.complete(sender, OptionParser.parse(args), Set.of("use-cache"), Map.of());
