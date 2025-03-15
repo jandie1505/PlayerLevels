@@ -1,5 +1,6 @@
-package net.jandie1505.playerlevels.api;
+package net.jandie1505.playerlevels.api.reward;
 
+import net.jandie1505.playerlevels.api.level.ReceivedRewardData;
 import net.jandie1505.playerlevels.rewards.RewardCondition;
 
 public interface MilestonePlayerReward extends PlayerReward {

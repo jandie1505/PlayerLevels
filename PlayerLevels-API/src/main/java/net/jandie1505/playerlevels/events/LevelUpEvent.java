@@ -1,6 +1,6 @@
 package net.jandie1505.playerlevels.events;
 
-import net.jandie1505.playerlevels.api.LevelPlayer;
+import net.jandie1505.playerlevels.api.level.LevelPlayer;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;

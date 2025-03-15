@@ -1,6 +1,6 @@
 package net.jandie1505.playerlevels.leveler;
 
-import net.jandie1505.playerlevels.api.ReceivedRewardData;
+import net.jandie1505.playerlevels.api.level.ReceivedRewardData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;

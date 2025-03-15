@@ -1,9 +1,9 @@
 package net.jandie1505.playerlevels.rewards.types;
 
-import net.jandie1505.playerlevels.api.IntervalPlayerReward;
-import net.jandie1505.playerlevels.api.LevelPlayer;
-import net.jandie1505.playerlevels.api.MilestonePlayerReward;
-import net.jandie1505.playerlevels.api.PlayerReward;
+import net.jandie1505.playerlevels.api.reward.IntervalPlayerReward;
+import net.jandie1505.playerlevels.api.level.LevelPlayer;
+import net.jandie1505.playerlevels.api.reward.MilestonePlayerReward;
+import net.jandie1505.playerlevels.api.reward.PlayerReward;
 import net.jandie1505.playerlevels.rewards.IntervalRewardData;
 import net.jandie1505.playerlevels.rewards.MilestoneRewardData;
 import net.jandie1505.playerlevels.rewards.RewardExecutor;

@@ -1,4 +1,4 @@
-package net.jandie1505.playerlevels.api;
+package net.jandie1505.playerlevels.api.level;
 
 /**
  * Represents a reward a player received.

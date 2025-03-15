@@ -1,7 +1,7 @@
 package net.jandie1505.playerlevels.events;
 
-import net.jandie1505.playerlevels.api.LevelPlayer;
-import net.jandie1505.playerlevels.api.PlayerReward;
+import net.jandie1505.playerlevels.api.level.LevelPlayer;
+import net.jandie1505.playerlevels.api.reward.PlayerReward;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;

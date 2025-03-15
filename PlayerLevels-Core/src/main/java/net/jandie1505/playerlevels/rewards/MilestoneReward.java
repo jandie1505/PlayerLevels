@@ -1,6 +1,6 @@
 package net.jandie1505.playerlevels.rewards;
 
-import net.jandie1505.playerlevels.api.MilestonePlayerReward;
+import net.jandie1505.playerlevels.api.reward.MilestonePlayerReward;
 import net.jandie1505.playerlevels.leveler.Leveler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

@@ -1,8 +1,8 @@
 package net.jandie1505.playerlevels.leveler;
 
 import net.jandie1505.playerlevels.PlayerLevels;
-import net.jandie1505.playerlevels.api.LevelManager;
-import net.jandie1505.playerlevels.api.LevelPlayer;
+import net.jandie1505.playerlevels.api.level.LevelManager;
+import net.jandie1505.playerlevels.api.level.LevelPlayer;
 import net.jandie1505.playerlevels.constants.ConfigKeys;
 import net.jandie1505.playerlevels.database.DatabaseSource;
 import net.objecthunter.exp4j.Expression;

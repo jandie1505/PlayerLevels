@@ -1,4 +1,4 @@
-package net.jandie1505.playerlevels.api;
+package net.jandie1505.playerlevels.api.reward;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

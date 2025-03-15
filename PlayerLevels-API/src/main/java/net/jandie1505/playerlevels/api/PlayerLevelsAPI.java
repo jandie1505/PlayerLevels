@@ -1,5 +1,8 @@
 package net.jandie1505.playerlevels.api;
 
+import net.jandie1505.playerlevels.api.level.LevelManager;
+import net.jandie1505.playerlevels.api.reward.RewardManager;
+
 public interface PlayerLevelsAPI {
 
     /**

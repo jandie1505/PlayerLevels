@@ -1,6 +1,6 @@
 package net.jandie1505.playerlevels.rewards;
 
-import net.jandie1505.playerlevels.api.PlayerReward;
+import net.jandie1505.playerlevels.api.reward.PlayerReward;
 import net.jandie1505.playerlevels.events.RewardApplyEvent;
 import net.jandie1505.playerlevels.leveler.Leveler;
 import net.jandie1505.playerlevels.leveler.ReceivedReward;

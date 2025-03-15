@@ -1,6 +1,6 @@
 package net.jandie1505.playerlevels.leveler;
 
-import net.jandie1505.playerlevels.api.LevelPlayer;
+import net.jandie1505.playerlevels.api.level.LevelPlayer;
 import net.jandie1505.playerlevels.events.LevelUpEvent;
 import net.jandie1505.playerlevels.database.DatabaseSource;
 import org.bukkit.Bukkit;

@@ -1,6 +1,6 @@
 package net.jandie1505.playerlevels.rewards;
 
-import net.jandie1505.playerlevels.api.IntervalPlayerReward;
+import net.jandie1505.playerlevels.api.reward.IntervalPlayerReward;
 import net.jandie1505.playerlevels.leveler.Leveler;
 import net.jandie1505.playerlevels.leveler.ReceivedReward;
 import org.jetbrains.annotations.NotNull;

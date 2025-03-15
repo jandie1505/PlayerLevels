@@ -1,8 +1,8 @@
 package net.jandie1505.playerlevels.rewards;
 
 import net.jandie1505.playerlevels.PlayerLevels;
-import net.jandie1505.playerlevels.api.PlayerReward;
-import net.jandie1505.playerlevels.api.RewardManager;
+import net.jandie1505.playerlevels.api.reward.PlayerReward;
+import net.jandie1505.playerlevels.api.reward.RewardManager;
 import net.jandie1505.playerlevels.leveler.Leveler;
 import org.jetbrains.annotations.NotNull;
 
