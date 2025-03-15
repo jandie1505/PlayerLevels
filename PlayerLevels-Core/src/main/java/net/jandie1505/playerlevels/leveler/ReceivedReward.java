@@ -1,13 +1,12 @@
 package net.jandie1505.playerlevels.leveler;
 
-import net.jandie1505.playerlevels.api.level.ReceivedRewardData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
 import java.util.Objects;
 
-public class ReceivedReward implements ReceivedRewardData {
+public class ReceivedReward implements net.jandie1505.playerlevels.api.level.ReceivedReward {
     private static final ReceivedReward DEFAULT = new ReceivedReward(null);
     @NotNull private final Callback callback;
     private boolean blocked;

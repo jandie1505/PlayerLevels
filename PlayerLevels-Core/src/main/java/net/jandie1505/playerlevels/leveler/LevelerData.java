@@ -1,6 +1,5 @@
 package net.jandie1505.playerlevels.leveler;
 
-import net.jandie1505.playerlevels.api.level.ReceivedRewardData;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -52,7 +51,7 @@ public class LevelerData implements net.jandie1505.playerlevels.api.level.Levele
         if (call) this.callback.onUpdate(this);
     }
 
-    public @NotNull Map<String, ReceivedRewardData> getReceivedRewards() {
+    public @NotNull Map<String, net.jandie1505.playerlevels.api.level.ReceivedReward> getReceivedRewards() {
         return Collections.unmodifiableMap(this.receivedRewards);
     }
 

@@ -59,14 +59,14 @@ public interface LevelerData {
      * Returns an unmodifiable map of the player's received reward entries.
      * @return received rewards
      */
-    @NotNull Map<String, ReceivedRewardData> getReceivedRewards();
+    @NotNull Map<String, ReceivedReward> getReceivedRewards();
 
     /**
      * Returns a specific received reward entry.
      * @param id reward id
      * @return received reward entry (null if not exist)
      */
-    @Nullable ReceivedRewardData getReceivedReward(@NotNull String id);
+    @Nullable ReceivedReward getReceivedReward(@NotNull String id);
 
     /**
      * Returns a specific received reward entry.<br/>
@@ -74,7 +74,7 @@ public interface LevelerData {
      * @param id reward id
      * @return received reward entry
      */
-    @NotNull ReceivedRewardData getOrCreateReceivedReward(@NotNull String id);
+    @NotNull ReceivedReward getOrCreateReceivedReward(@NotNull String id);
 
     /**
      * Returns a specific received reward entry.<br/>
@@ -84,7 +84,7 @@ public interface LevelerData {
      * @param call update player (<b>must be false when called from upgrades</b>)
      * @return received reward entry
      */
-    @NotNull ReceivedRewardData getOrCreateReceivedReward(@NotNull String id, boolean call);
+    @NotNull ReceivedReward getOrCreateReceivedReward(@NotNull String id, boolean call);
 
     /**
      * Removes a received reward entry.<br/>
