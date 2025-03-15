@@ -16,94 +16,45 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
-public class ManagePlayersInfoSubcommand implements TabCompletingCommandExecutor {
-    @NotNull private final PlayerLevels plugin;
+public class ManagePlayersInfoSubcommand extends ManagePlayersLevelerTemplateSubcommand {
 
     public ManagePlayersInfoSubcommand(@NotNull PlayerLevels plugin) {
-        this.plugin = plugin;
+        super(plugin);
     }
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String lavel, @NotNull String @NotNull [] a) {
-
-        if (!Permissions.hasPermission(sender, Permissions.MANAGE_PLAYERS)) {
-            sender.sendRichMessage("<red>No permission");
-            return true;
-        }
-
-        OptionParser.Result args = OptionParser.parse(a);
-
-        if (args.args().length < 1) {
-            sender.sendRichMessage("<red>Usage: /levels manage info [--use-cache] <player>");
-            return true;
-        }
-
-        UUID playerUUID = PlayerUtils.getPlayerUUIDFromString(args.args()[0]);
-        if (playerUUID == null) {
-            sender.sendMessage(Component.text("Player not found", NamedTextColor.RED));
-            return true;
-        }
-
-        boolean cache = args.hasOption("use-cache");
-
-        if (cache) {
-            Leveler leveler = this.plugin.getLevelManager().getLeveler(playerUUID);
-
-            if (leveler == null) {
-                sender.sendRichMessage("<red>Leveler not cached");
-                return true;
-            }
-
-            this.resultCallSync(sender, leveler);
-
-        } else {
-            this.loadLevelerWay(sender, playerUUID);
-        }
-
-        return true;
-    }
-
-    private void loadLevelerWay(@NotNull final CommandSender sender, @NotNull final UUID playerUUID) {
-        this.plugin.getLevelManager().loadLeveler(playerUUID, true).thenAccept(leveler -> new BukkitRunnable() {
-            @Override
-            public void run() {
-                ManagePlayersInfoSubcommand.this.resultCallSync(sender, leveler);
-            }
-        }.runTask(this.plugin));
-    }
-
-    private void resultCallSync(@NotNull CommandSender sender, @NotNull Leveler leveler) {
-
+    protected Result onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, OptionParser.@NotNull Result args, @NotNull Leveler leveler) {
         sender.sendRichMessage("<gray>Leveling Info:");
         sender.sendRichMessage("<gray>UUID: " + leveler.getPlayerUUID());
         sender.sendRichMessage("<gray>Level: " + leveler.getData().level());
         sender.sendRichMessage("<gray>XP: " + leveler.getData().xp());
-
+        sender.sendRichMessage("<gray>Reward entries:" + leveler.getData().internalReceivedRewards().size());
+        return new Result(false);
     }
 
     @Override
-    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String lavel, @NotNull String @NotNull [] args) {
-
-        if (args.length == 1) {
-            List<String> result = new ArrayList<>();
-            result.add("--use-cache");
-            result.addAll(Bukkit.getOnlinePlayers().stream().map(Player::getName).toList());
-            return result;
-        }
-
-        if (args.length == 2 && args[0].equals("--use-cache")) {
-            return Bukkit.getOnlinePlayers().stream().map(Player::getName).toList();
-        }
-
-        return List.of();
+    protected boolean hasPermission(@NotNull CommandSender sender) {
+        return Permissions.hasPermission(sender, Permissions.MANAGE_PLAYERS);
     }
 
-    public @NotNull PlayerLevels getPlugin() {
-        return plugin;
+    @Override
+    protected void onInvalidSyntax(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, OptionParser.@NotNull Result args) {
+        sender.sendRichMessage("<red>Usage: /levels manage players info <player>");
+    }
+
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
+
+        if (args.length > 1) {
+            return OptionParser.complete(OptionParser.parse(args), Set.of("use-cache"), Map.of());
+        }
+
+        return switch (args.length) {
+            case 1 -> Bukkit.getOnlinePlayers().stream().map(Player::getName).toList();
+            default -> List.of();
+        };
     }
 
 }

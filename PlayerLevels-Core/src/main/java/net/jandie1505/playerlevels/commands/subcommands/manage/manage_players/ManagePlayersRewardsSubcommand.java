@@ -1,89 +1,30 @@
 package net.jandie1505.playerlevels.commands.subcommands.manage.manage_players;
 
-import net.chaossquad.mclib.PlayerUtils;
-import net.chaossquad.mclib.command.TabCompletingCommandExecutor;
 import net.jandie1505.playerlevels.PlayerLevels;
 import net.jandie1505.playerlevels.commands.subcommands.utils.OptionParser;
 import net.jandie1505.playerlevels.constants.Permissions;
 import net.jandie1505.playerlevels.leveler.Leveler;
 import net.jandie1505.playerlevels.leveler.ReceivedReward;
 import net.jandie1505.playerlevels.rewards.Reward;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
+import java.util.Set;
 
-public class ManagePlayersRewardsSubcommand implements TabCompletingCommandExecutor {
-    @NotNull private final PlayerLevels plugin;
+public class ManagePlayersRewardsSubcommand extends ManagePlayersLevelerTemplateSubcommand {
 
     public ManagePlayersRewardsSubcommand(@NotNull PlayerLevels plugin) {
-        this.plugin = plugin;
+        super(plugin);
     }
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] a) {
-
-        if (!Permissions.hasPermission(sender, Permissions.MANAGE_PLAYERS)) {
-            sender.sendRichMessage("<red>No permission");
-            return true;
-        }
-
-        OptionParser.Result args = OptionParser.parse(a);
-
-        if (args.args().length < 1) {
-            sender.sendRichMessage("<red>Usage: /levels manage rewards [--use-cache] <player>");
-            return true;
-        }
-
-        UUID playerUUID = PlayerUtils.getPlayerUUIDFromString(args.args()[0]);
-        if (playerUUID == null) {
-            sender.sendMessage(Component.text("Player not found", NamedTextColor.RED));
-            return true;
-        }
-
-        boolean cache = args.hasOption("use-cache");
-
-        if (cache) {
-            Leveler leveler = this.plugin.getLevelManager().getLeveler(playerUUID);
-
-            if (leveler == null) {
-                sender.sendRichMessage("<red>Leveler not cached");
-                return true;
-            }
-
-            this.command(sender, leveler, args);
-
-        } else {
-            this.loadLevelerWay(sender, playerUUID, args);
-        }
-
-        return true;
-    }
-
-    private void loadLevelerWay(@NotNull final CommandSender sender, @NotNull final UUID playerUUID, @NotNull final OptionParser.Result args) {
-        this.plugin.getLevelManager().loadLeveler(playerUUID, true).thenAccept(leveler -> new BukkitRunnable() {
-            @Override
-            public void run() {
-                ManagePlayersRewardsSubcommand.this.command(sender, leveler, args);
-            }
-        }.runTask(this.plugin));
-    }
-
-    private void command(@NotNull CommandSender sender, @NotNull Leveler leveler, OptionParser.Result args) {
-
-        if (args.args().length < 2) {
-            sender.sendRichMessage("<red>Usage: ...");
-            return;
-        }
+    protected Result onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, OptionParser.@NotNull Result args, @NotNull Leveler leveler) {
 
         switch (args.args()[1].toLowerCase()) {
             case "list" -> {
@@ -93,12 +34,13 @@ public class ManagePlayersRewardsSubcommand implements TabCompletingCommandExecu
                     sender.sendRichMessage("<gold>" + entry.getKey() + ": blocked=" + entry.getValue().blocked() + " level=" + entry.getValue().level() + " default=" + entry.getValue().isDefault());
                 }
 
+                return new Result(false);
             }
             case "get" -> {
 
                 if (args.args().length < 3) {
                     sender.sendRichMessage("<red>You need to specify a reward entry id");
-                    return;
+                    return new Result(false);
                 }
 
                 String id = args.args()[2];
@@ -113,7 +55,7 @@ public class ManagePlayersRewardsSubcommand implements TabCompletingCommandExecu
                         "<gold>- Default: " + receivedReward.isDefault()
                 );
 
-                Reward reward = this.plugin.getRewardsManager().getReward(id);
+                Reward reward = this.getPlugin().getRewardsManager().getReward(id);
                 if (reward != null) {
                     message = (message + "\n" +
                             "<gold>Reward data:\n" +
@@ -127,13 +69,13 @@ public class ManagePlayersRewardsSubcommand implements TabCompletingCommandExecu
                 }
 
                 sender.sendRichMessage(message);
-
+                return new Result(false);
             }
             case "delete" -> {
 
                 if (args.args().length < 3) {
                     sender.sendRichMessage("<red>You need to specify a reward entry id");
-                    return;
+                    return new Result(false);
                 }
 
                 String id = args.args()[2];
@@ -147,12 +89,13 @@ public class ManagePlayersRewardsSubcommand implements TabCompletingCommandExecu
                     sender.sendRichMessage("<red>Reward entry does not exist");
                 }
 
+                return new Result(true);
             }
             case "reset" -> {
 
                 if (args.args().length < 3) {
                     sender.sendRichMessage("<red>You need to specify a reward entry id");
-                    return;
+                    return new Result(false);
                 }
 
                 String id = args.args()[2];
@@ -160,18 +103,18 @@ public class ManagePlayersRewardsSubcommand implements TabCompletingCommandExecu
                 ReceivedReward receivedReward = leveler.getData().getReceivedReward(id);
                 if (receivedReward == null) {
                     sender.sendRichMessage("<red>Reward entry does not exist");
-                    return;
+                    return new Result(false);
                 }
 
                 receivedReward.reset(!args.hasOption("no-update"));
                 sender.sendRichMessage("<green>Successfully reset reward entry");
-
+                return new Result(true);
             }
             case "set" -> {
 
                 if (args.args().length < 5) {
                     sender.sendRichMessage("<red>You need to specify a reward entry id, field and value");
-                    return;
+                    return new Result(false);
                 }
 
                 String id = args.args()[2];
@@ -184,10 +127,12 @@ public class ManagePlayersRewardsSubcommand implements TabCompletingCommandExecu
                         case "blocked" -> {
                             receivedReward.blocked(Boolean.parseBoolean(args.args()[4]), !args.hasOption("no-update"));
                             sender.sendRichMessage("<green>Successfully updated reward entry");
+                            return new Result(true);
                         }
                         case "level" -> {
                             receivedReward.level(Integer.parseInt(args.args()[4]), !args.hasOption("no-update"));
                             sender.sendRichMessage("<green>Successfully updated reward entry");
+                            return new Result(true);
                         }
                         default -> sender.sendRichMessage("<red>Unknown field");
                     }
@@ -196,10 +141,24 @@ public class ManagePlayersRewardsSubcommand implements TabCompletingCommandExecu
                     sender.sendRichMessage("<red>Illegal argument");
                 }
 
+                return new Result(false);
             }
-            default -> sender.sendRichMessage("<red>Unknown subcommand");
+            default -> {
+                sender.sendRichMessage("<red>Unknown subcommand");
+                return new Result(false);
+            }
         }
 
+    }
+
+    @Override
+    protected boolean hasPermission(@NotNull CommandSender sender) {
+        return Permissions.hasPermission(sender, Permissions.MANAGE_PLAYERS);
+    }
+
+    @Override
+    protected void onInvalidSyntax(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, OptionParser.@NotNull Result args) {
+        sender.sendRichMessage("<red>Usage: /levels manage players rewards <player> (list|get <reward>|set <reward> (blocked|level) <value>|reset <reward>|delete <reward>)");
     }
 
     // ----- TAB COMPLETER -----
@@ -214,10 +173,10 @@ public class ManagePlayersRewardsSubcommand implements TabCompletingCommandExecu
 
                 switch (args[1].toLowerCase()) {
                     case "list" -> {
-                        yield List.of("--use-cache");
+                        yield OptionParser.complete(OptionParser.parse(args), Set.of("use-cache"), Map.of());
                     }
                     case "get", "set", "delete", "reset" -> {
-                        yield List.copyOf(this.plugin.getRewardsManager().getRewards().keySet());
+                        yield List.copyOf(this.getPlugin().getRewardsManager().getRewards().keySet());
                     }
                 }
 
@@ -227,10 +186,10 @@ public class ManagePlayersRewardsSubcommand implements TabCompletingCommandExecu
 
                 switch (args[1].toLowerCase()) {
                     case "get" -> {
-                        yield List.of("--use-cache");
+                        yield OptionParser.complete(OptionParser.parse(args), Set.of("use-cache"), Map.of());
                     }
                     case "delete", "reset" -> {
-                        yield List.of("--use-cache", "--no-update");
+                        yield OptionParser.complete(OptionParser.parse(args), Set.of("use-cache", "no-update"), Map.of("push", (sender1, args1) -> List.of("false", "true")));
                     }
                     case "set" -> {
                         yield List.of("blocked", "level");
@@ -245,19 +204,7 @@ public class ManagePlayersRewardsSubcommand implements TabCompletingCommandExecu
 
                 switch (args[1].toLowerCase()) {
                     case "delete", "reset" -> {
-
-                        switch (args[3].toLowerCase()) {
-                            case "--use-cache" -> {
-                                yield List.of("--no-update");
-                            }
-                            case "--no-update" -> {
-                                yield List.of("--use-cache");
-                            }
-                            default -> {
-                                yield List.of();
-                            }
-                        }
-
+                        yield OptionParser.complete(OptionParser.parse(args), Set.of("use-cache", "no-update"), Map.of("push", (sender1, args1) -> List.of("false", "true")));
                     }
                     case "set" -> {
 
@@ -280,40 +227,16 @@ public class ManagePlayersRewardsSubcommand implements TabCompletingCommandExecu
                 }
 
             }
-            case 6 -> {
+            case 6, 7 -> {
 
                 if (args[1].equalsIgnoreCase("set")) {
-                    yield List.of("--use-cache", "--no-update");
-                }
-
-                yield List.of();
-            }
-            case 7 -> {
-
-                if (args[1].equalsIgnoreCase("set")) {
-
-                    switch (args[5].toLowerCase()) {
-                        case "--use-cache" -> {
-                            yield List.of("--no-update");
-                        }
-                        case "--no-update" -> {
-                            yield List.of("--use-cache");
-                        }
-                        default -> {
-                            yield List.of();
-                        }
-                    }
-
+                    yield OptionParser.complete(OptionParser.parse(args), Set.of("use-cache", "no-update"), Map.of("push", (sender1, args1) -> List.of("false", "true")));
                 }
 
                 yield List.of();
             }
             default -> List.of();
         };
-    }
-
-    public @NotNull PlayerLevels getPlugin() {
-        return plugin;
     }
 
 }

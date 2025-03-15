@@ -29,7 +29,7 @@ public class ManagePlayersEraseSubcommand implements TabCompletingCommandExecuto
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
 
         if (args.length < 1) {
-            sender.sendMessage(Component.text("Usage: /playerlevels manage erase <player>", NamedTextColor.RED));
+            sender.sendMessage(Component.text("Usage: /playerlevels manage players erase <player>", NamedTextColor.RED));
             return true;
         }
 

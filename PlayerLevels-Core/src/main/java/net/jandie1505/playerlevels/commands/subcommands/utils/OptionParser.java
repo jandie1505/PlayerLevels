@@ -1,6 +1,8 @@
 package net.jandie1505.playerlevels.commands.subcommands.utils;
 
+import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -54,6 +56,37 @@ public class OptionParser {
             return false;
         }
 
+    }
+
+    public static List<String> complete(@NotNull Result args, @NotNull Set<String> uncompletedAvailableOptions, @NotNull Map<@NotNull String, @Nullable OptionCompleter> completedAvailableOptions) {
+        Set<String> currentOptions = new HashSet<>(args.options().keySet());
+
+        List<String> suggestions = new ArrayList<>();
+
+        // Uncompleted options should be added as --option
+        for (String option : uncompletedAvailableOptions) {
+            if (!currentOptions.contains(option)) {
+                suggestions.add("--" + option);
+            }
+        }
+
+        // Completed options should be expanded with possible values
+        for (String option : completedAvailableOptions.keySet()) {
+            if (currentOptions.contains(option)) {
+                OptionCompleter completer = completedAvailableOptions.get(option);
+                if (completer != null) {
+                    for (String value : completer.onTabComplete(null, null)) { // sender und args müssten übergeben werden
+                        suggestions.add("--" + option + "=" + value);
+                    }
+                }
+            }
+        }
+
+        return suggestions;
+    }
+
+    public interface OptionCompleter {
+        List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Result args);
     }
 
 }
