@@ -2,7 +2,6 @@ package net.jandie1505.playerlevels.rewards;
 
 import net.jandie1505.playerlevels.PlayerLevels;
 import net.jandie1505.playerlevels.api.reward.PlayerReward;
-import net.jandie1505.playerlevels.api.reward.RewardManager;
 import net.jandie1505.playerlevels.leveler.Leveler;
 import org.jetbrains.annotations.NotNull;
 
@@ -10,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 
-public class RewardsManager implements RewardManager {
+public class RewardsManager implements net.jandie1505.playerlevels.api.reward.RewardsManager {
     @NotNull private final PlayerLevels plugin;
     @NotNull private final Map<String, Reward> rewards;
 

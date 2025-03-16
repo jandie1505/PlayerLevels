@@ -1,5 +1,8 @@
 package net.jandie1505.playerlevels.api.reward;
 
+import net.jandie1505.playerlevels.rewards.IntervalRewardData;
+import net.jandie1505.playerlevels.rewards.MilestoneRewardData;
+import net.jandie1505.playerlevels.rewards.RewardConfig;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -8,7 +11,17 @@ import java.util.Map;
 /**
  * Manages rewards.
  */
-public interface RewardManager {
+public interface RewardsManager {
+
+    // ----- CREATE REWARDS -----
+
+    @SuppressWarnings("UnusedReturnValue")
+    @NotNull MilestonePlayerReward addMilestoneReward(@NotNull RewardConfig config, @NotNull MilestoneRewardData data);
+
+    @SuppressWarnings("UnusedReturnValue")
+    @NotNull IntervalPlayerReward addIntervalReward(@NotNull RewardConfig config, @NotNull IntervalRewardData data);
+
+    // ----- MANAGE REWARDS -----
 
     /**
      * Returns an unmodifiable map of all registered rewards.

@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class IntervalReward extends Reward {
+public class IntervalReward extends Reward implements IntervalPlayerReward {
     private final int interval;
     @NotNull private final RewardCondition customCondition;
 
