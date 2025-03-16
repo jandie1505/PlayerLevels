@@ -43,7 +43,8 @@ public class ManagePlayersXPSubcommand extends ManagePlayersLevelerTemplateSubco
                         double value = Double.parseDouble(args.args()[2]);
                         if (value < 0) value = 0;
 
-                        leveler.getData().xp(value, !args.hasOption("no-update"));
+                        leveler.getData().xp(value);
+                        if (!args.hasOption("no-update")) leveler.processAsynchronously();
                         sender.sendMessage(Component.text("Updated xp to " + leveler.getData().xp(), NamedTextColor.GRAY));
                         return new Result(true);
                     } else {
@@ -58,7 +59,8 @@ public class ManagePlayersXPSubcommand extends ManagePlayersLevelerTemplateSubco
                         double value = leveler.getData().xp() + Double.parseDouble(args.args()[2]);
                         if (value < 0) value = 0;
 
-                        leveler.getData().xp(value, !args.hasOption("no-update"));
+                        leveler.getData().xp(value);
+                        if (!args.hasOption("no-update")) leveler.processAsynchronously();
                         sender.sendMessage(Component.text("Updated xp to " + leveler.getData().xp(), NamedTextColor.GRAY));
                         return new Result(true);
                     } else {
@@ -73,7 +75,8 @@ public class ManagePlayersXPSubcommand extends ManagePlayersLevelerTemplateSubco
                         double value = leveler.getData().xp() - Double.parseDouble(args.args()[2]);
                         if (value < 0) value = 0;
 
-                        leveler.getData().xp(value, !args.hasOption("no-update"));
+                        leveler.getData().xp(value);
+                        if (!args.hasOption("no-update")) leveler.processAsynchronously();
                         sender.sendMessage(Component.text("Updated xp to " + leveler.getData().xp(), NamedTextColor.GRAY));
                         return new Result(true);
                     } else {

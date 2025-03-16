@@ -129,7 +129,7 @@ public abstract class Reward implements PlayerReward {
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public final boolean isApplicable(@NotNull Leveler leveler) {
         if (!this.enabled) return false; // Not applicable when reward disabled
-        if (leveler.getData().getOrCreateReceivedReward(this.id, false).blocked()) return false; // Not applicable when blocked
+        if (leveler.getData().getOrCreateReceivedReward(this.id).blocked()) return false; // Not applicable when blocked
         if (this.requireOnlinePlayer && Bukkit.getPlayer(leveler.getPlayerUUID()) == null) return false; // not applicable when player required online but is offline
         if (this.serverId != null && !this.serverId.equals(this.manager.getPlugin().getServerId())) return false; // Wrong server
         return this.checkApplyCondition(leveler); // Applicable when apply condition of subclass is successful
@@ -151,9 +151,9 @@ public abstract class Reward implements PlayerReward {
      */
     @ApiStatus.OverrideOnly
     public void onApplySuccess(@NotNull Leveler leveler) {
-        ReceivedReward reward = leveler.getData().getOrCreateReceivedReward(Reward.this.id, false);
-        reward.blocked(true, false);
-        reward.level(leveler.getData().level(), false);
+        ReceivedReward reward = leveler.getData().getOrCreateReceivedReward(Reward.this.id);
+        reward.blocked(true);
+        reward.level(leveler.getData().level());
     }
 
     // ----- GETTER -----

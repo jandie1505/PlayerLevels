@@ -18,14 +18,6 @@ public interface ReceivedReward {
     /**
      * Sets the blocked state of a player.
      * @param blocked blocked state
-     * @param process process player (<b>must be false when called from upgrades</b>)
-     */
-    void blocked(boolean blocked, boolean process);
-
-    /**
-     * Sets the blocked state of a player and process the player.<br/>
-     * Must not be called from upgrades.
-     * @param blocked blocked state
      */
     void blocked(boolean blocked);
 
@@ -40,30 +32,13 @@ public interface ReceivedReward {
     int level();
 
     /**
-     * Sets the level the player has received the reward on.
-     * @param level level
-     * @param process process player (<b>must be false when called from upgrades</b>)
-     */
-    void level(int level, boolean process);
-
-    /**
-     * Sets the level the player has received the reward on and processes the player.<br/>
-     * Must not be called from upgrades.
+     * Sets the level the player has received.
      * @param level level
      */
     void level(int level);
 
     /**
-     * Resets the reward entry to default values.<br/>
-     * Since default entries are not written to the database,
-     * this is an alternative to deleting the entry.
-     * @param call process player (<b>must be false when called from upgrades</b>)
-     */
-    void reset(boolean call);
-
-    /**
-     * Resets the reward entry to default values and processes the player.<br/>
-     * Must not be used from upgrades.
+     * Resets the reward entry to default.
      */
     void reset();
 

@@ -7,20 +7,17 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class LevelerData implements net.jandie1505.playerlevels.api.level.LevelerData {
-    private static final LevelerData DEFAULT = new LevelerData(null);
+    private static final LevelerData DEFAULT = new LevelerData();
     private int level;
     private double xp;
     @NotNull private HashMap<String, ReceivedReward> receivedRewards;
-    @NotNull private Callback callback;
 
-    public LevelerData(@Nullable Callback callback) {
+    public LevelerData() {
         this.level = 0;
         this.xp = 0;
         this.receivedRewards = new HashMap<>();
-        this.callback = callback != null ? callback : data -> {};
     }
 
     // ----- VALUES -----
@@ -30,12 +27,7 @@ public class LevelerData implements net.jandie1505.playerlevels.api.level.Levele
     }
 
     public void level(int level) {
-        this.level(level, true);
-    }
-
-    public void level(int level, boolean call) {
         this.level = level;
-        if (call) this.callback.onUpdate(this);
     }
 
     public double xp() {
@@ -43,39 +35,19 @@ public class LevelerData implements net.jandie1505.playerlevels.api.level.Levele
     }
 
     public void xp(double xp) {
-        this.xp(xp, true);
-    }
-
-    public void xp(double xp, boolean call) {
         this.xp = xp;
-        if (call) this.callback.onUpdate(this);
     }
 
     public @NotNull Map<String, net.jandie1505.playerlevels.api.level.ReceivedReward> getReceivedRewards() {
         return Collections.unmodifiableMap(this.receivedRewards);
     }
 
-    public @NotNull ReceivedReward getOrCreateReceivedReward(@NotNull String id, boolean call) {
-        AtomicBoolean modified = new AtomicBoolean(false);
-        ReceivedReward reward = this.receivedRewards.computeIfAbsent(id, k -> {
-            modified.set(true);
-            return new ReceivedReward(r -> this.callback.onUpdate(this));
-        });
-        if (call && modified.get()) this.callback.onUpdate(this);
-        return reward;
-    }
-
     public @NotNull ReceivedReward getOrCreateReceivedReward(@NotNull String id) {
-        return this.getOrCreateReceivedReward(id, false);
-    }
-
-    public void removeReceivedReward(@NotNull String id, boolean call) {
-        ReceivedReward out = this.receivedRewards.remove(id);
-        if (call && out != null && !out.isDefault()) this.callback.onUpdate(this);
+        return this.receivedRewards.computeIfAbsent(id, k -> new ReceivedReward());
     }
 
     public void removeReceivedReward(@NotNull String id) {
-        this.removeReceivedReward(id, true);
+        this.receivedRewards.remove(id);
     }
 
     public @Nullable ReceivedReward getReceivedReward(@NotNull String id) {
@@ -93,25 +65,23 @@ public class LevelerData implements net.jandie1505.playerlevels.api.level.Levele
 
     // ----- MERGE -----
 
-    public void merge(LevelerData levelerData, boolean call) {
+    public void merge(LevelerData levelerData) {
 
-        this.level(levelerData.level(), false);
-        this.xp(levelerData.xp(), false);
+        this.level(levelerData.level());
+        this.xp(levelerData.xp());
 
         this.receivedRewards.clear();
         for (Map.Entry<String, ReceivedReward> entry : levelerData.receivedRewards.entrySet()) {
 
             ReceivedReward reward = this.receivedRewards.get(entry.getKey());
             if (reward != null) {
-                reward.merge(entry.getValue(), false);
+                reward.merge(entry.getValue());
                 continue;
             }
 
-            this.receivedRewards.put(entry.getKey(), entry.getValue().clone(r -> this.callback.onUpdate(this)));
+            this.receivedRewards.put(entry.getKey(), entry.getValue().clone());
         }
         this.receivedRewards.putAll(levelerData.receivedRewards);
-
-        if (call) this.callback.onUpdate(this);
     }
 
     // ----- SERIALIZATION -----
@@ -132,8 +102,8 @@ public class LevelerData implements net.jandie1505.playerlevels.api.level.Levele
         return json;
     }
 
-    public static LevelerData fromJSON(JSONObject json, @Nullable Callback callback) throws JSONException {
-        LevelerData levelerData = new LevelerData(callback);
+    public static LevelerData fromJSON(JSONObject json) throws JSONException {
+        LevelerData levelerData = new LevelerData();
 
         levelerData.level = json.optInt("level", 0);
         levelerData.xp = json.optDouble("xp", 0);
@@ -143,7 +113,7 @@ public class LevelerData implements net.jandie1505.playerlevels.api.level.Levele
             for (String key : receivedRewards.keySet()) {
                 JSONObject entry = receivedRewards.optJSONObject(key, null);
                 if (entry == null) continue;
-                levelerData.receivedRewards.put(key, ReceivedReward.fromJSON(entry, reward -> levelerData.callback.onUpdate(levelerData)));
+                levelerData.receivedRewards.put(key, ReceivedReward.fromJSON(entry));
             }
         }
 
@@ -178,12 +148,6 @@ public class LevelerData implements net.jandie1505.playerlevels.api.level.Levele
 
     public boolean isDefault() {
         return this.equals(DEFAULT);
-    }
-
-    // ----- CALLBACK -----
-
-    public interface Callback {
-        void onUpdate(LevelerData levelerData);
     }
 
 }

@@ -32,12 +32,7 @@ public final class Leveler implements net.jandie1505.playerlevels.api.level.Leve
         this.databaseSource = databaseSource;
         this.databaseUpdateInProgress = new AtomicBoolean(false);
         this.manageValuesInProgress = new AtomicBoolean(false);
-        this.data = new LevelerData(data -> new BukkitRunnable() {
-            @Override
-            public void run() {
-                Leveler.this.process(); // TODO: I don't know if this can stay like it is or if it should be called directly without the async task
-            }
-        }.runTaskAsynchronously(this.manager.getPlugin()));
+        this.data = new LevelerData();
         this.updateId = UUID.randomUUID().toString();
     }
 
@@ -111,8 +106,8 @@ public final class Leveler implements net.jandie1505.playerlevels.api.level.Leve
             requiredXP = this.manager.getXPForNextLevel(level, level + 1);
         }
 
-        this.data.level(level, false);
-        this.data.xp(xp, false);
+        this.data.level(level);
+        this.data.xp(xp);
 
         final int levelToPush = level;
 
@@ -169,7 +164,7 @@ public final class Leveler implements net.jandie1505.playerlevels.api.level.Leve
             if (pullResult != null) {
                 // Current data is outdated, replace it with database data
                 if (!this.updateId.equals(pullResult.updateId())) {
-                    this.data.merge(pullResult.data(), true);
+                    this.data.merge(pullResult.data());
                     this.updateId = pullResult.updateId();
                     System.out.println("Local outdated");
                     return UpdateResult.LOCAL_OUTDATED;
@@ -274,7 +269,7 @@ public final class Leveler implements net.jandie1505.playerlevels.api.level.Leve
                 String updateId = pullResultSet.getString("update_id");
 
                 return new LevelDataPullResult(
-                        LevelerData.fromJSON(new JSONObject(pullResultSet.getString("data")), null),
+                        LevelerData.fromJSON(new JSONObject(pullResultSet.getString("data"))),
                         updateId
                 );
             } else {

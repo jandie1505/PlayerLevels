@@ -45,7 +45,7 @@ public class ManagePlayersRewardsSubcommand extends ManagePlayersLevelerTemplate
 
                 String id = args.args()[2];
 
-                ReceivedReward receivedReward = leveler.getData().getOrCreateReceivedReward(id, false);
+                ReceivedReward receivedReward = leveler.getData().getOrCreateReceivedReward(id);
 
                 String message = ("<gold>----- PLAYER REWARD INFO -----\n" +
                         "<gold>ID: " + id + "\n" +
@@ -81,7 +81,8 @@ public class ManagePlayersRewardsSubcommand extends ManagePlayersLevelerTemplate
                 String id = args.args()[2];
 
                 ReceivedReward receivedReward = leveler.getData().getReceivedReward(id);
-                leveler.getData().removeReceivedReward(id, !args.hasOption("no-update"));
+                leveler.getData().removeReceivedReward(id);
+                if (!args.hasOption("no-update")) leveler.processAsynchronously();
 
                 if (receivedReward != null) {
                     sender.sendRichMessage("<green>Successfully deleted reward entry id");
@@ -106,7 +107,8 @@ public class ManagePlayersRewardsSubcommand extends ManagePlayersLevelerTemplate
                     return new Result(false);
                 }
 
-                receivedReward.reset(!args.hasOption("no-update"));
+                receivedReward.reset();
+                if (!args.hasOption("no-update")) leveler.processAsynchronously();
                 sender.sendRichMessage("<green>Successfully reset reward entry");
                 return new Result(true);
             }
@@ -119,18 +121,20 @@ public class ManagePlayersRewardsSubcommand extends ManagePlayersLevelerTemplate
 
                 String id = args.args()[2];
 
-                ReceivedReward receivedReward = leveler.getData().getOrCreateReceivedReward(id, false);
+                ReceivedReward receivedReward = leveler.getData().getOrCreateReceivedReward(id);
 
                 try {
 
                     switch (args.args()[3]) {
                         case "blocked" -> {
-                            receivedReward.blocked(Boolean.parseBoolean(args.args()[4]), !args.hasOption("no-update"));
+                            receivedReward.blocked(Boolean.parseBoolean(args.args()[4]));
+                            if (!args.hasOption("no-update")) leveler.processAsynchronously();
                             sender.sendRichMessage("<green>Successfully updated reward entry");
                             return new Result(true);
                         }
                         case "level" -> {
-                            receivedReward.level(Integer.parseInt(args.args()[4]), !args.hasOption("no-update"));
+                            receivedReward.level(Integer.parseInt(args.args()[4]));
+                            if (!args.hasOption("no-update")) leveler.processAsynchronously();
                             sender.sendRichMessage("<green>Successfully updated reward entry");
                             return new Result(true);
                         }

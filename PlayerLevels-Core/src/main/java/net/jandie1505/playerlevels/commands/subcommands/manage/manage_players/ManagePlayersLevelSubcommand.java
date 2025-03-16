@@ -51,7 +51,8 @@ public class ManagePlayersLevelSubcommand extends ManagePlayersLevelerTemplateSu
                             return new Result(false);
                         }
 
-                        leveler.getData().level(level, !args.hasOption("no-update"));
+                        leveler.getData().level(level);
+                        if (!args.hasOption("no-update")) leveler.processAsynchronously();
                         sender.sendMessage(Component.text("Updated level to " + leveler.getData().level(), NamedTextColor.GRAY));
                         return new Result(true);
                     } else {

@@ -34,7 +34,7 @@ public class IntervalReward extends Reward {
         }
 
         // Condition is not met when the reward has already been applied for the level
-        if (leveler.getData().getOrCreateReceivedReward(this.getId(), false).level() >= leveler.getData().level()) {
+        if (leveler.getData().getOrCreateReceivedReward(this.getId()).level() >= leveler.getData().level()) {
             return false;
         }
 
@@ -44,8 +44,8 @@ public class IntervalReward extends Reward {
 
     @Override
     public void onApplySuccess(@NotNull Leveler leveler) {
-        ReceivedReward reward = leveler.getData().getOrCreateReceivedReward(this.getId(), false);
-        reward.level(reward.level() + 1, false);
+        ReceivedReward reward = leveler.getData().getOrCreateReceivedReward(this.getId());
+        reward.level(reward.level() + 1);
     }
 
     // ----- INTERVAL -----
