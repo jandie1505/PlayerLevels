@@ -4,6 +4,9 @@ import net.jandie1505.playerlevels.api.level.Leveler;
 import net.jandie1505.playerlevels.api.reward.Reward;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * This contains the code which is executed when a reward is applied.
+ */
 public interface RewardExecutor {
 
     /**

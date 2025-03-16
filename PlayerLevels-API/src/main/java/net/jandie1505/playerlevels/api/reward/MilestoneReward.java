@@ -3,6 +3,11 @@ package net.jandie1505.playerlevels.api.reward;
 import net.jandie1505.playerlevels.api.level.ReceivedReward;
 import net.jandie1505.playerlevels.rewards.RewardCondition;
 
+/**
+ * Represents a milestone reward.<br/>
+ * This reward is applied once when the player reaches level x.<br/>
+ * It can also check if the reward is no longer applied and then re-apply it using the {@link RewardCondition}.
+ */
 public interface MilestoneReward extends Reward {
 
     /**

@@ -5,11 +5,16 @@ import org.jetbrains.annotations.NotNull;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * A leveling player.<br/>
+ * Each player has a leveler, which handles the leveling for that player.
+ */
 public interface Leveler {
 
     // ----- VALUES -----
 
     /**
+     * Returns the player's uuid.
      * @return player UUID
      */
     @NotNull UUID getPlayerUUID();
@@ -48,6 +53,9 @@ public interface Leveler {
 
     // ----- INNER CLASSES -----
 
+    /**
+     * The result of the database sync.
+     */
     enum UpdateResult {
 
         /**

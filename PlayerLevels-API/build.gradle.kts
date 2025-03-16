@@ -10,7 +10,7 @@ dependencies {
 
 java {
     withSourcesJar()
-    //withJavadocJar()
+    withJavadocJar()
 }
 
 tasks.shadowJar {

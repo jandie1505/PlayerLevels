@@ -8,6 +8,8 @@ import net.jandie1505.playerlevels.api.PlayerLevelsAPI;
 public class PlayerLevelsAPIProvider {
     private static PlayerLevelsAPI api;
 
+    private PlayerLevelsAPIProvider() {}
+
     /**
      * Returns the API.
      * @return api

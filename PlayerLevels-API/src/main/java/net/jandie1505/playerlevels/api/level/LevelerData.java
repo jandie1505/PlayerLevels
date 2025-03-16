@@ -14,6 +14,7 @@ public interface LevelerData {
     // ----- LEVEL -----
 
     /**
+     * Returns the leveler's level.
      * @return player level
      */
     int level();
@@ -27,6 +28,7 @@ public interface LevelerData {
     // ----- XP -----
 
     /**
+     * Returns the leveler's xp.
      * @return player xp
      */
     double xp();

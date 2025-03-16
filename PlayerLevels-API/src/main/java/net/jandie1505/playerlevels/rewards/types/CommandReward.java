@@ -6,11 +6,16 @@ import net.jandie1505.playerlevels.api.reward.MilestoneReward;
 import net.jandie1505.playerlevels.api.reward.Reward;
 import net.jandie1505.playerlevels.rewards.IntervalRewardData;
 import net.jandie1505.playerlevels.rewards.MilestoneRewardData;
+import net.jandie1505.playerlevels.rewards.RewardConfig;
 import net.jandie1505.playerlevels.rewards.RewardExecutor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * This is a reward that executes a command when it is applied.<br/>
+ * You can get the data using {@link CommandReward#createInterval(String, boolean, SenderType, int)} or {@link CommandReward#createMilestone(String, boolean, SenderType, int)}.
+ */
 public class CommandReward implements RewardExecutor {
     @NotNull private final String command;
     @NotNull private final SenderType senderType;
@@ -69,13 +74,36 @@ public class CommandReward implements RewardExecutor {
         }
     }
 
+    /**
+     * The sender type of the command.<br/>
+     * Either the player itself or the console.<br/>
+     * Support for custom command senders is planned.
+     */
     public enum SenderType {
+
+        /**
+         * Execute the command as the console.
+         */
         CONSOLE,
+
+        /**
+         * Execute the command as the player.
+         */
         PLAYER;
+
     }
 
     // ----- CREATE -----
 
+    /**
+     * Creates a milestone reward data for this command reward.<br/>
+     * The reward can be registered at {@link net.jandie1505.playerlevels.api.reward.RewardsManager#addMilestoneReward(RewardConfig, MilestoneRewardData)}.
+     * @param command the command that should be executed
+     * @param requiresOnlinePlayer if the command requires the player to be online
+     * @param senderType {@link SenderType}
+     * @param level the level the reward should be applied
+     * @return milestone reward data
+     */
     public static MilestoneRewardData createMilestone(
             @NotNull String command,
             boolean requiresOnlinePlayer,
@@ -85,6 +113,15 @@ public class CommandReward implements RewardExecutor {
         return new MilestoneRewardData(new CommandReward(command, senderType), null, requiresOnlinePlayer, level);
     }
 
+    /**
+     * Creates an interval reward data for this command reward.<br/>
+     * The reward data can be registered at {@link net.jandie1505.playerlevels.api.reward.RewardsManager#addIntervalReward(RewardConfig, IntervalRewardData)}.
+     * @param command the command that should be executed
+     * @param requiresOnlinePlayer if the command requires the player to be online
+     * @param senderType {@link SenderType}
+     * @param interval interval in levels the player should get the reward applied
+     * @return interval reward data
+     */
     public static IntervalRewardData createInterval(
             @NotNull String command,
             boolean requiresOnlinePlayer,
