@@ -28,4 +28,9 @@ public class MilestoneReward extends Reward implements net.jandie1505.playerleve
         return this.level;
     }
 
+    @Override
+    public void onApplySuccess(@NotNull Leveler leveler) {
+        leveler.getData().getOrCreateReceivedReward(this.getId()).level(leveler.getData().level());
+    }
+
 }
