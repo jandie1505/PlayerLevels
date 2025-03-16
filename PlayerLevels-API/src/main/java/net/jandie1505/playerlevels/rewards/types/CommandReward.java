@@ -1,8 +1,8 @@
 package net.jandie1505.playerlevels.rewards.types;
 
-import net.jandie1505.playerlevels.api.reward.IntervalPlayerReward;
+import net.jandie1505.playerlevels.api.reward.IntervalReward;
 import net.jandie1505.playerlevels.api.level.Leveler;
-import net.jandie1505.playerlevels.api.reward.MilestonePlayerReward;
+import net.jandie1505.playerlevels.api.reward.MilestoneReward;
 import net.jandie1505.playerlevels.api.reward.Reward;
 import net.jandie1505.playerlevels.rewards.IntervalRewardData;
 import net.jandie1505.playerlevels.rewards.MilestoneRewardData;
@@ -35,8 +35,8 @@ public class CommandReward implements RewardExecutor {
         cmd = cmd.replace("{player_reward_level}", String.valueOf(player.getData().getOrCreateReceivedReward(reward.getId()).level()));
 
         cmd = cmd.replace("{reward_id}", reward.getId());
-        if (reward instanceof MilestonePlayerReward r) cmd = cmd.replace("{reward_level}", String.valueOf(r.getLevel()));
-        if (reward instanceof IntervalPlayerReward r) cmd = cmd.replace("{reward_interval}", String.valueOf(r.getInterval()));
+        if (reward instanceof MilestoneReward r) cmd = cmd.replace("{reward_level}", String.valueOf(r.getLevel()));
+        if (reward instanceof IntervalReward r) cmd = cmd.replace("{reward_interval}", String.valueOf(r.getInterval()));
         cmd = cmd.replace("{reward_name}", reward.getName());
         cmd = cmd.replace("{reward_requires_online_player}", String.valueOf(reward.requiresOnlinePlayer()));
         cmd = cmd.replace("{reward_command}", this.command);

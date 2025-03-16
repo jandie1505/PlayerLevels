@@ -16,10 +16,10 @@ public interface RewardsManager {
     // ----- CREATE REWARDS -----
 
     @SuppressWarnings("UnusedReturnValue")
-    @NotNull MilestonePlayerReward addMilestoneReward(@NotNull RewardConfig config, @NotNull MilestoneRewardData data);
+    @NotNull MilestoneReward addMilestoneReward(@NotNull RewardConfig config, @NotNull MilestoneRewardData data);
 
     @SuppressWarnings("UnusedReturnValue")
-    @NotNull IntervalPlayerReward addIntervalReward(@NotNull RewardConfig config, @NotNull IntervalRewardData data);
+    @NotNull IntervalReward addIntervalReward(@NotNull RewardConfig config, @NotNull IntervalRewardData data);
 
     // ----- MANAGE REWARDS -----
 

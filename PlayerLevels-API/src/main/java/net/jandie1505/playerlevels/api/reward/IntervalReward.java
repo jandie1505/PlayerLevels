@@ -2,7 +2,7 @@ package net.jandie1505.playerlevels.api.reward;
 
 import net.jandie1505.playerlevels.rewards.RewardCondition;
 
-public interface IntervalPlayerReward extends Reward {
+public interface IntervalReward extends Reward {
 
     RewardCondition DEFAULT_CONDITION = (reward, player) -> false;
 

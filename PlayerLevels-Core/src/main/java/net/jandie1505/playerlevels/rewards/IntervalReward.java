@@ -1,6 +1,5 @@
 package net.jandie1505.playerlevels.rewards;
 
-import net.jandie1505.playerlevels.api.reward.IntervalPlayerReward;
 import net.jandie1505.playerlevels.leveler.Leveler;
 import net.jandie1505.playerlevels.leveler.ReceivedReward;
 import org.jetbrains.annotations.NotNull;
@@ -9,14 +8,14 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class IntervalReward extends Reward implements IntervalPlayerReward {
+public class IntervalReward extends Reward implements net.jandie1505.playerlevels.api.reward.IntervalReward {
     private final int interval;
     @NotNull private final RewardCondition customCondition;
 
     public IntervalReward(@NotNull RewardsManager manager, @NotNull String id, @Nullable String serverId, int interval, @NotNull RewardExecutor executor, @Nullable RewardCondition customCondition, boolean requireOnlinePlayer, @NotNull String name, @Nullable String description) {
         super(manager, id, serverId, executor, requireOnlinePlayer, name, description);
         this.interval = interval;
-        this.customCondition = customCondition != null ? customCondition : IntervalPlayerReward.DEFAULT_CONDITION;
+        this.customCondition = customCondition != null ? customCondition : net.jandie1505.playerlevels.api.reward.IntervalReward.DEFAULT_CONDITION;
     }
 
     public IntervalReward(@NotNull RewardsManager manager, @NotNull RewardConfig config, @NotNull IntervalRewardData data) {
