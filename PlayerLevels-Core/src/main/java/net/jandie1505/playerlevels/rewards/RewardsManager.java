@@ -51,7 +51,7 @@ public class RewardsManager implements RewardManager {
 
     @SuppressWarnings("UnusedReturnValue")
     public @NotNull IntervalReward addIntervalReward(@NotNull RewardConfig config, @NotNull IntervalRewardData data) {
-        IntervalReward reward = new IntervalReward(this, config, data, data.level());
+        IntervalReward reward = new IntervalReward(this, config, data);
         this.addReward(reward);
         return reward;
     }

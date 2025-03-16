@@ -82,7 +82,7 @@ public class CommandReward implements RewardExecutor {
             @NotNull SenderType senderType,
             int level
     ) {
-        return new MilestoneRewardData(new CommandReward(command, senderType), MilestonePlayerReward.DEFAULT_CONDITION, requiresOnlinePlayer, level);
+        return new MilestoneRewardData(new CommandReward(command, senderType), null, requiresOnlinePlayer, level);
     }
 
     public static IntervalRewardData createInterval(
@@ -91,7 +91,7 @@ public class CommandReward implements RewardExecutor {
             SenderType senderType,
             int interval
     ) {
-        return new IntervalRewardData(new CommandReward(command, senderType), MilestonePlayerReward.DEFAULT_CONDITION, requiresOnlinePlayer, interval);
+        return new IntervalRewardData(new CommandReward(command, senderType), null, requiresOnlinePlayer, interval);
     }
 
 }
