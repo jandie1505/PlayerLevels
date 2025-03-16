@@ -19,7 +19,7 @@ public class IntervalReward extends Reward implements net.jandie1505.playerlevel
     }
 
     public IntervalReward(@NotNull RewardsManager manager, @NotNull RewardConfig config, @NotNull IntervalRewardData data) {
-        this(manager, config.id(), config.serverId(), data.level(), data.executor(), data.customCondition(), data.requiresPlayerOnline(), config.name(), config.description());
+        this(manager, config.id(), config.serverId(), data.interval(), data.executor(), data.customCondition(), data.requiresPlayerOnline(), config.name(), config.description());
     }
 
     // ----- CONDITIONS -----

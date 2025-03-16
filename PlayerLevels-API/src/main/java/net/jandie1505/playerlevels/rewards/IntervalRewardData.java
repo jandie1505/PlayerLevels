@@ -7,5 +7,5 @@ public record IntervalRewardData(
         @NotNull RewardExecutor executor,
         @Nullable RewardCondition customCondition,
         boolean requiresPlayerOnline,
-        int level
+        int interval
 ) {}
