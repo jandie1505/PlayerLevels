@@ -1,7 +1,7 @@
 package net.jandie1505.playerlevels.rewards;
 
 import net.jandie1505.playerlevels.api.level.Leveler;
-import net.jandie1505.playerlevels.api.reward.PlayerReward;
+import net.jandie1505.playerlevels.api.reward.Reward;
 import org.jetbrains.annotations.NotNull;
 
 public interface RewardCondition {
@@ -12,6 +12,6 @@ public interface RewardCondition {
      * @param player player
      * @return true = reward is already applied
      */
-    boolean isApplied(@NotNull PlayerReward reward, @NotNull Leveler player);
+    boolean isApplied(@NotNull Reward reward, @NotNull Leveler player);
 
 }

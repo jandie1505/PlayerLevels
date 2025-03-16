@@ -3,7 +3,7 @@ package net.jandie1505.playerlevels.rewards.types;
 import net.jandie1505.playerlevels.api.reward.IntervalPlayerReward;
 import net.jandie1505.playerlevels.api.level.Leveler;
 import net.jandie1505.playerlevels.api.reward.MilestonePlayerReward;
-import net.jandie1505.playerlevels.api.reward.PlayerReward;
+import net.jandie1505.playerlevels.api.reward.Reward;
 import net.jandie1505.playerlevels.rewards.IntervalRewardData;
 import net.jandie1505.playerlevels.rewards.MilestoneRewardData;
 import net.jandie1505.playerlevels.rewards.RewardExecutor;
@@ -21,7 +21,7 @@ public class CommandReward implements RewardExecutor {
     }
 
     @Override
-    public boolean onApply(@NotNull PlayerReward reward, @NotNull Leveler player) {
+    public boolean onApply(@NotNull Reward reward, @NotNull Leveler player) {
 
         String cmd = this.command;
 

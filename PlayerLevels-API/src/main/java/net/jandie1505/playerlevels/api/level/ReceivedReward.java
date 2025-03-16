@@ -1,10 +1,12 @@
 package net.jandie1505.playerlevels.api.level;
 
+import net.jandie1505.playerlevels.api.reward.Reward;
+
 /**
  * Represents a reward a player has received.<br/>
  * This is an entry that the plugin knows the player has already received the reward,
  * and not the reward itself.<br/>
- * If you are looking for the actual reward, go to {@link net.jandie1505.playerlevels.api.reward.PlayerReward}.
+ * If you are looking for the actual reward, go to {@link Reward}.
  */
 public interface ReceivedReward {
 

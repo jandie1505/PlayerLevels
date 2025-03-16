@@ -3,7 +3,7 @@ package net.jandie1505.playerlevels.api.reward;
 import net.jandie1505.playerlevels.api.level.ReceivedReward;
 import net.jandie1505.playerlevels.rewards.RewardCondition;
 
-public interface MilestonePlayerReward extends PlayerReward {
+public interface MilestonePlayerReward extends Reward {
 
     /**
      * The default RewardCondition.<br/>

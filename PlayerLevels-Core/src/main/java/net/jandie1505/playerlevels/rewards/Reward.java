@@ -1,6 +1,5 @@
 package net.jandie1505.playerlevels.rewards;
 
-import net.jandie1505.playerlevels.api.reward.PlayerReward;
 import net.jandie1505.playerlevels.events.RewardApplyEvent;
 import net.jandie1505.playerlevels.leveler.Leveler;
 import net.jandie1505.playerlevels.leveler.ReceivedReward;
@@ -13,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 
-public abstract class Reward implements PlayerReward {
+public abstract class Reward implements net.jandie1505.playerlevels.api.reward.Reward {
     @NotNull private final RewardsManager manager;
     @NotNull private final String id;
     @Nullable private final String serverId;

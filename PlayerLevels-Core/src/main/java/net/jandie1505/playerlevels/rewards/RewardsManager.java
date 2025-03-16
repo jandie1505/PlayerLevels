@@ -1,7 +1,6 @@
 package net.jandie1505.playerlevels.rewards;
 
 import net.jandie1505.playerlevels.PlayerLevels;
-import net.jandie1505.playerlevels.api.reward.PlayerReward;
 import net.jandie1505.playerlevels.leveler.Leveler;
 import org.jetbrains.annotations.NotNull;
 
@@ -57,7 +56,7 @@ public class RewardsManager implements net.jandie1505.playerlevels.api.reward.Re
 
     // ----- MANAGE REWARDS -----
 
-    public final @NotNull Map<String, PlayerReward> getRewards() {
+    public final @NotNull Map<String, net.jandie1505.playerlevels.api.reward.Reward> getRewards() {
         return Map.copyOf(this.rewards);
     }
 

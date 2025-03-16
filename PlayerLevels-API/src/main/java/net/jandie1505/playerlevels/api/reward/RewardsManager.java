@@ -27,7 +27,7 @@ public interface RewardsManager {
      * Returns an unmodifiable map of all registered rewards.
      * @return rewards map
      */
-    @NotNull Map<String, PlayerReward> getRewards();
+    @NotNull Map<String, Reward> getRewards();
 
     /**
      * Removes a reward.
@@ -40,6 +40,6 @@ public interface RewardsManager {
      * @param rewardId reward id
      * @return reward or null
      */
-    @Nullable PlayerReward getReward(@NotNull String rewardId);
+    @Nullable Reward getReward(@NotNull String rewardId);
 
 }

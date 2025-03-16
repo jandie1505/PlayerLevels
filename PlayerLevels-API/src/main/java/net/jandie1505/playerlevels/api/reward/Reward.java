@@ -6,7 +6,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * A reward a player will receive for reaching a specific level.
  */
-public interface PlayerReward {
+public interface Reward {
 
     /**
      * This is the unique id of the upgrade.
