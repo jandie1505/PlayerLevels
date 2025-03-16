@@ -3,8 +3,11 @@ package net.jandie1505.playerlevels.api.level;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public interface Leveler {
+
+    // ----- VALUES -----
 
     /**
      * @return player UUID
@@ -26,5 +29,97 @@ public interface Leveler {
      * @return if player is cached
      */
     boolean isCached();
+
+    // ----- TASKS -----
+
+    /**
+     * Processes the Leveler.<br/>
+     * This means doing the levelling process and applying rewards.
+     */
+    void processAsynchronously();
+
+    /**
+     * Synchronizes the leveler with the database.<br/>
+     * The result returns what has been done.
+     * @return result
+     * @throws IllegalStateException if an update is already in progress
+     */
+    CompletableFuture<UpdateResult> syncAsynchronously();
+
+    // ----- INNER CLASSES -----
+
+    enum UpdateResult {
+
+        /**
+         * Local leveler is outdated.<br/>
+         * Pull from database.
+         */
+        LOCAL_OUTDATED(true, false, false),
+
+        /**
+         * Remote is outdated, but leveler is already available.<br/>
+         * Update existing leveler entry in the database.
+         */
+        REMOTE_OUTDATED_AVAIL(false, true, false),
+
+        /**
+         * Remote is outdated, and leveler is not in the database.<br/>
+         * Create new leveler entry in the database.
+         */
+        REMOTE_OUTDATED_MISSING(false, true, false),
+
+        /**
+         * Leveler is up-to-date with the database.<br/>
+         * Nothing has to be done.
+         */
+        UP_TO_DATE(false, false, false),
+
+        /**
+         * An error occurred while synchronizing.<br/>
+         * The error has been logged.
+         */
+        ERROR(true, false, true),
+
+        /**
+         * The sync task is already in progress.<br/>
+         * It can not run multiple times at the same time.
+         */
+        ALREADY_IN_PROGRESS(false, false, true);
+
+        private final boolean localChanged;
+        private final boolean remoteChanged;
+        private final boolean fail;
+
+        UpdateResult(boolean localChanged, boolean remoteChanged, boolean fail) {
+            this.localChanged = localChanged;
+            this.remoteChanged = remoteChanged;
+            this.fail = fail;
+        }
+
+        /**
+         * Returns true if the local Leveler has been changed.
+         * @return local changed
+         */
+        public boolean isLocalChanged() {
+            return localChanged;
+        }
+
+        /**
+         * Returns true if the remote Leveler entry has been changed.
+         * @return remote changed
+         */
+        public boolean isRemoteChanged() {
+            return remoteChanged;
+        }
+
+        /**
+         * Returns true if the sync task has failed.
+         * @return sync failed
+         */
+        public boolean isFail() {
+            return fail;
+        }
+
+    }
 
 }

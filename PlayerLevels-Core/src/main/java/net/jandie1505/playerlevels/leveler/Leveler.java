@@ -293,36 +293,4 @@ public final class Leveler implements net.jandie1505.playerlevels.api.level.Leve
 
     private record LevelDataPullResult(@NotNull LevelerData data, @NotNull String updateId) {}
 
-    public enum UpdateResult {
-        LOCAL_OUTDATED(true, false, false),
-        REMOTE_OUTDATED_AVAIL(false, true, false),
-        REMOTE_OUTDATED_MISSING(false, true, false),
-        UP_TO_DATE(false, false, false),
-        ERROR(true, false, true),
-        ALREADY_IN_PROGRESS(false, false, true);
-
-        private final boolean localChanged;
-        private final boolean remoteChanged;
-        private final boolean fail;
-
-        UpdateResult(boolean localChanged, boolean remoteChanged, boolean fail) {
-            this.localChanged = localChanged;
-            this.remoteChanged = remoteChanged;
-            this.fail = fail;
-        }
-
-        public boolean isLocalChanged() {
-            return localChanged;
-        }
-
-        public boolean isRemoteChanged() {
-            return remoteChanged;
-        }
-
-        public boolean isFail() {
-            return fail;
-        }
-
-    }
-
 }
