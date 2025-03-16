@@ -49,14 +49,14 @@ public interface Leveler {
      * @return result
      * @throws IllegalStateException if an update is already in progress
      */
-    CompletableFuture<UpdateResult> syncAsynchronously();
+    CompletableFuture<SyncResult> syncAsynchronously();
 
     // ----- INNER CLASSES -----
 
     /**
      * The result of the database sync.
      */
-    enum UpdateResult {
+    enum SyncResult {
 
         /**
          * Local leveler is outdated.<br/>
@@ -98,7 +98,7 @@ public interface Leveler {
         private final boolean remoteChanged;
         private final boolean fail;
 
-        UpdateResult(boolean localChanged, boolean remoteChanged, boolean fail) {
+        SyncResult(boolean localChanged, boolean remoteChanged, boolean fail) {
             this.localChanged = localChanged;
             this.remoteChanged = remoteChanged;
             this.fail = fail;

@@ -132,17 +132,17 @@ public final class Leveler implements net.jandie1505.playerlevels.api.level.Leve
      * The recommended way for updating.
      * @return future result
      */
-    public CompletableFuture<UpdateResult> syncAsynchronously() {
+    public CompletableFuture<SyncResult> syncAsynchronously() {
 
         if (this.databaseUpdateInProgress.get()) {
             this.manager.getPlugin().getLogger().warning("Sync task of Leveler " + this.playerUUID + " has been called while still in progress (async call). This can be caused by unsupported API usage.");
         }
 
-        CompletableFuture<UpdateResult> future = new CompletableFuture<>();
+        CompletableFuture<SyncResult> future = new CompletableFuture<>();
         new BukkitRunnable() {
             @Override
             public void run() {
-                UpdateResult result = Leveler.this.sync();
+                SyncResult result = Leveler.this.sync();
                 future.complete(result);
             }
         }.runTaskAsynchronously(this.manager.getPlugin());
@@ -155,18 +155,18 @@ public final class Leveler implements net.jandie1505.playerlevels.api.level.Leve
      * Don't use this from the servers main thread.
      * @return result
      */
-    public @NotNull UpdateResult sync() {
+    public @NotNull net.jandie1505.playerlevels.api.level.Leveler.SyncResult sync() {
 
         // Prevent executing this more than once at the same time
         if (!this.databaseUpdateInProgress.compareAndSet(false, true)) {
             this.manager.getPlugin().getLogger().warning("Sync task of Leveler " + this.playerUUID + " has been called while still in progress. This can be caused by unsupported API usage.");
-            return UpdateResult.ALREADY_IN_PROGRESS;
+            return SyncResult.ALREADY_IN_PROGRESS;
         }
 
         try (Connection connection = this.databaseSource.getConnection()) {
             if (connection == null) {
                 System.out.println("Error: No database connection available");
-                return UpdateResult.ERROR;
+                return SyncResult.ERROR;
             }
 
             LevelDataPullResult pullResult = this.getDataFromDatabase(connection);
@@ -177,27 +177,27 @@ public final class Leveler implements net.jandie1505.playerlevels.api.level.Leve
                     this.data.merge(pullResult.data());
                     this.updateId = pullResult.updateId();
                     System.out.println("Local outdated");
-                    return UpdateResult.LOCAL_OUTDATED;
+                    return SyncResult.LOCAL_OUTDATED;
                 }
 
                 // Remote data is outdated, push changes
                 if (!this.data.equals(pullResult.data())) {
                     this.updateDataInDatabase(connection);
                     System.out.println("Remote outdated");
-                    return UpdateResult.REMOTE_OUTDATED_AVAIL;
+                    return SyncResult.REMOTE_OUTDATED_AVAIL;
                 }
 
             } else {
                 this.insertDataIntoDatabase(connection);
                 System.out.println("Remote not avail");
-                return UpdateResult.REMOTE_OUTDATED_MISSING;
+                return SyncResult.REMOTE_OUTDATED_MISSING;
             }
 
-            return UpdateResult.UP_TO_DATE;
+            return SyncResult.UP_TO_DATE;
         } catch (SQLException | JSONException e) {
             System.out.println("Exception: ");
             e.printStackTrace();
-            return UpdateResult.ERROR;
+            return SyncResult.ERROR;
         } finally {
             this.databaseUpdateInProgress.set(false);
         }
