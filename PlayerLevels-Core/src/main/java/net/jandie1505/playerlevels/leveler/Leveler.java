@@ -60,6 +60,11 @@ public final class Leveler implements net.jandie1505.playerlevels.api.level.Leve
      * Processes the leveler asynchronously.
      */
     public void processAsynchronously() {
+
+        if (this.manageValuesInProgress.get()) {
+            throw new IllegalStateException("Process task of Leveler " + this.playerUUID + " has been called while still in progress (async call). This can be caused by unsupported API usage.");
+        }
+
         new BukkitRunnable() {
             @Override
             public void run() {
@@ -128,6 +133,11 @@ public final class Leveler implements net.jandie1505.playerlevels.api.level.Leve
      * @return future result
      */
     public CompletableFuture<UpdateResult> syncAsynchronously() {
+
+        if (this.databaseUpdateInProgress.get()) {
+            this.manager.getPlugin().getLogger().warning("Sync task of Leveler " + this.playerUUID + " has been called while still in progress (async call). This can be caused by unsupported API usage.");
+        }
+
         CompletableFuture<UpdateResult> future = new CompletableFuture<>();
         new BukkitRunnable() {
             @Override
