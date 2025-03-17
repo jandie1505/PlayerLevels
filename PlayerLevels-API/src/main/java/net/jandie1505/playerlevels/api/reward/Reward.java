@@ -28,6 +28,15 @@ public interface Reward {
     boolean requiresOnlinePlayer();
 
     /**
+     * Returns the level limit.<br/>
+     * Levels after this limit are not checked for this reward.<br/>
+     * That means, if the reward unlocks on level 50, but the limit is set to 49, the reward will not be applied<br/>
+     * This is useful for limiting IntervalRewards, for example, you get a reward each level, but only until level 50.
+     * @return limit
+     */
+    int getLimit();
+
+    /**
      * Returns if the upgrade is enabled.
      * @return enabled
      */

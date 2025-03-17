@@ -25,10 +25,4 @@ public interface IntervalReward extends Reward {
      */
     int getInterval();
 
-    /**
-     * Returns the limit.
-     * @return limit
-     */
-    int getLimit();
-
 }
