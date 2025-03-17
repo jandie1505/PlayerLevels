@@ -1,16 +1,15 @@
 package net.jandie1505.playerlevels.rewards.types;
 
+import net.chaossquad.mclib.storage.DataStorage;
 import net.jandie1505.playerlevels.api.reward.IntervalReward;
 import net.jandie1505.playerlevels.api.level.Leveler;
 import net.jandie1505.playerlevels.api.reward.MilestoneReward;
 import net.jandie1505.playerlevels.api.reward.Reward;
-import net.jandie1505.playerlevels.rewards.IntervalRewardData;
-import net.jandie1505.playerlevels.rewards.MilestoneRewardData;
-import net.jandie1505.playerlevels.rewards.RewardConfig;
-import net.jandie1505.playerlevels.rewards.RewardExecutor;
+import net.jandie1505.playerlevels.rewards.*;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * This is a reward that executes a command when it is applied.<br/>
@@ -141,6 +140,49 @@ public class CommandReward implements RewardExecutor {
             int limit
     ) {
         return new IntervalRewardData(new CommandReward(command, senderType), null, requiresOnlinePlayer, start, interval, limit);
+    }
+
+    // ----- CREATOR -----
+
+    /**
+     * Creates a new CommandReward from config.
+     */
+    public static class Creator implements RewardCreator {
+
+        /**
+         * Creates the creator.
+         */
+        public Creator() {}
+
+        @Override
+        public @Nullable MilestoneRewardData createMilestoneReward(@NotNull DataStorage data) {
+
+            String command = data.optString("command", null);
+            if (command == null) throw new IllegalArgumentException("command is null");
+
+            return createMilestone(
+                    command,
+                    data.optBoolean("requires_online_player", true),
+                    SenderType.valueOf(data.optString("sender_type", "").toUpperCase()),
+                    data.optInt("level", 1)
+            );
+        }
+
+        @Override
+        public @Nullable IntervalRewardData createIntervalReward(@NotNull DataStorage data) {
+
+            String command = data.optString("command", null);
+            if (command == null) throw new IllegalArgumentException("command is null");
+
+            return createInterval(
+                    command,
+                    data.optBoolean("requires_online_player", true),
+                    SenderType.valueOf(data.optString("sender_type", "").toUpperCase()),
+                    data.optInt("start", 1),
+                    data.optInt("interval", 1),
+                    data.optInt("limit", 1)
+            );
+        }
     }
 
 }

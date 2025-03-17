@@ -12,6 +12,7 @@ import net.jandie1505.playerlevels.leveler.LevelingManager;
 import net.jandie1505.playerlevels.rewards.IntervalReward;
 import net.jandie1505.playerlevels.rewards.RewardConfig;
 import net.jandie1505.playerlevels.rewards.RewardsManager;
+import net.jandie1505.playerlevels.rewards.RewardsRegistry;
 import net.jandie1505.playerlevels.rewards.types.CommandReward;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
@@ -27,6 +28,7 @@ public class PlayerLevels extends JavaPlugin implements PlayerLevelsAPI {
     @NotNull private final DataStorage config;
     private LevelingManager levelingManager;
     private RewardsManager rewardsManager;
+    private RewardsRegistry rewardsRegistry;
     private DatabaseManager databaseManager;
     private PlayerLevelsCommand command;
 
@@ -111,6 +113,11 @@ public class PlayerLevels extends JavaPlugin implements PlayerLevelsAPI {
     @Override
     public RewardsManager getRewardsManager() {
         return this.rewardsManager;
+    }
+
+    @Override
+    public RewardsRegistry getRewardsRegistry() {
+        return this.rewardsRegistry;
     }
 
     public DatabaseManager getDatabaseManager() {

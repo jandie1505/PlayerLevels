@@ -1,15 +1,14 @@
 package net.jandie1505.playerlevels.rewards.types;
 
+import net.chaossquad.mclib.storage.DataStorage;
 import net.jandie1505.playerlevels.api.level.Leveler;
 import net.jandie1505.playerlevels.api.reward.Reward;
-import net.jandie1505.playerlevels.rewards.IntervalRewardData;
-import net.jandie1505.playerlevels.rewards.MilestoneRewardData;
-import net.jandie1505.playerlevels.rewards.RewardCondition;
-import net.jandie1505.playerlevels.rewards.RewardExecutor;
+import net.jandie1505.playerlevels.rewards.*;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
 import net.luckperms.api.node.Node;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * A reward that gives a permission to a player when it is applied.<br/>
@@ -78,6 +77,44 @@ public class LuckPermsPermissionReward implements RewardExecutor, RewardConditio
     public static IntervalRewardData createIntervalRewardData(String permission, int start, int interval, int limit) {
         LuckPermsPermissionReward reward = new LuckPermsPermissionReward(permission);
         return new IntervalRewardData(reward, reward, true, start, interval, limit);
+    }
+
+    /**
+     * Creates a new LuckPermsPermissionReward from config.
+     */
+    public static class Creator implements RewardCreator {
+
+        /**
+         * Creates the creator.
+         */
+        public Creator() {}
+
+        @Override
+        public @Nullable MilestoneRewardData createMilestoneReward(@NotNull DataStorage data) {
+
+            String permission = data.optString("permission", null);
+            if (permission == null) throw new NullPointerException("permission is null");
+
+            return createMilestoneRewardData(
+                    permission,
+                    data.optInt("level", 0)
+            );
+        }
+
+        @Override
+        @Deprecated
+        public @Nullable IntervalRewardData createIntervalReward(@NotNull DataStorage data) {
+
+            String permission = data.optString("permission", null);
+            if (permission == null) throw new NullPointerException("permission is null");
+
+            return createIntervalRewardData(
+                    permission,
+                    data.optInt("start", 1),
+                    data.optInt("interval", 1),
+                    data.optInt("limit", 1)
+            );
+        }
     }
 
 }
