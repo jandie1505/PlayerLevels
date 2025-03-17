@@ -1,5 +1,7 @@
 package net.jandie1505.playerlevels.rewards;
 
+import net.jandie1505.playerlevels.events.RewardAppliedEvent;
+import net.jandie1505.playerlevels.events.RewardApplyEvent;
 import net.jandie1505.playerlevels.leveler.Leveler;
 import net.jandie1505.playerlevels.leveler.ReceivedReward;
 import org.bukkit.Bukkit;
@@ -74,27 +76,47 @@ public abstract class Reward implements net.jandie1505.playerlevels.api.reward.R
                         continue;
                     }
 
-                    // APPLY EVENT
+                    // APPLY REWARD
 
-                    boolean success;
+                    // Call apply event before applying the reward
+                    RewardApplyEvent event = new RewardApplyEvent(leveler, Reward.this, level);
+                    Bukkit.getPluginManager().callEvent(event);
 
-                    // Apply event and catch errors
-                    try {
-                        success = Reward.this.executor.onApply(Reward.this, leveler, level);
-                    } catch (Exception e) {
-                        Reward.this.getManager().getPlugin().getLogger().log(Level.WARNING, "Exception while applying reward " + Reward.this.id + " to player " + leveler.getPlayerUUID(), e);
-                        return;
-                    }
+                    if (event.getResult().isApplied()) {
 
-                    // Do not mark the event as applied when it was unsuccessful
-                    if (!success) {
-                        Reward.this.getManager().getPlugin().getLogger().log(Level.WARNING, "Failed to apply reward " + Reward.this.id + " to player " + leveler.getPlayerUUID() + ": Executor returned failure");
-                        return;
+                        // The event is applied when the event result is either APPLY or APPLY_SKIP
+
+                        boolean success;
+
+                        // Apply event and catch errors
+                        try {
+                            success = Reward.this.executor.onApply(Reward.this, leveler, level);
+                        } catch (Exception e) {
+                            Reward.this.getManager().getPlugin().getLogger().log(Level.WARNING, "Exception while applying reward " + Reward.this.id + " to player " + leveler.getPlayerUUID(), e);
+                            return;
+                        }
+
+                        // Do not mark the event as applied when it was unsuccessful
+                        if (!success) {
+                            Reward.this.getManager().getPlugin().getLogger().log(Level.WARNING, "Failed to apply reward " + Reward.this.id + " to player " + leveler.getPlayerUUID() + ": Executor returned failure");
+                            return;
+                        }
+
                     }
 
                     // SUCCESS
 
-                    Reward.this.onApplySuccess(leveler, level);
+                    if (event.getResult().isMarkedAsApplied()) {
+
+                        // The reward is marked successful when the event result is APPLY or CANCEL_MARK_APPLIED
+
+                        Reward.this.onApplySuccess(leveler, level);
+
+                        // Call applied event
+                        Bukkit.getPluginManager().callEvent(new RewardAppliedEvent(leveler, Reward.this, level));
+
+                    }
+
                 }
 
             }
