@@ -4,6 +4,7 @@ import net.chaossquad.mclib.command.TabCompletingCommandExecutor;
 import net.jandie1505.playerlevels.PlayerLevels;
 import net.jandie1505.playerlevels.commands.subcommands.utils.OptionParser;
 import net.jandie1505.playerlevels.constants.Permissions;
+import net.jandie1505.playerlevels.rewards.IntervalReward;
 import net.jandie1505.playerlevels.rewards.MilestoneReward;
 import net.jandie1505.playerlevels.rewards.Reward;
 import org.bukkit.command.Command;
@@ -49,6 +50,11 @@ public class ManageRewardsInfoSubcommand implements TabCompletingCommandExecutor
             sender.sendRichMessage("<gold>Name: " + reward.getName());
             sender.sendRichMessage("<gold>Type:" + reward.getClass().getSimpleName());
             if (reward instanceof MilestoneReward r) sender.sendRichMessage("<gold>Level: " + r.getLevel());
+            if (reward instanceof IntervalReward r) {
+                sender.sendRichMessage("<gold>Start: " + r.getStart());
+                sender.sendRichMessage("<gold>Interval: " + r.getInterval());
+                sender.sendRichMessage("<gold>Limit: " + (r.getLimit() > 0 ? "" + r.getLimit() : "disabled"));
+            }
             sender.sendRichMessage("<gold>ServerId: " + reward.getServerId());
             sender.sendRichMessage("<gold>Enabled: " + reward.isEnabled());
             sender.sendRichMessage("<gold>Description: " + reward.getDescription());

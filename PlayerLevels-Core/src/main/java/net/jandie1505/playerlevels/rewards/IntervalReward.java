@@ -9,17 +9,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class IntervalReward extends Reward implements net.jandie1505.playerlevels.api.reward.IntervalReward {
+    private final int start;
     private final int interval;
+    private final int limit;
     @NotNull private final RewardCondition customCondition;
 
-    public IntervalReward(@NotNull RewardsManager manager, @NotNull String id, @Nullable String serverId, int interval, @NotNull RewardExecutor executor, @Nullable RewardCondition customCondition, boolean requireOnlinePlayer, @NotNull String name, @Nullable String description) {
+    public IntervalReward(@NotNull RewardsManager manager, @NotNull String id, @Nullable String serverId, int start, int interval, int limit, @NotNull RewardExecutor executor, @Nullable RewardCondition customCondition, boolean requireOnlinePlayer, @NotNull String name, @Nullable String description) {
         super(manager, id, serverId, executor, requireOnlinePlayer, name, description);
-        this.interval = interval;
+        this.start = start > 0 ? start : 1;
+        this.interval = interval > 0 ? interval : 1;
+        this.limit = limit;
         this.customCondition = customCondition != null ? customCondition : net.jandie1505.playerlevels.api.reward.IntervalReward.DEFAULT_CONDITION;
     }
 
     public IntervalReward(@NotNull RewardsManager manager, @NotNull RewardConfig config, @NotNull IntervalRewardData data) {
-        this(manager, config.id(), config.serverId(), data.interval(), data.executor(), data.customCondition(), data.requiresPlayerOnline(), config.name(), config.description());
+        this(manager, config.id(), config.serverId(), data.start(), data.interval(), data.limit(), data.executor(), data.customCondition(), data.requiresPlayerOnline(), config.name(), config.description());
     }
 
     // ----- CONDITIONS -----
@@ -49,12 +53,22 @@ public class IntervalReward extends Reward implements net.jandie1505.playerlevel
 
     // ----- INTERVAL -----
 
+    public final int getStart() {
+        return this.start;
+    }
+
     public final int getInterval() {
         return this.interval;
     }
 
+    public final int getLimit() {
+        return this.limit;
+    }
+
     public boolean isInInterval(int level) {
-        return level % this.interval == 0;
+        if (level < this.start) return false;
+        if (this.limit > 0 && level >= this.limit) return false;
+        return (level - this.start) % this.interval == 0;
     }
 
     public final List<Integer> getApplyingLevelsUntil(int level) {

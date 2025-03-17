@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * This is a reward that executes a command when it is applied.<br/>
- * You can get the data using {@link CommandReward#createInterval(String, boolean, SenderType, int)} or {@link CommandReward#createMilestone(String, boolean, SenderType, int)}.
+ * You can get the data using {@link CommandReward#createInterval(String, boolean, SenderType, int, int, int)}.
  */
 public class CommandReward implements RewardExecutor {
     @NotNull private final String command;
@@ -40,11 +40,18 @@ public class CommandReward implements RewardExecutor {
         cmd = cmd.replace("{player_reward_level}", String.valueOf(player.getData().getOrCreateReceivedReward(reward.getId()).level()));
 
         cmd = cmd.replace("{reward_id}", reward.getId());
-        if (reward instanceof MilestoneReward r) cmd = cmd.replace("{reward_level}", String.valueOf(r.getLevel()));
-        if (reward instanceof IntervalReward r) cmd = cmd.replace("{reward_interval}", String.valueOf(r.getInterval()));
         cmd = cmd.replace("{reward_name}", reward.getName());
         cmd = cmd.replace("{reward_requires_online_player}", String.valueOf(reward.requiresOnlinePlayer()));
         cmd = cmd.replace("{reward_command}", this.command);
+
+        if (reward instanceof MilestoneReward r) {
+            cmd = cmd.replace("{reward_level}", String.valueOf(r.getLevel()));
+        }
+
+        if (reward instanceof IntervalReward r) {
+            cmd = cmd.replace("{reward_interval_start}", String.valueOf(r));
+            cmd = cmd.replace("{reward_interval}", String.valueOf(r.getInterval()));
+        }
 
         Player bukkitPlayer = Bukkit.getPlayer(player.getPlayerUUID());
         cmd = cmd.replace("{player_name}", bukkitPlayer != null ? bukkitPlayer.getName() : " ");
@@ -119,16 +126,20 @@ public class CommandReward implements RewardExecutor {
      * @param command the command that should be executed
      * @param requiresOnlinePlayer if the command requires the player to be online
      * @param senderType {@link SenderType}
+     * @param start interval start
      * @param interval interval in levels the player should get the reward applied
+     * @param limit the reward will not be applied for levels higher/equal than this
      * @return interval reward data
      */
     public static IntervalRewardData createInterval(
             @NotNull String command,
             boolean requiresOnlinePlayer,
             SenderType senderType,
-            int interval
+            int start,
+            int interval,
+            int limit
     ) {
-        return new IntervalRewardData(new CommandReward(command, senderType), null, requiresOnlinePlayer, interval);
+        return new IntervalRewardData(new CommandReward(command, senderType), null, requiresOnlinePlayer, start, interval, limit);
     }
 
 }
