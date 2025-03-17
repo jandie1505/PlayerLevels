@@ -12,6 +12,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Iterator;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -87,6 +88,7 @@ public final class Leveler implements net.jandie1505.playerlevels.api.level.Leve
         try {
             this.levelUp();
             this.manager.getPlugin().getRewardsManager().processPlayer(this);
+            this.cleanupNotExistingRewards();
         } catch (Exception e) {
             this.manager.getPlugin().getLogger().log(Level.SEVERE, "Manage values task of " + this.playerUUID + " threw an exception", e);
         }
@@ -122,6 +124,20 @@ public final class Leveler implements net.jandie1505.playerlevels.api.level.Leve
                 Bukkit.getServer().getPluginManager().callEvent(new LevelUpEvent(Leveler.this, levelAtStart, levelToPush));
             }
         }.runTask(this.manager.getPlugin());
+
+    }
+
+    /**
+     * Removes reward entries for rewards that do not exist.
+     */
+    private void cleanupNotExistingRewards() {
+
+        Iterator<String> i = this.getData().internalReceivedRewards().keySet().iterator();
+        while (i.hasNext()) {
+            String key = i.next();
+            if (this.manager.getPlugin().getRewardsManager().getReward(key) != null) continue;
+            i.remove();
+        }
 
     }
 
