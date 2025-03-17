@@ -1,6 +1,5 @@
 package net.jandie1505.playerlevels.rewards;
 
-import net.jandie1505.playerlevels.events.RewardApplyEvent;
 import net.jandie1505.playerlevels.leveler.Leveler;
 import net.jandie1505.playerlevels.leveler.ReceivedReward;
 import org.bukkit.Bukkit;
@@ -9,7 +8,6 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 
 public abstract class Reward implements net.jandie1505.playerlevels.api.reward.Reward {
@@ -18,6 +16,7 @@ public abstract class Reward implements net.jandie1505.playerlevels.api.reward.R
     @Nullable private final String serverId;
     @NotNull private final RewardExecutor executor;
     private final boolean requireOnlinePlayer;
+    private final int limit;
     @NotNull private final String name;
     @NotNull private final String description;
     private boolean enabled;
@@ -28,6 +27,7 @@ public abstract class Reward implements net.jandie1505.playerlevels.api.reward.R
             @Nullable String serverId,
             @NotNull RewardExecutor executor,
             boolean requireOnlinePlayer,
+            int limit,
             @NotNull String name,
             @Nullable String description
     ) {
@@ -36,6 +36,7 @@ public abstract class Reward implements net.jandie1505.playerlevels.api.reward.R
         this.serverId = serverId;
         this.executor = executor;
         this.requireOnlinePlayer = requireOnlinePlayer;
+        this.limit = limit;
         this.name = name;
         this.description = description != null ? description : "";
         this.enabled = true;
@@ -49,75 +50,56 @@ public abstract class Reward implements net.jandie1505.playerlevels.api.reward.R
      * @return success
      */
     @SuppressWarnings("UnusedReturnValue")
-    public final CompletableFuture<Boolean> apply(@NotNull Leveler leveler) {
-        if (!this.isApplicable(leveler)) return CompletableFuture.completedFuture(false); // Check conditions
-
-        CompletableFuture<Boolean> future = new CompletableFuture<>();
+    public final void apply(@NotNull Leveler leveler) {
+        if (!this.isApplicable(leveler)) return; // Check conditions
 
         new BukkitRunnable() {
             @Override
             public void run() {
 
-                // Fire event and don't apply the reward when it's cancelled
-                RewardApplyEvent event = new RewardApplyEvent(leveler, Reward.this);
-                Bukkit.getPluginManager().callEvent(event);
-                if (event.isCancelled()) {
-                    future.complete(false);
-                    return;
-                }
+                int levelerLevel = leveler.getData().level();
+                for (int level = 1; level <= levelerLevel && (Reward.this.limit < 0 || level <= Reward.this.limit); level++) {
 
-                boolean failure = false;
+                    // PRECONDITIONS
 
-                int maxIterations = 100;
-                while (maxIterations-- > 0) {
+                    // Check for general apply conditions
+                    // If the general apply condition fails, the reward can't be applied for any level, so we can return here.
+                    if (!Reward.this.isApplicable(leveler)) {
+                        return;
+                    }
+
+                    // Continue with next level when current level does not apply.
+                    // This ensures that the event is applied for all levels that fulfill the condition between level 1 and the player's level.
+                    if (!Reward.this.checkApplyCondition(leveler, level)) {
+                        continue;
+                    }
+
+                    // APPLY EVENT
 
                     boolean success;
 
                     // Apply event and catch errors
                     try {
-                        success = Reward.this.executor.onApply(Reward.this, leveler);
+                        success = Reward.this.executor.onApply(Reward.this, leveler, level);
                     } catch (Exception e) {
                         Reward.this.getManager().getPlugin().getLogger().log(Level.WARNING, "Exception while applying reward " + Reward.this.id + " to player " + leveler.getPlayerUUID(), e);
-                        future.complete(false);
-                        failure = true;
-                        break;
+                        return;
                     }
 
                     // Do not mark the event as applied when it was unsuccessful
                     if (!success) {
-                        Reward.this.getManager().getPlugin().getLogger().log(Level.WARNING, "Failed to apply reward " + Reward.this.id + " to player " + leveler.getPlayerUUID() + ": Executor returned null");
-                        future.complete(false);
-                        failure = true;
-                        break;
+                        Reward.this.getManager().getPlugin().getLogger().log(Level.WARNING, "Failed to apply reward " + Reward.this.id + " to player " + leveler.getPlayerUUID() + ": Executor returned failure");
+                        return;
                     }
 
-                    Reward.this.onApplySuccess(leveler);
+                    // SUCCESS
 
-                    if (!Reward.this.isApplicable(leveler)) {
-                        break;
-                    }
-
+                    Reward.this.onApplySuccess(leveler, level);
                 }
 
-                if (maxIterations <= 0) {
-                    Reward.this.getManager().getPlugin().getLogger().warning(
-                            "Reward " + Reward.this.id + " has exceeded the maximum number of iterations\n"
-                    );
-                    future.complete(false);
-                    return;
-                }
-
-                if (failure) {
-                    future.complete(false);
-                    Reward.this.getManager().getPlugin().getLogger().warning("Reward " + Reward.this.id + " could not be applied to player " + leveler.getPlayerUUID() + ". Check for warnings/errors before this log message.");
-                    return;
-                }
-
-                future.complete(true);
             }
         }.runTask(this.manager.getPlugin());
 
-        return future;
     }
 
     /**
@@ -131,7 +113,7 @@ public abstract class Reward implements net.jandie1505.playerlevels.api.reward.R
         if (leveler.getData().getOrCreateReceivedReward(this.id).blocked()) return false; // Not applicable when blocked
         if (this.requireOnlinePlayer && Bukkit.getPlayer(leveler.getPlayerUUID()) == null) return false; // not applicable when player required online but is offline
         if (this.serverId != null && !this.serverId.equals(this.manager.getPlugin().getServerId())) return false; // Wrong server
-        return this.checkApplyCondition(leveler); // Applicable when apply condition of subclass is successful
+        return true;
     }
 
     // ----- ABSTRACT -----
@@ -141,7 +123,7 @@ public abstract class Reward implements net.jandie1505.playerlevels.api.reward.R
      * @param leveler leveler
      * @return true = reward should be applied
      */
-    public abstract boolean checkApplyCondition(@NotNull Leveler leveler);
+    public abstract boolean checkApplyCondition(@NotNull Leveler leveler, int checkedLevel);
 
     /**
      * Is called after the reward has been successfully applied.<br/>
@@ -149,7 +131,7 @@ public abstract class Reward implements net.jandie1505.playerlevels.api.reward.R
      * @param leveler leveler
      */
     @ApiStatus.OverrideOnly
-    public void onApplySuccess(@NotNull Leveler leveler) {
+    public void onApplySuccess(@NotNull Leveler leveler, int checkedLevel) {
         ReceivedReward reward = leveler.getData().getOrCreateReceivedReward(Reward.this.id);
         reward.blocked(true);
         reward.level(leveler.getData().level());
@@ -171,6 +153,10 @@ public abstract class Reward implements net.jandie1505.playerlevels.api.reward.R
 
     public final boolean requiresOnlinePlayer() {
         return requireOnlinePlayer;
+    }
+
+    public final int getLimit() {
+        return limit;
     }
 
     public final @NotNull String getName() {

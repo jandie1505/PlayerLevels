@@ -42,7 +42,7 @@ public class RewardsManager implements net.jandie1505.playerlevels.api.reward.Re
 
     @SuppressWarnings("UnusedReturnValue")
     public @NotNull MilestoneReward addMilestoneReward(@NotNull RewardConfig config, @NotNull MilestoneRewardData data) {
-        MilestoneReward reward = new MilestoneReward(this, config, data, data.level());
+        MilestoneReward reward = new MilestoneReward(this, config, data);
         this.addReward(reward);
         return reward;
     }

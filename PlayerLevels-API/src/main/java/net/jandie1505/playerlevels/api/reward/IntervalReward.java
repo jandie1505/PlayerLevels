@@ -11,7 +11,7 @@ public interface IntervalReward extends Reward {
     /**
      * The default condition of an interval reward.
      */
-    RewardCondition DEFAULT_CONDITION = (reward, player) -> false;
+    RewardCondition DEFAULT_CONDITION = (reward, player, level) -> false;
 
     /**
      * Returns the interval start.

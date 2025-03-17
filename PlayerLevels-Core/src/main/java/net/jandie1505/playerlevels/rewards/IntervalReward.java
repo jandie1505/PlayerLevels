@@ -15,7 +15,7 @@ public class IntervalReward extends Reward implements net.jandie1505.playerlevel
     @NotNull private final RewardCondition customCondition;
 
     public IntervalReward(@NotNull RewardsManager manager, @NotNull String id, @Nullable String serverId, int start, int interval, int limit, @NotNull RewardExecutor executor, @Nullable RewardCondition customCondition, boolean requireOnlinePlayer, @NotNull String name, @Nullable String description) {
-        super(manager, id, serverId, executor, requireOnlinePlayer, name, description);
+        super(manager, id, serverId, executor, requireOnlinePlayer, limit, name, description);
         this.start = start > 0 ? start : 1;
         this.interval = interval > 0 ? interval : 1;
         this.limit = limit;
@@ -29,26 +29,26 @@ public class IntervalReward extends Reward implements net.jandie1505.playerlevel
     // ----- CONDITIONS -----
 
     @Override
-    public boolean checkApplyCondition(@NotNull Leveler leveler) {
+    public boolean checkApplyCondition(@NotNull Leveler leveler, int checkedLevel) {
 
         // Condition is not met when level is not in interval
-        if (!this.isInInterval(leveler.getData().level())) {
+        if (!this.isInInterval(checkedLevel)) {
             return false;
         }
 
         // Condition is not met when the reward has already been applied for the level
-        if (leveler.getData().getOrCreateReceivedReward(this.getId()).level() > leveler.getData().level()) {
+        if (leveler.getData().getOrCreateReceivedReward(this.getId()).level() >= checkedLevel) {
             return false;
         }
 
         // Check if the reward has already been applied with the custom condition
-        return !this.customCondition.isApplied(this, leveler);
+        return !this.customCondition.isApplied(this, leveler, checkedLevel);
     }
 
     @Override
-    public void onApplySuccess(@NotNull Leveler leveler) {
+    public void onApplySuccess(@NotNull Leveler leveler, int checkedLevel) {
         ReceivedReward reward = leveler.getData().getOrCreateReceivedReward(this.getId());
-        reward.level(reward.level() + this.interval);
+        reward.level(checkedLevel);
     }
 
     // ----- INTERVAL -----
@@ -59,10 +59,6 @@ public class IntervalReward extends Reward implements net.jandie1505.playerlevel
 
     public final int getInterval() {
         return this.interval;
-    }
-
-    public final int getLimit() {
-        return this.limit;
     }
 
     public boolean isInInterval(int level) {

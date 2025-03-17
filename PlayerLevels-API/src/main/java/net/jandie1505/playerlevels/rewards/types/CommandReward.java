@@ -26,7 +26,7 @@ public class CommandReward implements RewardExecutor {
     }
 
     @Override
-    public boolean onApply(@NotNull Reward reward, @NotNull Leveler player) {
+    public boolean onApply(@NotNull Reward reward, @NotNull Leveler player, int level) {
 
         String cmd = this.command;
 
@@ -37,7 +37,8 @@ public class CommandReward implements RewardExecutor {
         cmd = cmd.replace("{player_xp}", String.valueOf(player.getData().xp()));
 
         cmd = cmd.replace("{player_reward_blocked}", String.valueOf(player.getData().getOrCreateReceivedReward(reward.getId()).blocked()));
-        cmd = cmd.replace("{player_reward_level}", String.valueOf(player.getData().getOrCreateReceivedReward(reward.getId()).level()));
+        cmd = cmd.replace("{player_reward_level}", String.valueOf(level));
+        cmd = cmd.replace("{player_reward_level_stored}", String.valueOf(player.getData().getOrCreateReceivedReward(reward.getId()).level()));
 
         cmd = cmd.replace("{reward_id}", reward.getId());
         cmd = cmd.replace("{reward_name}", reward.getName());

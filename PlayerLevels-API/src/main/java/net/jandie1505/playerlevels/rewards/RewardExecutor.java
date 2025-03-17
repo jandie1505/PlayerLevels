@@ -15,8 +15,9 @@ public interface RewardExecutor {
      * If the upgrade has successfully been applied, this method has to return true. If it failed, it has to return false. This is important!
      * @param reward reward
      * @param player player
+     * @param level the level the reward is applied for
      * @return success
      */
-    boolean onApply(@NotNull Reward reward, @NotNull Leveler player);
+    boolean onApply(@NotNull Reward reward, @NotNull Leveler player, int level);
 
 }

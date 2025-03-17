@@ -16,9 +16,10 @@ public interface RewardCondition {
      * The default is when the player has.
      * @param reward the reward calling this method
      * @param player the player for which the reward is calling this method
+     * @param checkedLevel the level that is checked for
      * @return true = reward is already applied
      */
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    boolean isApplied(@NotNull Reward reward, @NotNull Leveler player);
+    boolean isApplied(@NotNull Reward reward, @NotNull Leveler player, int checkedLevel);
 
 }
