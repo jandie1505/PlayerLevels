@@ -13,11 +13,13 @@ public class LevelerData implements net.jandie1505.playerlevels.api.level.Levele
     private int level;
     private double xp;
     @NotNull private HashMap<String, ReceivedReward> receivedRewards;
+    @Nullable private String name;
 
     public LevelerData() {
         this.level = 0;
         this.xp = 0;
         this.receivedRewards = new HashMap<>();
+        this.name = null;
     }
 
     // ----- VALUES -----
@@ -63,12 +65,21 @@ public class LevelerData implements net.jandie1505.playerlevels.api.level.Levele
         return this.receivedRewards;
     }
 
+    public @Nullable String cachedName() {
+        return name;
+    }
+
+    public void cachedName(@Nullable String name) {
+        this.name = name;
+    }
+
     // ----- MERGE -----
 
     public void merge(LevelerData levelerData) {
 
         this.level(levelerData.level());
         this.xp(levelerData.xp());
+        this.cachedName(levelerData.cachedName());
 
         this.receivedRewards.clear();
         for (Map.Entry<String, ReceivedReward> entry : levelerData.receivedRewards.entrySet()) {
@@ -91,6 +102,7 @@ public class LevelerData implements net.jandie1505.playerlevels.api.level.Levele
 
         json.put("level", this.level);
         json.put("xp", this.xp);
+        if (this.name != null) json.put("name", this.name);
 
         JSONObject receivedRewards = new JSONObject();
         for (Map.Entry<String, ReceivedReward> entry : this.receivedRewards.entrySet()) {
@@ -107,6 +119,7 @@ public class LevelerData implements net.jandie1505.playerlevels.api.level.Levele
 
         levelerData.level = json.optInt("level", 0);
         levelerData.xp = json.optDouble("xp", 0);
+        levelerData.name = json.optString("name", null);
 
         JSONObject receivedRewards = json.optJSONObject("receivedRewards", null);
         if (receivedRewards != null) {
@@ -137,7 +150,7 @@ public class LevelerData implements net.jandie1505.playerlevels.api.level.Levele
             receivedRewards.put(entry.getKey(), entry.getValue());
         }
 
-        return Objects.hash(this.level, this.xp, receivedRewards);
+        return Objects.hash(this.level, this.xp, this.name, receivedRewards);
     }
 
     @Override

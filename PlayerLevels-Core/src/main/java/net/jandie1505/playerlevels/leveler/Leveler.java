@@ -3,6 +3,7 @@ package net.jandie1505.playerlevels.leveler;
 import net.jandie1505.playerlevels.events.LevelUpEvent;
 import net.jandie1505.playerlevels.database.DatabaseSource;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
@@ -89,6 +90,7 @@ public final class Leveler implements net.jandie1505.playerlevels.api.level.Leve
             this.levelUp();
             this.manager.getPlugin().getRewardsManager().processPlayer(this);
             this.cleanupNotExistingRewards();
+            this.updateCachedName();
         } catch (Exception e) {
             this.manager.getPlugin().getLogger().log(Level.SEVERE, "Manage values task of " + this.playerUUID + " threw an exception", e);
         }
@@ -139,6 +141,15 @@ public final class Leveler implements net.jandie1505.playerlevels.api.level.Leve
             i.remove();
         }
 
+    }
+
+    /**
+     * Updates the cached name of the player.
+     */
+    private void updateCachedName() {
+        Player player = Bukkit.getPlayer(this.playerUUID);
+        if (player == null) return;
+        this.data.cachedName(player.getName());
     }
 
     // ----- DATABASE SYNC -----

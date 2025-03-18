@@ -221,7 +221,10 @@ public class LevelingManager implements net.jandie1505.playerlevels.api.level.Le
                 "player_uuid VARCHAR(36) NOT NULL PRIMARY KEY," +
                 "data LONGTEXT NOT NULL," +
                 "update_id VARCHAR(36) NOT NULL," +
-                "last_updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP" +
+                "last_updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP," +
+                "level INT GENERATED ALWAYS AS (JSON_UNQUOTE(JSON_EXTRACT(data, '$.level'))) PERSISTENT," +
+                "INDEX idx_level (level)," +
+                "CONSTRAINT chk_json_valid CHECK (JSON_VALID(data))"+
                 ")";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {

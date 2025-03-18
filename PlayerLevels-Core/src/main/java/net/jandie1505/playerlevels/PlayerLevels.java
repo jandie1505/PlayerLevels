@@ -9,6 +9,7 @@ import net.jandie1505.playerlevels.constants.DefaultConfigValues;
 import net.jandie1505.playerlevels.database.DatabaseManager;
 import net.jandie1505.playerlevels.leveler.Leveler;
 import net.jandie1505.playerlevels.leveler.LevelingManager;
+import net.jandie1505.playerlevels.leveler.TopListManager;
 import net.jandie1505.playerlevels.rewards.RewardConfig;
 import net.jandie1505.playerlevels.rewards.RewardsManager;
 import net.jandie1505.playerlevels.rewards.RewardsRegistry;
@@ -25,10 +26,11 @@ import java.util.logging.Level;
 
 public class PlayerLevels extends JavaPlugin implements PlayerLevelsAPI {
     @NotNull private final DataStorage config;
+    private DatabaseManager databaseManager;
     private LevelingManager levelingManager;
     private RewardsManager rewardsManager;
+    private TopListManager topListManager;
     private RewardsRegistry rewardsRegistry;
-    private DatabaseManager databaseManager;
     private PlayerLevelsCommand command;
 
     public PlayerLevels() {
@@ -63,7 +65,7 @@ public class PlayerLevels extends JavaPlugin implements PlayerLevelsAPI {
         this.levelingManager = new LevelingManager(this, this.databaseManager);
         this.rewardsRegistry = new RewardsRegistry(this);
         this.rewardsManager = new RewardsManager(this);
-
+        this.topListManager = new TopListManager(this, this.databaseManager);
         this.command = new PlayerLevelsCommand(this);
 
         this.getCommand("playerlevels").setExecutor(this.command);
@@ -76,6 +78,13 @@ public class PlayerLevels extends JavaPlugin implements PlayerLevelsAPI {
             }
         }.runTaskTimerAsynchronously(this, 20, 10*60*20);
         this.getServer().getPluginManager().registerEvents(this.levelingManager, this);
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (PlayerLevels.this.config().optBoolean(ConfigKeys.TOP_LIST_ENABLED, false)) PlayerLevels.this.topListManager.updateTopList();
+            }
+        }.runTaskTimerAsynchronously(this, 20, 60*60*20);
 
         PlayerLevelsAPIProvider.setApi(this);
 
@@ -140,6 +149,10 @@ public class PlayerLevels extends JavaPlugin implements PlayerLevelsAPI {
     @Override
     public RewardsRegistry getRewardsRegistry() {
         return this.rewardsRegistry;
+    }
+
+    public TopListManager getTopListManager() {
+        return this.topListManager;
     }
 
     public DatabaseManager getDatabaseManager() {

@@ -6,6 +6,7 @@ import net.chaossquad.mclib.command.TabCompletingCommandExecutor;
 import net.jandie1505.playerlevels.PlayerLevels;
 import net.jandie1505.playerlevels.commands.subcommands.DebugSubcommand;
 import net.jandie1505.playerlevels.commands.subcommands.ManageSubcommand;
+import net.jandie1505.playerlevels.commands.subcommands.TopSubcommand;
 import net.jandie1505.playerlevels.commands.subcommands.manage.ManageRewardsSubcommand;
 import net.jandie1505.playerlevels.commands.subcommands.manage.ManagePlayersSubcommand;
 import net.jandie1505.playerlevels.leveler.Leveler;
@@ -40,6 +41,7 @@ public class PlayerLevelsCommand extends SubcommandCommand {
 
         this.addSubcommand("manage", SubcommandEntry.of(new ManageSubcommand(this.plugin)));
         this.addSubcommand("debug", SubcommandEntry.of(new DebugSubcommand(this.plugin)));
+        this.addSubcommand("top", SubcommandEntry.of(new TopSubcommand(this.plugin)));
     }
 
     @Override
@@ -58,14 +60,14 @@ public class PlayerLevelsCommand extends SubcommandCommand {
 
         double totalXP;
         try {
-            totalXP = this.plugin.getLevelManager().getXPForLevel(leveler.getData().level());
+            totalXP = this.plugin.getLevelManager().getXPForLevel(leveler.getData().level()) + leveler.getData().xp();
         } catch (Exception e) {
             totalXP = -1;
             this.plugin.getLogger().log(Level.WARNING, "Failed to calculate xp using the XP formula", e);
         }
 
-        String formattedXP = new DecimalFormat("#,###.00").format(totalXP) + " XP";
-        String formattedTotalXP = totalXP > 0 ? " (" + new DecimalFormat("#,###.00").format(totalXP) + " XP)" : "";
+        String formattedXP = new DecimalFormat("#,###.00").format(leveler.getData().xp()) + " XP";
+        String formattedTotalXP = totalXP > 0 ? " (" + new DecimalFormat("#,##0.00").format(totalXP) + " XP)" : "";
 
         sender.sendRichMessage("<green>Your level is " + leveler.getData().level() + " and you have " + formattedXP + formattedTotalXP);
     }

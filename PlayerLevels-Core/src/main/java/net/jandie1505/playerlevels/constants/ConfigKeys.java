@@ -8,4 +8,6 @@ public interface ConfigKeys {
     String DATABASE_PORT = "database.port";
     String XP_FORMULA = "xp_formula";
     String SERVER_ID = "server_id";
+    String TOP_LIST_ENABLED = "top_list.enabled";
+    String TOP_LIST_LENGTH = "top_list.length";
 }

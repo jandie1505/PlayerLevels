@@ -15,6 +15,8 @@ public interface DefaultConfigValues {
         config.set(ConfigKeys.DATABASE_NAME, "playerlevels");
         config.set(ConfigKeys.XP_FORMULA, "level * 10");
         config.set(ConfigKeys.SERVER_ID, "");
+        config.set(ConfigKeys.TOP_LIST_ENABLED, true);
+        config.set(ConfigKeys.TOP_LIST_LENGTH, 10);
 
         return config;
     }
