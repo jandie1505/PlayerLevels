@@ -38,12 +38,7 @@ public class ManageRewardsListSubcommand implements TabCompletingCommandExecutor
         } else {
             sender.sendRichMessage("<gold>Rewards:");
             for (Reward reward : this.plugin.getRewardsManager().getRewardsInternal().values()) {
-                sender.sendRichMessage("<gold>----- Reward " + reward.getId() + " -----");
-                sender.sendRichMessage("<gold>Name: " + reward.getName());
-                sender.sendRichMessage("<gold>Type: " + reward.getClass().getSimpleName());
-                if (reward instanceof MilestoneReward r) sender.sendRichMessage("<gold>Level: " + r.getLevel());
-                sender.sendRichMessage("<gold>ServerId: " + reward.getServerId());
-                sender.sendRichMessage("<gold>Enabled: " + reward.isEnabled());
+                sender.sendRichMessage("<gold>" + reward.getId() + ": " + reward.getClass().getSimpleName() + " " + (reward.getServerId() != null ? reward.getServerId() + " " : "all ") + reward.isEnabled());
             }
         }
 

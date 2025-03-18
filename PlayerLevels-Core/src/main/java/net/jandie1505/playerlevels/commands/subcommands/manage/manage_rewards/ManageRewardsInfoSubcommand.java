@@ -53,9 +53,9 @@ public class ManageRewardsInfoSubcommand implements TabCompletingCommandExecutor
             if (reward instanceof IntervalReward r) {
                 sender.sendRichMessage("<gold>Start: " + r.getStart());
                 sender.sendRichMessage("<gold>Interval: " + r.getInterval());
-                sender.sendRichMessage("<gold>Limit: " + (r.getLimit() > 0 ? "" + r.getLimit() : "disabled"));
             }
             sender.sendRichMessage("<gold>ServerId: " + reward.getServerId());
+            sender.sendRichMessage("<gold>Limit: " + (reward.getLimit() > 0 ? "" + reward.getLimit() : "no limit"));
             sender.sendRichMessage("<gold>Enabled: " + reward.isEnabled());
             sender.sendRichMessage("<gold>Description: " + reward.getDescription());
         }
