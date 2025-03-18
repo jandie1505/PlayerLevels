@@ -7,15 +7,11 @@ import net.jandie1505.playerlevels.commands.PlayerLevelsCommand;
 import net.jandie1505.playerlevels.constants.ConfigKeys;
 import net.jandie1505.playerlevels.constants.DefaultConfigValues;
 import net.jandie1505.playerlevels.database.DatabaseManager;
-import net.jandie1505.playerlevels.leveler.LevelerData;
 import net.jandie1505.playerlevels.leveler.LevelingManager;
-import net.jandie1505.playerlevels.rewards.IntervalReward;
 import net.jandie1505.playerlevels.rewards.RewardConfig;
 import net.jandie1505.playerlevels.rewards.RewardsManager;
 import net.jandie1505.playerlevels.rewards.RewardsRegistry;
 import net.jandie1505.playerlevels.rewards.types.CommandReward;
-import net.kyori.adventure.text.Component;
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
@@ -42,7 +38,7 @@ public class PlayerLevels extends JavaPlugin implements PlayerLevelsAPI {
     public void onEnable() {
 
         this.config.clear();
-        this.config.merge(DefaultConfigValues.get());
+        this.config.merge(DefaultConfigValues.getConfig());
 
         try {
 
@@ -62,6 +58,7 @@ public class PlayerLevels extends JavaPlugin implements PlayerLevelsAPI {
         this.databaseManager = new DatabaseManager(this);
         this.databaseManager.setupDatabase();
         this.levelingManager = new LevelingManager(this, this.databaseManager);
+        this.rewardsRegistry = new RewardsRegistry(this);
         this.rewardsManager = new RewardsManager(this);
 
         this.command = new PlayerLevelsCommand(this);
@@ -79,6 +76,12 @@ public class PlayerLevels extends JavaPlugin implements PlayerLevelsAPI {
 
         PlayerLevelsAPIProvider.setApi(this);
 
+        try {
+            this.rewardsRegistry.createRewardsFromConfig();
+        } catch (Exception e) {
+            this.getLogger().log(Level.SEVERE, "Failed to load rewards from config", e);
+        }
+
         this.getRewardsManager().addMilestoneReward(
                 new RewardConfig("test_milestone", null, "Test Reward", null),
                 CommandReward.createMilestone("say {player_name} has unlocked {reward_name} on level {player_reward_level}", true, CommandReward.SenderType.CONSOLE, 50)
@@ -93,6 +96,8 @@ public class PlayerLevels extends JavaPlugin implements PlayerLevelsAPI {
     @Override
     public void onDisable() {
         this.levelingManager = null;
+        this.rewardsManager = null;
+        this.rewardsRegistry = null;
         this.databaseManager.shutdownDatabase();
         this.databaseManager = null;
         this.config.clear();
