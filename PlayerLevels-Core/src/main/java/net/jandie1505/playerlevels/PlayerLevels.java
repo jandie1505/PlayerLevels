@@ -77,7 +77,7 @@ public class PlayerLevels extends JavaPlugin implements PlayerLevelsAPI {
         PlayerLevelsAPIProvider.setApi(this);
 
         try {
-            this.rewardsRegistry.createRewardsFromConfig();
+            this.rewardsRegistry.createRewardsFromConfig(true);
         } catch (Exception e) {
             this.getLogger().log(Level.SEVERE, "Failed to load rewards from config", e);
         }

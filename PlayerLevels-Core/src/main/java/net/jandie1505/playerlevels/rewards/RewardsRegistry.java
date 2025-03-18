@@ -48,8 +48,10 @@ public final class RewardsRegistry implements net.jandie1505.playerlevels.api.re
 
     // ----- CREATE REWARDS FROM CONFIG -----
 
-    public void createRewardsFromConfig() {
+    public void createRewardsFromConfig(boolean clearExisting) {
         DataStorage config = new DataStorage();
+
+        if (clearExisting) this.plugin.getRewardsManager().getRewardsInternal().clear();
 
         try {
 
