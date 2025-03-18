@@ -1,19 +1,19 @@
 package net.jandie1505.playerlevels.commands.subcommands;
 
-import com.destroystokyo.paper.profile.PlayerProfile;
 import net.chaossquad.mclib.command.TabCompletingCommandExecutor;
 import net.jandie1505.playerlevels.PlayerLevels;
 import net.jandie1505.playerlevels.api.level.TopListManager;
 import net.jandie1505.playerlevels.constants.Permissions;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TopSubcommand implements TabCompletingCommandExecutor {
+    private static final int pageSize = 10;
     @NotNull private final PlayerLevels plugin;
 
     public TopSubcommand(@NotNull PlayerLevels plugin) {
@@ -33,9 +33,28 @@ public class TopSubcommand implements TabCompletingCommandExecutor {
             return true;
         }
 
-        String message = "<gold>Level Leaderboard:";
+        int page = 0;
+        if (args.length > 0) {
+            try {
+                page = Integer.parseInt(args[0]) - 1;
+            } catch (IllegalArgumentException e) {
+                // don't care, show first page
+            }
+        }
 
-        for (int i = 0; i < toplist.size(); i++) {
+        if (page < 0) page = 0;
+
+        int start = page * pageSize;
+        int end = page * pageSize + pageSize;
+
+        if (start >= toplist.size()) {
+            sender.sendRichMessage("<red>This page does not exist");
+            return true;
+        }
+
+        String message = "<gold>Level Leaderboard (Page " + (page + 1) + "): ";
+
+        for (int i = start; i < toplist.size() && i < end; i++) {
             TopListManager.TopListEntry entry = toplist.get(i);
 
             double xp;
@@ -46,7 +65,7 @@ public class TopSubcommand implements TabCompletingCommandExecutor {
                 xp = -1;
             }
 
-            message = message + "\n<aqua>" + (i + 1) + ". <yellow>" + entry.name() + "<reset><gray> - <gold>" + entry.level() + "⭐ (" + (xp >= 0 ? TopSubcommand.this.formatXP(xp) : "?") + " XP)<reset>";
+            message = message + "\n<aqua>" + (i + 1) + ". <yellow>" + (entry.name() != null ? entry.name() : "???") + "<reset><gray> - <gold>" + entry.level() + "⭐ (" + (xp >= 0 ? TopSubcommand.this.formatXP(xp) : "?") + " XP)<reset>";
 
         }
 
@@ -57,6 +76,16 @@ public class TopSubcommand implements TabCompletingCommandExecutor {
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
+
+        if (args.length == 1) {
+            int maxPages = (int) Math.ceil((double) this.plugin.getTopListManager().getTopList().size() / (pageSize == 0 ? 1 : pageSize));
+            List<String> complete = new ArrayList<>();
+            for (int i = 0; i < maxPages; i++) {
+                complete.add(String.valueOf(i + 1));
+            }
+            return complete;
+        }
+
         return List.of();
     }
 
