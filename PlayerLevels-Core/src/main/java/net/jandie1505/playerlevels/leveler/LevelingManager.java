@@ -154,7 +154,7 @@ public class LevelingManager implements net.jandie1505.playerlevels.api.level.Le
             }
 
             statement.setString(1, playerUUID.toString());
-            statement.executeUpdate(); // 🔥 Vergessen? Hier wird das DELETE ausgeführt!
+            statement.executeUpdate(); // Here, the DELETE is executed!
 
             this.cachedLevelers.remove(playerUUID);
             return true;

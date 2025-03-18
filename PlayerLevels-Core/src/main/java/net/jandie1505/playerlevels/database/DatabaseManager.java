@@ -35,7 +35,7 @@ public class DatabaseManager implements DatabaseSource {
         }
 
         HikariConfig config = new HikariConfig();
-        config.setJdbcUrl("jdbc:mariadb://" + host + ":" + port + "/" + database);
+        config.setJdbcUrl("jdbc:mariadb://" + host + ":" + port + "/" + database + "?socketTimeout=30000");
         config.setUsername(user);
         config.setPassword(password);
         config.setDriverClassName("org.mariadb.jdbc.Driver");

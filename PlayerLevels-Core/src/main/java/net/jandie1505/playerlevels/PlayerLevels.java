@@ -7,6 +7,7 @@ import net.jandie1505.playerlevels.commands.PlayerLevelsCommand;
 import net.jandie1505.playerlevels.constants.ConfigKeys;
 import net.jandie1505.playerlevels.constants.DefaultConfigValues;
 import net.jandie1505.playerlevels.database.DatabaseManager;
+import net.jandie1505.playerlevels.leveler.Leveler;
 import net.jandie1505.playerlevels.leveler.LevelingManager;
 import net.jandie1505.playerlevels.rewards.RewardConfig;
 import net.jandie1505.playerlevels.rewards.RewardsManager;
@@ -16,7 +17,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 
+import javax.swing.text.html.parser.Entity;
 import java.io.File;
+import java.util.Iterator;
 import java.util.Objects;
 import java.util.logging.Level;
 
@@ -95,6 +98,20 @@ public class PlayerLevels extends JavaPlugin implements PlayerLevelsAPI {
 
     @Override
     public void onDisable() {
+
+        try {
+
+            Iterator<Leveler> i = this.levelingManager.getCache().values().iterator();
+            while (i.hasNext()) {
+                Leveler leveler = i.next();
+                leveler.sync();
+                i.remove();
+            }
+
+        } catch (Exception e) {
+            this.getLogger().log(Level.WARNING, "Failed to sync levelers on plugin disable", e);
+        }
+
         this.levelingManager = null;
         this.rewardsManager = null;
         this.rewardsRegistry = null;
