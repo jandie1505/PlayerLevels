@@ -6,6 +6,7 @@ import net.jandie1505.playerlevels.api.level.ReceivedReward;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.tag.Tag;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
+import org.bukkit.Bukkit;
 import org.intellij.lang.annotations.Subst;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,10 +21,11 @@ public final class TagResolvers {
 
     /**
      * Returns a tag resolver for the specified leveler.
+     * @param tagName the tag name: &lt;TAG_NAME:field&gt;.
      * @param leveler leveler
      * @return tag resolver
      */
-    public static TagResolver tagResolver(@Subst("leveler") @NotNull String tagName, @NotNull Leveler leveler) {
+    public static TagResolver leveler(@Subst("leveler") @NotNull String tagName, @NotNull Leveler leveler) {
         return TagResolver.resolver(tagName, (argumentQueue, context) -> {
             final String arg = argumentQueue.popOr(tagName + " tag (leveler resolver) requires an argument").value();
 
@@ -67,6 +69,10 @@ public final class TagResolvers {
                     case "uuid" -> placeholder = Component.text(leveler.getPlayerUUID().toString());
                     case "cached" -> placeholder = Component.text(leveler.isCached());
                     case "data_string" -> placeholder = Component.text(leveler.getData().toString());
+                    case "name" -> {
+                        String name = Bukkit.getOfflinePlayer(leveler.getPlayerUUID()).getName();
+                        placeholder = name != null ? Component.text(name) : Component.text("???");
+                    }
                     default -> placeholder = Component.empty();
                 }
 

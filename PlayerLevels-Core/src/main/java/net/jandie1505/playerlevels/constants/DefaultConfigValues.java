@@ -17,6 +17,7 @@ public interface DefaultConfigValues {
         config.set(ConfigKeys.SERVER_ID, "");
         config.set(ConfigKeys.TOP_LIST_ENABLED, true);
         config.set(ConfigKeys.TOP_LIST_LENGTH, 10);
+        config.set(ConfigKeys.PLAYER_COMMANDS_LOAD_PLAYERS, true);
 
         return config;
     }
@@ -24,6 +25,8 @@ public interface DefaultConfigValues {
     static @NotNull DataStorage getMessages() {
         DataStorage messages = new DataStorage();
 
+        messages.set(MessageKeys.INFO_OWN, "<green>You are on level <leveler:level> and you have <leveler:total_xp_formatted> XP");
+        messages.set(MessageKeys.INFO_OTHERS, "<green><leveler:name> is on level <leveler:level> and has <leveler:total_xp_formatted> XP");
         messages.set(MessageKeys.TOPLIST_TITLE, "<gold>Level Leaderboard (Page <page>):");
         messages.set(MessageKeys.TOPLIST_ENTRY, "<aqua><entry:place>. <yellow><entry:name><reset> - <gold><entry:level>⭐ (<entry:xp_formatted> XP)");
 

@@ -5,6 +5,7 @@ import net.chaossquad.mclib.command.SubcommandEntry;
 import net.chaossquad.mclib.command.TabCompletingCommandExecutor;
 import net.jandie1505.playerlevels.PlayerLevels;
 import net.jandie1505.playerlevels.commands.subcommands.DebugSubcommand;
+import net.jandie1505.playerlevels.commands.subcommands.InfoSubcommand;
 import net.jandie1505.playerlevels.commands.subcommands.ManageSubcommand;
 import net.jandie1505.playerlevels.commands.subcommands.TopSubcommand;
 import net.jandie1505.playerlevels.commands.subcommands.manage.ManageRewardsSubcommand;
@@ -41,6 +42,7 @@ public class PlayerLevelsCommand extends SubcommandCommand {
 
         this.addSubcommand("manage", SubcommandEntry.of(new ManageSubcommand(this.plugin)));
         this.addSubcommand("debug", SubcommandEntry.of(new DebugSubcommand(this.plugin)));
+        this.addSubcommand("info", SubcommandEntry.of(new InfoSubcommand(this.plugin)));
         this.addSubcommand("top", SubcommandEntry.of(new TopSubcommand(this.plugin)));
     }
 
