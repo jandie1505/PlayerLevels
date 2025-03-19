@@ -28,4 +28,25 @@ public interface LevelingManager {
      */
     @NotNull CompletableFuture<Leveler> loadLeveler(@NotNull UUID playerUUID);
 
+    /**
+     * Returns the amount of xp for the specified level.
+     * @param level level
+     * @return xp
+     * @throws NullPointerException when the xp formula is not set
+     * @throws IllegalArgumentException when the formula is not valid
+     * @throws ArithmeticException when the formula contains a division by zero
+     */
+    double getXPForLevel(int level) throws NullPointerException, IllegalArgumentException, ArithmeticException;
+
+    /**
+     * Returns the amount of xp required from the currentLevel to the level.
+     * @param currentLevel start
+     * @param level target
+     * @return required xp
+     * @throws NullPointerException when the xp formula is not set
+     * @throws IllegalArgumentException when the formula is not valid
+     * @throws ArithmeticException when the formula contains a division by zero
+     */
+    double getXPForNextLevel(int currentLevel, int level) throws NullPointerException, IllegalArgumentException, ArithmeticException;
+
 }

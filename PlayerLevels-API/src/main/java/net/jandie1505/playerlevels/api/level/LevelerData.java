@@ -68,4 +68,12 @@ public interface LevelerData {
      */
     void removeReceivedReward(@NotNull String id);
 
+    // ----- CACHED NAME -----
+
+    /**
+     * Returns the cached name of the player.
+     * @return cached name
+     */
+    @Nullable String cachedName();
+
 }

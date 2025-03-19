@@ -5,6 +5,7 @@ import net.jandie1505.playerlevels.PlayerLevels;
 import net.jandie1505.playerlevels.api.level.TopListManager;
 import net.jandie1505.playerlevels.constants.MessageKeys;
 import net.jandie1505.playerlevels.constants.Permissions;
+import net.jandie1505.playerlevels.messages.Formatters;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.Tag;
@@ -101,31 +102,6 @@ public class TopSubcommand implements TabCompletingCommandExecutor {
         return List.of();
     }
 
-    private String formatXP(double xp) {
-        // Wenn XP kleiner als 1000 ist, gib einfach den Wert aus
-        if (xp < 1000) {
-            return String.format("%.0f", xp);
-        }
-
-        // Falls die Zahl Tausende überschreitet, teile sie durch 1000 und füge "K" hinzu
-        if (xp < 1000000) {
-            return String.format("%.1fK", xp / 1000);
-        }
-
-        // Wenn die Zahl Millionen überschreitet, teile sie durch 1000000 und füge "M" hinzu
-        if (xp < 1000000000) {
-            return String.format("%.1fM", xp / 1000000);
-        }
-
-        // Falls Milliarden überschritten werden, teile sie durch 1000000000 und füge "B" hinzu
-        if (xp < 1000000000000L) {
-            return String.format("%.1fB", xp / 1000000000);
-        }
-
-        // Optional: Falls noch größere Zahlen existieren, könnte man auch "T" für Billionen hinzufügen
-        return String.format("%.1fT", xp / 1000000000000L);
-    }
-
     private TagResolver tagResolver(@NotNull TopListManager.TopListEntry entry) {
         return TagResolver.resolver("entry", (argumentQueue, context) -> {
             final String arg = argumentQueue.popOr("entry" + " tag requires an argument").value();
@@ -137,9 +113,9 @@ public class TopSubcommand implements TabCompletingCommandExecutor {
                 switch (arg) {
                     case "level" -> placeholder = Component.text(entry.level());
                     case "xp" -> placeholder = Component.text(entry.xp());
-                    case "xp_formatted" -> placeholder = Component.text(this.formatXP(entry.xp()));
+                    case "xp_formatted" -> placeholder = Component.text(Formatters.formatXP(entry.xp()));
                     case "total_xp" -> placeholder = Component.text(this.plugin.getLevelManager().getXPForLevel(entry.level()) + entry.xp());
-                    case "total_xp_formatted" -> placeholder = Component.text(this.formatXP(this.plugin.getLevelManager().getXPForLevel(entry.level()) + entry.xp()));
+                    case "total_xp_formatted" -> placeholder = Component.text(Formatters.formatXP(this.plugin.getLevelManager().getXPForLevel(entry.level()) + entry.xp()));
                     case "name" -> placeholder = Component.text(entry.name() != null ? entry.name() : "???");
                     case "uuid" -> placeholder = Component.text(entry.playerUUID().toString());
                     default -> placeholder = Component.empty();
