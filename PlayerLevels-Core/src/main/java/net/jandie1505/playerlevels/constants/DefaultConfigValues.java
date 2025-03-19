@@ -21,6 +21,15 @@ public interface DefaultConfigValues {
         return config;
     }
 
+    static @NotNull DataStorage getMessages() {
+        DataStorage messages = new DataStorage();
+
+        messages.set(MessageKeys.TOPLIST_TITLE, "<gold>Level Leaderboard (Page <page>):");
+        messages.set(MessageKeys.TOPLIST_ENTRY, "<aqua><entry:place>. <yellow><entry:name><reset> - <gold><entry:level>⭐ (<entry:xp_formatted> XP)");
+
+        return messages;
+    }
+
     static @NotNull DataStorage getRewards() {
         DataStorage config = new DataStorage();
 

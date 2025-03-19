@@ -26,6 +26,7 @@ import java.util.logging.Level;
 
 public class PlayerLevels extends JavaPlugin implements PlayerLevelsAPI {
     @NotNull private final DataStorage config;
+    @NotNull private final DataStorage messages;
     private DatabaseManager databaseManager;
     private LevelingManager levelingManager;
     private RewardsManager rewardsManager;
@@ -35,6 +36,7 @@ public class PlayerLevels extends JavaPlugin implements PlayerLevelsAPI {
 
     public PlayerLevels() {
         this.config = new DataStorage();
+        this.messages = new DataStorage();
     }
 
     // ----- ENABLE -----
@@ -58,6 +60,24 @@ public class PlayerLevels extends JavaPlugin implements PlayerLevelsAPI {
 
         } catch (Exception e) {
             this.getLogger().log(Level.WARNING, "Failed to load config. Using default values.", e);
+        }
+
+        this.messages.clear();
+        this.messages.merge(DefaultConfigValues.getMessages());
+
+        try {
+
+            DataStorage loadedStorage = DSSerializer.loadConfig(new File(this.getDataFolder(), "messages.yml"));
+            if (loadedStorage != null) {
+                this.messages.merge(loadedStorage);
+                this.getLogger().info("Messages config loaded successfully");
+            } else {
+                DSSerializer.saveConfig(this.messages, new File(this.getDataFolder(), "messages.yml"));
+                this.getLogger().info("Messages config created successfully");
+            }
+
+        } catch (Exception e) {
+            this.getLogger().log(Level.WARNING, "Failed to load messages config. Using default values.", e);
         }
 
         this.databaseManager = new DatabaseManager(this);
@@ -127,6 +147,7 @@ public class PlayerLevels extends JavaPlugin implements PlayerLevelsAPI {
         this.databaseManager.shutdownDatabase();
         this.databaseManager = null;
         this.config.clear();
+        this.messages.clear();
         PlayerLevelsAPIProvider.setApi(null);
     }
 
@@ -134,6 +155,10 @@ public class PlayerLevels extends JavaPlugin implements PlayerLevelsAPI {
 
     public final @NotNull DataStorage config() {
         return config;
+    }
+
+    public final @NotNull DataStorage messages() {
+        return messages;
     }
 
     @Override

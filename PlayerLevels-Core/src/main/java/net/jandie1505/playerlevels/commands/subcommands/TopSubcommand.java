@@ -3,7 +3,12 @@ package net.jandie1505.playerlevels.commands.subcommands;
 import net.chaossquad.mclib.command.TabCompletingCommandExecutor;
 import net.jandie1505.playerlevels.PlayerLevels;
 import net.jandie1505.playerlevels.api.level.TopListManager;
+import net.jandie1505.playerlevels.constants.MessageKeys;
 import net.jandie1505.playerlevels.constants.Permissions;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.minimessage.tag.Tag;
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -52,7 +57,11 @@ public class TopSubcommand implements TabCompletingCommandExecutor {
             return true;
         }
 
-        String message = "<gold>Level Leaderboard (Page " + (page + 1) + "): ";
+        Component message = Component.empty()
+                .append(MiniMessage.miniMessage().deserialize(
+                        this.plugin.messages().optString(MessageKeys.TOPLIST_TITLE, ""),
+                        TagResolver.resolver("page", Tag.inserting(Component.text(page + 1)))
+                ));
 
         for (int i = start; i < toplist.size() && i < end; i++) {
             TopListManager.TopListEntry entry = toplist.get(i);
@@ -65,12 +74,15 @@ public class TopSubcommand implements TabCompletingCommandExecutor {
                 xp = -1;
             }
 
-            message = message + "\n<aqua>" + (i + 1) + ". <yellow>" + (entry.name() != null ? entry.name() : "???") + "<reset><gray> - <gold>" + entry.level() + "⭐ (" + (xp >= 0 ? TopSubcommand.this.formatXP(xp) : "?") + " XP)<reset>";
-
+            message = message
+                    .appendNewline()
+                    .append(MiniMessage.miniMessage().deserialize(
+                            this.plugin.messages().optString(MessageKeys.TOPLIST_ENTRY, ""),
+                            this.tagResolver(entry)
+                    ));
         }
 
-        sender.sendRichMessage(message);
-
+        sender.sendMessage(message);
         return true;
     }
 
@@ -112,6 +124,33 @@ public class TopSubcommand implements TabCompletingCommandExecutor {
 
         // Optional: Falls noch größere Zahlen existieren, könnte man auch "T" für Billionen hinzufügen
         return String.format("%.1fT", xp / 1000000000000L);
+    }
+
+    private TagResolver tagResolver(@NotNull TopListManager.TopListEntry entry) {
+        return TagResolver.resolver("entry", (argumentQueue, context) -> {
+            final String arg = argumentQueue.popOr("entry" + " tag requires an argument").value();
+
+            Component placeholder;
+
+            try {
+
+                switch (arg) {
+                    case "level" -> placeholder = Component.text(entry.level());
+                    case "xp" -> placeholder = Component.text(entry.xp());
+                    case "xp_formatted" -> placeholder = Component.text(this.formatXP(entry.xp()));
+                    case "total_xp" -> placeholder = Component.text(this.plugin.getLevelManager().getXPForLevel(entry.level()) + entry.xp());
+                    case "total_xp_formatted" -> placeholder = Component.text(this.formatXP(this.plugin.getLevelManager().getXPForLevel(entry.level()) + entry.xp()));
+                    case "name" -> placeholder = Component.text(entry.name() != null ? entry.name() : "???");
+                    case "uuid" -> placeholder = Component.text(entry.playerUUID().toString());
+                    default -> placeholder = Component.empty();
+                }
+
+            } catch (Exception e) {
+                placeholder = Component.empty();
+            }
+
+            return Tag.inserting(placeholder);
+        });
     }
 
 }
