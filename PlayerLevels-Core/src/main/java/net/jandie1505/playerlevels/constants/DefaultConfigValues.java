@@ -18,6 +18,7 @@ public interface DefaultConfigValues {
         config.set(ConfigKeys.TOP_LIST_ENABLED, true);
         config.set(ConfigKeys.TOP_LIST_LENGTH, 10);
         config.set(ConfigKeys.PLAYER_COMMANDS_LOAD_PLAYERS, true);
+        config.set(ConfigKeys.PLAYER_COMMANDS_DATABASE_RATE_LIMIT, 10);
 
         return config;
     }

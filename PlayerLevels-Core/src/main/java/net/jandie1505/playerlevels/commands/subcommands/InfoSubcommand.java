@@ -1,5 +1,6 @@
 package net.jandie1505.playerlevels.commands.subcommands;
 
+import com.destroystokyo.paper.profile.PlayerProfile;
 import net.chaossquad.mclib.command.TabCompletingCommandExecutor;
 import net.jandie1505.playerlevels.PlayerLevels;
 import net.jandie1505.playerlevels.commands.subcommands.utils.OptionParser;
@@ -16,14 +17,26 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 public class InfoSubcommand implements TabCompletingCommandExecutor {
     @NotNull private final PlayerLevels plugin;
+    @NotNull private final ConcurrentHashMap<UUID, Long> rateLimiter;
 
     public InfoSubcommand(@NotNull PlayerLevels plugin) {
         this.plugin = plugin;
+        this.rateLimiter = new ConcurrentHashMap<>();
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                InfoSubcommand.this.rateLimiter.entrySet().removeIf(entry -> Instant.now().getEpochSecond() > entry.getValue());
+            }
+        }.runTaskTimerAsynchronously(plugin, 30*20L, 30*20L);
     }
 
     // ----- COMMAND -----
@@ -74,45 +87,59 @@ public class InfoSubcommand implements TabCompletingCommandExecutor {
             return;
         }
 
-        UUID playerId;
+        boolean loadLevelers = this.plugin.config().optBoolean(ConfigKeys.PLAYER_COMMANDS_LOAD_PLAYERS, false);
+        int rateLimit = this.plugin.config().optInt(ConfigKeys.PLAYER_COMMANDS_DATABASE_RATE_LIMIT, 10);
 
-        try {
-            playerId = UUID.fromString(args.args()[0]);
-        } catch (IllegalArgumentException e) {
+        if (sender instanceof Player player && loadLevelers && rateLimit > 0) {
+            Long time = this.rateLimiter.get(player.getUniqueId());
 
-            Player player = Bukkit.getPlayer(args.args()[0]);
-            if (player != null) {
-                playerId = player.getUniqueId();
-            } else {
-                playerId = null;
-            }
-
-        }
-
-        if (playerId == null) {
-            sender.sendRichMessage("<red>Player has not been found");
-            return;
-        }
-
-        if (this.plugin.config().optBoolean(ConfigKeys.PLAYER_COMMANDS_LOAD_PLAYERS, false)) {
-            this.plugin.getLevelManager().loadLeveler(playerId, false).thenAccept(leveler -> this.otherPlayerLevelerRetrieved(sender, leveler));
-        } else {
-
-            Leveler leveler = this.plugin.getLevelManager().getLeveler(playerId);
-            if (leveler == null) {
-                sender.sendRichMessage("<red>Player not found");
+            if (time != null && Instant.now().getEpochSecond() < time) {
+                sender.sendRichMessage("<red>Please wait a few seconds until you use this command again.");
                 return;
             }
 
-            this.otherPlayerLevelerRetrieved(sender, leveler);
+            this.rateLimiter.put(player.getUniqueId(), Instant.now().getEpochSecond() + rateLimit);
+        }
+
+        try {
+            this.otherPlayerLoadLeveler(sender, UUID.fromString(args.args()[0]), loadLevelers);
+        } catch (IllegalArgumentException e) {
+
+            PlayerProfile profile = Bukkit.createProfile(args.args()[0]);
+            if (profile.getId() != null) {
+                this.otherPlayerLoadLeveler(sender, profile.getId(), loadLevelers);
+            } else {
+                profile.update().thenAccept(updatedProfile -> this.otherPlayerLoadLeveler(sender, updatedProfile.getId(), loadLevelers));
+            }
+
+        }
+    }
+
+    private void otherPlayerLoadLeveler(@NotNull CommandSender sender, @Nullable UUID uuid, boolean loadLevelers) {
+
+        if (uuid == null) {
+            this.otherPlayerLevelerRetrieved(sender, null);
+            return;
+        }
+
+        if (loadLevelers) {
+            this.plugin.getLevelManager().loadLeveler(uuid, false).thenAccept(leveler -> this.otherPlayerLevelerRetrieved(sender, leveler));
+        } else {
+            this.otherPlayerLevelerRetrieved(sender, this.plugin.getLevelManager().getLeveler(uuid));
         }
 
     }
 
-    private void otherPlayerLevelerRetrieved(@NotNull CommandSender sender, @NotNull Leveler leveler) {
+    private void otherPlayerLevelerRetrieved(@NotNull CommandSender sender, @Nullable Leveler leveler) {
         new BukkitRunnable() {
             @Override
             public void run() {
+
+                if (leveler == null) {
+                    sender.sendRichMessage("<red>Player not found");
+                    return;
+                }
+
                 sender.sendRichMessage(InfoSubcommand.this.plugin.messages().optString(MessageKeys.INFO_OTHERS, ""), TagResolvers.leveler("leveler", leveler));
             }
         }.runTask(this.plugin);
@@ -122,6 +149,11 @@ public class InfoSubcommand implements TabCompletingCommandExecutor {
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
+
+        if (args.length == 1) {
+            return Bukkit.getOnlinePlayers().stream().map(Player::getName).toList();
+        }
+
         return List.of();
     }
 
