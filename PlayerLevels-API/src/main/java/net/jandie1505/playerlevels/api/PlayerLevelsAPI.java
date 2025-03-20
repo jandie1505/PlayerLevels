@@ -1,6 +1,7 @@
 package net.jandie1505.playerlevels.api;
 
 import net.jandie1505.playerlevels.api.level.LevelingManager;
+import net.jandie1505.playerlevels.api.level.TopListManager;
 import net.jandie1505.playerlevels.api.reward.RewardsManager;
 import net.jandie1505.playerlevels.api.reward.RewardsRegistry;
 
@@ -29,5 +30,13 @@ public interface PlayerLevelsAPI {
      * @return RewardRegistry
      */
     RewardsRegistry getRewardsRegistry();
+
+    /**
+     * Returns the toplist manager.<br/>
+     * The toplist manager handles the toplist.<br/>
+     * This list contains the top n (configurable) players, for displaying purposes.
+     * @return TopListManager
+     */
+    TopListManager getTopListManager();
 
 }
