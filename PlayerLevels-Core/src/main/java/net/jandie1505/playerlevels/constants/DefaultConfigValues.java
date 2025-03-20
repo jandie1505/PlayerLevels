@@ -27,9 +27,10 @@ public interface DefaultConfigValues {
         DataStorage messages = new DataStorage();
 
         messages.set(MessageKeys.INFO_OWN, """
-                        <green>----- YOUR LEVELING PROGRESS -----
-                        Level: <leveler:level>; XP: <leveler:total_xp_formatted>
-                        Next levelup: <leveler:xp_remaining_formatted> XP (<leveler:xp_formatted>/<leveler:xp_to_next_level_formatted>)
+                        <gold>----- YOUR LEVELING PROGRESS -----
+                        Your level: <leveler:level>
+                        Total XP: <leveler:total_xp_formatted>
+                        Progress: <leveler:xp_formatted>/<leveler:xp_to_next_level_formatted> XP (<leveler:xp_remaining_formatted> XP remaining)
                         Next milestones: <level:next_milestones>"""
         );
         messages.set(MessageKeys.INFO_OTHERS, "<green><leveler:name> is on level <leveler:level> and has <leveler:total_xp_formatted> XP");
