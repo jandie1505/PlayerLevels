@@ -109,9 +109,8 @@ public class InfoSubcommand implements TabCompletingCommandExecutor {
             if (profile.getId() != null) {
                 this.otherPlayerLoadLeveler(sender, profile.getId(), loadLevelers);
             } else {
-                profile.update().thenAccept(updatedProfile -> this.otherPlayerLoadLeveler(sender, updatedProfile.getId(), loadLevelers));
+                this.plugin.getLevelManager().findLevelerByName(args.args()[0]).thenAccept(list -> this.otherPlayerLoadLeveler(sender, list.isEmpty() ? null : list.getFirst(), loadLevelers));
             }
-
         }
     }
 
