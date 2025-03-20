@@ -8,17 +8,15 @@ import net.jandie1505.playerlevels.commands.subcommands.DebugSubcommand;
 import net.jandie1505.playerlevels.commands.subcommands.InfoSubcommand;
 import net.jandie1505.playerlevels.commands.subcommands.ManageSubcommand;
 import net.jandie1505.playerlevels.commands.subcommands.TopSubcommand;
-import net.jandie1505.playerlevels.commands.subcommands.manage.ManageRewardsSubcommand;
-import net.jandie1505.playerlevels.commands.subcommands.manage.ManagePlayersSubcommand;
+import net.jandie1505.playerlevels.constants.MessageKeys;
 import net.jandie1505.playerlevels.leveler.Leveler;
+import net.jandie1505.playerlevels.messages.TagResolvers;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-import java.text.DecimalFormat;
 import java.util.List;
-import java.util.logging.Level;
 
 public class PlayerLevelsCommand extends SubcommandCommand {
     @NotNull private final PlayerLevels plugin;
@@ -60,18 +58,7 @@ public class PlayerLevelsCommand extends SubcommandCommand {
             return;
         }
 
-        double totalXP;
-        try {
-            totalXP = this.plugin.getLevelManager().getXPForLevel(leveler.getData().level()) + leveler.getData().xp();
-        } catch (Exception e) {
-            totalXP = -1;
-            this.plugin.getLogger().log(Level.WARNING, "Failed to calculate xp using the XP formula", e);
-        }
-
-        String formattedXP = new DecimalFormat("#,###.00").format(leveler.getData().xp()) + " XP";
-        String formattedTotalXP = totalXP > 0 ? " (" + new DecimalFormat("#,##0.00").format(totalXP) + " XP)" : "";
-
-        sender.sendRichMessage("<green>Your level is " + leveler.getData().level() + " and you have " + formattedXP + formattedTotalXP);
+        sender.sendRichMessage(this.plugin.messages().optString(MessageKeys.INFO_OWN, ""), TagResolvers.leveler("leveler", leveler), TagResolvers.level("level", leveler.getData().level()));
     }
 
 }

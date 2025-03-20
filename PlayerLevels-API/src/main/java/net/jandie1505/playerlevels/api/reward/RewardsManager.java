@@ -56,4 +56,11 @@ public interface RewardsManager {
      */
     @Nullable Reward getReward(@NotNull String rewardId);
 
+    /**
+     * Returns all milestone rewards for the specified level.
+     * @param level level
+     * @return milestone rewards
+     */
+    @NotNull Map<String, MilestoneReward> getMilestonesForLevel(int level);
+
 }

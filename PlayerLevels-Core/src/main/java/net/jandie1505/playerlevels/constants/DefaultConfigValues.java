@@ -26,7 +26,12 @@ public interface DefaultConfigValues {
     static @NotNull DataStorage getMessages() {
         DataStorage messages = new DataStorage();
 
-        messages.set(MessageKeys.INFO_OWN, "<green>You are on level <leveler:level> and you have <leveler:total_xp_formatted> XP");
+        messages.set(MessageKeys.INFO_OWN, """
+                        <green>----- YOUR LEVELING PROGRESS -----
+                        Level: <leveler:level>; XP: <leveler:total_xp_formatted>
+                        Next levelup: <leveler:xp_remaining_formatted> XP (<leveler:xp_formatted>/<leveler:xp_to_next_level_formatted>)
+                        Next milestones: <level:next_milestones>"""
+        );
         messages.set(MessageKeys.INFO_OTHERS, "<green><leveler:name> is on level <leveler:level> and has <leveler:total_xp_formatted> XP");
         messages.set(MessageKeys.TOPLIST_TITLE, "<gold>Level Leaderboard (Page <page>):");
         messages.set(MessageKeys.TOPLIST_ENTRY, "<aqua><entry:place>. <yellow><entry:name><reset> - <gold><entry:level>⭐ (<entry:xp_formatted> XP)");

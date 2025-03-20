@@ -3,6 +3,7 @@ package net.jandie1505.playerlevels.messages;
 import net.jandie1505.playerlevels.PlayerLevelsAPIProvider;
 import net.jandie1505.playerlevels.api.level.Leveler;
 import net.jandie1505.playerlevels.api.level.ReceivedReward;
+import net.jandie1505.playerlevels.api.reward.MilestoneReward;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.tag.Tag;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
@@ -10,6 +11,7 @@ import org.bukkit.Bukkit;
 import org.intellij.lang.annotations.Subst;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -73,6 +75,68 @@ public final class TagResolvers {
                         String name = Bukkit.getOfflinePlayer(leveler.getPlayerUUID()).getName();
                         placeholder = name != null ? Component.text(name) : Component.text("???");
                     }
+                    case "xp_current_level" -> placeholder = Component.text(getXPForLevel(leveler.getData().level()));
+                    case "xp_current_level_formatted" -> placeholder = Component.text(Formatters.formatXP(getXPForLevel(leveler.getData().level())));
+                    case "xp_next_level" -> placeholder = Component.text(getXPForLevel(leveler.getData().level() + 1));
+                    case "xp_next_level_formatted" -> placeholder = Component.text(Formatters.formatXP(getXPForLevel(leveler.getData().level() + 1)));
+                    case "xp_to_next_level" -> placeholder = Component.text(getXPForNextLevel(leveler.getData().level(), leveler.getData().level() + 1));
+                    case "xp_to_next_level_formatted" -> placeholder = Component.text(Formatters.formatXP(getXPForNextLevel(leveler.getData().level(), leveler.getData().level() + 1)));
+                    case "xp_remaining" -> placeholder = Component.text(getXPForNextLevel(leveler.getData().level(), leveler.getData().level() + 1) - leveler.getData().xp());
+                    case "xp_remaining_formatted" -> placeholder = Component.text(Formatters.formatXP(getXPForNextLevel(leveler.getData().level(), leveler.getData().level() + 1) - leveler.getData().xp()));
+                    default -> placeholder = Component.empty();
+                }
+
+                return Tag.inserting(placeholder);
+            } catch (Exception e) {
+                return Tag.inserting(Component.empty());
+            }
+
+        });
+    }
+
+    /**
+     * Resolves tags for a specified level.
+     * @param tagName tag name
+     * @param level level
+     * @return tag resolver
+     */
+    public static TagResolver level(@Subst("level") @NotNull String tagName, int level) {
+        return TagResolver.resolver(tagName, (argumentQueue, context) -> {
+            final String arg = argumentQueue.popOr(tagName + " tag (level resolver) requires an argument").value();
+
+            Component placeholder;
+
+            try {
+
+                switch (arg) {
+                    case "milestones" -> {
+                        Map<String, MilestoneReward> milestones = PlayerLevelsAPIProvider.getApi().getRewardsManager().getMilestonesForLevel(level);
+
+                        String value = "";
+                        for (MilestoneReward milestone : milestones.values()) {
+                            value = value + milestone.getName() + ", ";
+                        }
+                        value = value.substring(0, value.length() - 2);
+                        placeholder = Component.text(value.isEmpty() ? "---" : value);
+                    }
+                    case "next_milestones" -> {
+                        Map<String, MilestoneReward> milestones = PlayerLevelsAPIProvider.getApi().getRewardsManager().getMilestonesForLevel(level + 1);
+
+                        String value = "";
+                        for (MilestoneReward milestone : milestones.values()) {
+                            value = value + milestone.getName() + ", ";
+                        }
+                        value = value.substring(0, value.length() - 2);
+                        placeholder = Component.text(value.isEmpty() ? "---" : value);
+                    }
+                    case "level" -> placeholder = Component.text(level);
+                    case "next_level" -> placeholder = Component.text(level + 1);
+                    case "xp_current_level" -> placeholder = Component.text(getXPForLevel(level));
+                    case "xp_current_level_formatted" -> placeholder = Component.text(Formatters.formatXP(getXPForLevel(level)));
+                    case "xp_next_level" -> placeholder = Component.text(getXPForLevel(level + 1));
+                    case "xp_next_level_formatted" -> placeholder = Component.text(Formatters.formatXP(getXPForLevel(level + 1)));
+                    case "xp_to_next_level" -> placeholder = Component.text(getXPForNextLevel(level, level + 1));
+                    case "xp_to_next_level_formatted" -> placeholder = Component.text(Formatters.formatXP(getXPForNextLevel(level, level + 1)));
                     default -> placeholder = Component.empty();
                 }
 
@@ -87,6 +151,14 @@ public final class TagResolvers {
     private static double getXPForLevel(int level) {
         try {
             return PlayerLevelsAPIProvider.getApi().getLevelManager().getXPForLevel(level);
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
+    private static double getXPForNextLevel(int currentLevel, int level) {
+        try {
+            return PlayerLevelsAPIProvider.getApi().getLevelManager().getXPForNextLevel(currentLevel, level);
         } catch (Exception e) {
             return 0;
         }

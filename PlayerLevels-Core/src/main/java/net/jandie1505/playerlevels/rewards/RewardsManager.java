@@ -4,8 +4,7 @@ import net.jandie1505.playerlevels.PlayerLevels;
 import net.jandie1505.playerlevels.leveler.Leveler;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 
 public class RewardsManager implements net.jandie1505.playerlevels.api.reward.RewardsManager {
@@ -75,6 +74,18 @@ public class RewardsManager implements net.jandie1505.playerlevels.api.reward.Re
 
     public final @NotNull Map<String, Reward> getRewardsInternal() {
         return this.rewards;
+    }
+
+    // ----- FIND REWARDS -----
+
+    public @NotNull Map<String, net.jandie1505.playerlevels.api.reward.MilestoneReward> getMilestonesForLevel(int level) {
+        Map<String, net.jandie1505.playerlevels.api.reward.MilestoneReward> result = new HashMap<>();
+        for (Map.Entry<String, Reward> entry : Map.copyOf(this.rewards).entrySet()) {
+            if (!(entry.getValue() instanceof MilestoneReward reward)) continue;
+            if (reward.getLevel() != level) continue;
+            result.put(entry.getKey(), reward);
+        }
+        return result;
     }
 
     // ----- OTHER -----
