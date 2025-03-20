@@ -21,7 +21,6 @@ import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 public class InfoSubcommand implements TabCompletingCommandExecutor {
     @NotNull private final PlayerLevels plugin;
@@ -82,7 +81,7 @@ public class InfoSubcommand implements TabCompletingCommandExecutor {
 
     private void otherPlayerInfo(@NotNull CommandSender sender, @NotNull OptionParser.Result args) {
 
-        if (!Permissions.hasPermission(sender, Permissions.VIEW_OTHER)) {
+        if (!Permissions.hasPermission(sender, Permissions.COMMAND_INFO_VIEW_OTHERS)) {
             sender.sendRichMessage("<red>You can't see the level of other players");
             return;
         }
