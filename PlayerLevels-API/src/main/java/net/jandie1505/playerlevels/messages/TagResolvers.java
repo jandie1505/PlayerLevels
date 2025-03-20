@@ -1,10 +1,14 @@
 package net.jandie1505.playerlevels.messages;
 
 import net.jandie1505.playerlevels.PlayerLevelsAPIProvider;
+import net.jandie1505.playerlevels.api.PlayerLevelsAPI;
 import net.jandie1505.playerlevels.api.level.Leveler;
 import net.jandie1505.playerlevels.api.level.ReceivedReward;
+import net.jandie1505.playerlevels.api.reward.IntervalReward;
 import net.jandie1505.playerlevels.api.reward.MilestoneReward;
+import net.jandie1505.playerlevels.api.reward.Reward;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.minimessage.tag.Tag;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.bukkit.Bukkit;
@@ -75,6 +79,7 @@ public final class TagResolvers {
                         String name = Bukkit.getOfflinePlayer(leveler.getPlayerUUID()).getName();
                         placeholder = name != null ? Component.text(name) : Component.text("???");
                     }
+                    case "level_next" -> placeholder = Component.text(leveler.getData().level() + 1);
                     case "xp_current_level" -> placeholder = Component.text(getXPForLevel(leveler.getData().level()));
                     case "xp_current_level_formatted" -> placeholder = Component.text(Formatters.formatXP(getXPForLevel(leveler.getData().level())));
                     case "xp_next_level" -> placeholder = Component.text(getXPForLevel(leveler.getData().level() + 1));
@@ -137,6 +142,65 @@ public final class TagResolvers {
                     case "xp_next_level_formatted" -> placeholder = Component.text(Formatters.formatXP(getXPForLevel(level + 1)));
                     case "xp_to_next_level" -> placeholder = Component.text(getXPForNextLevel(level, level + 1));
                     case "xp_to_next_level_formatted" -> placeholder = Component.text(Formatters.formatXP(getXPForNextLevel(level, level + 1)));
+                    default -> placeholder = Component.empty();
+                }
+
+                return Tag.inserting(placeholder);
+            } catch (Exception e) {
+                return Tag.inserting(Component.empty());
+            }
+
+        });
+    }
+
+    /**
+     * Resolves tags about rewards.
+     * @param tagName tag name
+     * @param reward reward
+     * @return resolver
+     */
+    public static TagResolver reward(@Subst("reward") @NotNull String tagName, @NotNull Reward reward) {
+        return TagResolver.resolver(tagName, (argumentQueue, context) -> {
+            final String arg = argumentQueue.popOr(tagName + " tag (reward resolver) requires an argument").value();
+
+            Component placeholder;
+
+            try {
+
+                switch (arg) {
+                    case "id" -> placeholder = Component.text(reward.getId());
+                    case "type" -> placeholder = Component.text(reward.getClass().getSimpleName());
+                    case "name" -> placeholder = Component.text(reward.getName());
+                    case "description" -> placeholder = Component.text(reward.getDescription());
+                    case "limit" -> placeholder = Component.text(reward.getLimit());
+                    case "enabled" -> placeholder = Component.text(reward.isEnabled());
+                    case "requiresOnlinePlayer" -> placeholder = Component.text(reward.requiresOnlinePlayer());
+                    case "serverId" -> {
+                        String serverId = reward.getServerId();
+                        placeholder = Component.text(serverId == null ? "_global_" : serverId);
+                    }
+                    case "level" -> {
+                        if (reward instanceof MilestoneReward milestone) {
+                            placeholder = Component.text(milestone.getLevel());
+                        } else {
+                            placeholder = Component.empty();
+                        }
+
+                    }
+                    case "interval" -> {
+                        if (reward instanceof IntervalReward intervalReward) {
+                            placeholder = Component.text(intervalReward.getInterval());
+                        } else {
+                            placeholder = Component.empty();
+                        }
+                    }
+                    case "start" -> {
+                        if (reward instanceof IntervalReward intervalReward) {
+                            placeholder = Component.text(intervalReward.getStart());
+                        } else {
+                            placeholder = Component.empty();
+                        }
+                    }
                     default -> placeholder = Component.empty();
                 }
 
