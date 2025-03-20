@@ -71,10 +71,15 @@ public interface Leveler {
         REMOTE_OUTDATED_AVAIL(false, true, false),
 
         /**
-         * Remote is outdated, and leveler is not in the database.<br/>
+         * The leveler is not in the database and has been pushed to the database.<br/>
          * Create new leveler entry in the database.
          */
         REMOTE_OUTDATED_MISSING(false, true, false),
+
+        /**
+         * The leveler is not in the database and has not been pushed because it only consists of default values.
+         */
+        REMOTE_MISSING_DEFAULT(false, false, false),
 
         /**
          * Leveler is up-to-date with the database.<br/>

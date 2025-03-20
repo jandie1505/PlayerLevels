@@ -215,6 +215,12 @@ public final class Leveler implements net.jandie1505.playerlevels.api.level.Leve
                 }
 
             } else {
+
+                if (this.getData().isDefault()) {
+                    System.out.println("Remote not avail, only default values");
+                    return SyncResult.REMOTE_MISSING_DEFAULT;
+                }
+
                 this.insertDataIntoDatabase(connection);
                 System.out.println("Remote not avail");
                 return SyncResult.REMOTE_OUTDATED_MISSING;
