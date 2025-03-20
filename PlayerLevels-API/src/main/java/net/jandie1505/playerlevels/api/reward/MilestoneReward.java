@@ -1,7 +1,9 @@
 package net.jandie1505.playerlevels.api.reward;
 
+import net.jandie1505.playerlevels.api.level.Leveler;
 import net.jandie1505.playerlevels.api.level.ReceivedReward;
 import net.jandie1505.playerlevels.rewards.RewardCondition;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Represents a milestone reward.<br/>
@@ -21,5 +23,12 @@ public interface MilestoneReward extends Reward {
      * @return level
      */
     int getLevel();
+
+    /**
+     * Returns true if the reward has already been applied.
+     * @param leveler leveler
+     * @return already applied
+     */
+    boolean isApplied(@NotNull Leveler leveler);
 
 }

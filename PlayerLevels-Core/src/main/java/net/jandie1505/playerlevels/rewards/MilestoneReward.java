@@ -33,6 +33,24 @@ public class MilestoneReward extends Reward implements net.jandie1505.playerleve
         return !this.condition.isApplied(this, leveler, checkedLevel);
     }
 
+    /**
+     * Returns true if the reward has already been applied.
+     * @param leveler leveler
+     * @return already applied
+     */
+    public boolean isApplied(@NotNull Leveler leveler) {
+        return this.condition.isApplied(this, leveler, this.level);
+    }
+
+    /**
+     * Returns true if the reward has already been applied.
+     * @param leveler leveler
+     * @return already applied
+     */
+    public boolean isApplied(@NotNull net.jandie1505.playerlevels.api.level.Leveler leveler) {
+        return this.isApplied((Leveler) leveler);
+    }
+
     @Override
     public int getLevel() {
         return this.level;
