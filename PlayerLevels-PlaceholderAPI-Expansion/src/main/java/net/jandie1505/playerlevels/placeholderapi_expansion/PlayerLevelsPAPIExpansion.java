@@ -1,15 +1,14 @@
 package net.jandie1505.playerlevels.placeholderapi_expansion;
 
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
-import net.jandie1505.playerlevels.PlayerLevelsAPIProvider;
-import net.jandie1505.playerlevels.api.level.Leveler;
-import net.jandie1505.playerlevels.api.level.TopListManager;
-import net.jandie1505.playerlevels.messages.Formatters;
+import net.jandie1505.playerlevels.api.core.level.Leveler;
+import net.jandie1505.playerlevels.api.core.level.TopListManager;
+import net.jandie1505.playerlevels.core.PlayerLevelsAPIProvider;
+import net.jandie1505.playerlevels.core.messages.Formatters;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -34,7 +33,7 @@ public class PlayerLevelsPAPIExpansion extends PlaceholderExpansion {
     public @Nullable String onRequest(OfflinePlayer player, @NotNull String params) {
 
         try {
-            Class.forName("net.jandie1505.playerlevels.api.PlayerLevelsAPI");
+            Class.forName("net.jandie1505.playerlevels.api.core.PlayerLevelsAPI");
         } catch (ClassNotFoundException e) {
             return "plugin_not_found";
         }
