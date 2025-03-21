@@ -9,6 +9,7 @@ import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -40,14 +41,13 @@ public class PlayerLevelsPAPIExpansion extends PlaceholderExpansion {
 
         if (params.startsWith("toplist_")) {
             params = params.substring("toplist_".length());
-            String[] split = params.split("_");
+            String[] split = params.split("_", 2);
             if (split.length != 2) return "toplist_invalid_format";
 
-            String type = split[0];
             int position;
 
             try {
-                position = Integer.parseInt(split[1]);
+                position = Integer.parseInt(split[0]);
             } catch (NumberFormatException e) {
                 return "toplist_invalid_position";
             }
@@ -60,6 +60,7 @@ public class PlayerLevelsPAPIExpansion extends PlaceholderExpansion {
             }
             entry = tl.get(position);
 
+            String type = split[1];
             return switch (type) {
                 case "level" -> String.valueOf(entry.level());
                 case "xp" -> String.valueOf(entry.xp());
