@@ -18,6 +18,7 @@ public class ManagePlayersSubcommand extends SubcommandCommand {
         this.addSubcommand("level", SubcommandEntry.of(new ManagePlayersLevelSubcommand(this.plugin)));
         this.addSubcommand("xp", SubcommandEntry.of(new ManagePlayersXPSubcommand(this.plugin)));
         this.addSubcommand("rewards", SubcommandEntry.of(new ManagePlayersRewardsSubcommand(this.plugin)));
+        this.addSubcommand("cached-name", SubcommandEntry.of(new ManagePlayersCachedNameSubcommand(this.plugin)));
         this.addSubcommand("sync", SubcommandEntry.of(new ManagePlayersSyncSubcommand(this.plugin)));
         this.addSubcommand("update", SubcommandEntry.of(new ManagePlayersUpdateSubcommand(this.plugin)));
         this.addSubcommand("erase", SubcommandEntry.of(new ManagePlayersEraseSubcommand(this.plugin)));
