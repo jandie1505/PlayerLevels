@@ -34,8 +34,21 @@ public interface DefaultConfigValues {
                         Next milestones: <level:next_milestones>"""
         );
         messages.set(MessageKeys.INFO_OTHERS, "<green><leveler:name> is on level <leveler:level> and has <leveler:total_xp_formatted> XP");
+
         messages.set(MessageKeys.TOPLIST_TITLE, "<gold>Level Leaderboard (Page <page>):");
         messages.set(MessageKeys.TOPLIST_ENTRY, "<aqua><entry:place>. <yellow><entry:name><reset> - <gold><entry:level>⭐ (<entry:xp_formatted> XP)");
+
+        messages.set(MessageKeys.MILESTONE_LIST_TITLE, "<gold><bold>Milestones (page <page>/<max_pages>):");
+        messages.set(MessageKeys.MILESTONE_LIST_ENTRY, """
+                <gold>▪ <reward:name>
+                <gray>└ <italic><reward:description></italic>
+                <gray>└ <reward_leveler:milestone_unlock_status>"""
+        );
+        messages.set(MessageKeys.MILESTONE_LIST_EMPTY, "<gold>No rewards");
+
+        messages.set(MessageKeys.PLACEHOLDER_REWARD_UNLOCKED, "<green>\uD83D\uDD13 Unlocked</green>");
+        messages.set(MessageKeys.PLACEHOLDER_REWARD_LOCKED, "<red>\uD83D\uDD12 Unlocks at level <reward:level></red>");
+        messages.set(MessageKeys.PLACEHOLDER_REWARD_UNKNOWN_UNLOCK_STATUS, "<yellow>Unlock status unknown");
 
         return messages;
     }
