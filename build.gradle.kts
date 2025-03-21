@@ -17,6 +17,10 @@ allprojects {
             name = "chaossquad-snapshots"
             url = uri("https://maven.chaossquad.net/snapshots")
         }
+        maven {
+            name = "placeholder-api"
+            url = uri("https://repo.extendedclip.com/content/repositories/placeholderapi/")
+        }
     }
 }
 
