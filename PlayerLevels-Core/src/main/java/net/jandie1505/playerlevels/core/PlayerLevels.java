@@ -112,16 +112,6 @@ public class PlayerLevels extends JavaPlugin implements PlayerLevelsAPI {
         } catch (Exception e) {
             this.getLogger().log(Level.SEVERE, "Failed to load rewards from config", e);
         }
-
-        this.getRewardsManager().addMilestoneReward(
-                new RewardConfig("test_milestone", null, "Test Reward", null),
-                CommandReward.createMilestone("say {player_name} has unlocked {reward_name} on level {player_reward_level}", true, CommandReward.SenderType.CONSOLE, 50)
-        );
-
-        this.getRewardsManager().addIntervalReward(
-                new RewardConfig("test_interval", null, "Interval Test Reward", null),
-                CommandReward.createInterval("say {player_name} has unlocked {reward_name} on level {player_reward_level}", true, CommandReward.SenderType.CONSOLE, 1, 2, -1)
-        );
     }
 
     @Override
