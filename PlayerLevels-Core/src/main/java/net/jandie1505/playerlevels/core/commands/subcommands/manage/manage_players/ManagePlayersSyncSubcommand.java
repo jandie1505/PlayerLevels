@@ -3,6 +3,7 @@ package net.jandie1505.playerlevels.core.commands.subcommands.manage.manage_play
 import net.chaossquad.mclib.PlayerUtils;
 import net.chaossquad.mclib.command.TabCompletingCommandExecutor;
 import net.jandie1505.playerlevels.core.PlayerLevels;
+import net.jandie1505.playerlevels.core.constants.MessageKeys;
 import net.jandie1505.playerlevels.core.constants.Permissions;
 import net.jandie1505.playerlevels.core.leveler.Leveler;
 import net.kyori.adventure.text.Component;
@@ -29,7 +30,7 @@ public class ManagePlayersSyncSubcommand implements TabCompletingCommandExecutor
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String @NotNull [] args) {
 
         if (!Permissions.hasPermission(sender, Permissions.MANAGE_PLAYERS)) {
-            sender.sendRichMessage("<red>No permission");
+            sender.sendRichMessage(this.plugin.messages().optString(MessageKeys.GENERAL_NO_PERMISSION, ""));
             return true;
         }
 

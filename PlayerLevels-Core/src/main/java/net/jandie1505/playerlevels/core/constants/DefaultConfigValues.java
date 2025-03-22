@@ -26,6 +26,9 @@ public interface DefaultConfigValues {
     static @NotNull DataStorage getMessages() {
         DataStorage messages = new DataStorage();
 
+        messages.set(MessageKeys.GENERAL_NO_PERMISSION, "<red>You don't have permission to use this command");
+        messages.set(MessageKeys.GENERAL_UNKNOWN_SUBCOMMAND, "<red>Unknown subcommand");
+
         messages.set(MessageKeys.INFO_OWN, """
                         <gold>----- YOUR LEVELING PROGRESS -----
                         Your level: <leveler:level>

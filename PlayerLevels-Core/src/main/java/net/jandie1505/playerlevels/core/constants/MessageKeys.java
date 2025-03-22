@@ -2,6 +2,9 @@ package net.jandie1505.playerlevels.core.constants;
 
 public interface MessageKeys {
 
+    String GENERAL_NO_PERMISSION = "general.no_permission";
+    String GENERAL_UNKNOWN_SUBCOMMAND = "general.unknown_subcommand";
+
     String INFO_OWN = "info.own";
     String INFO_OTHERS = "info.others";
 

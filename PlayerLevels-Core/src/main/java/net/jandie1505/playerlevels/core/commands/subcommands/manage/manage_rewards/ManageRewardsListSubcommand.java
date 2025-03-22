@@ -3,6 +3,7 @@ package net.jandie1505.playerlevels.core.commands.subcommands.manage.manage_rewa
 import net.chaossquad.mclib.command.TabCompletingCommandExecutor;
 import net.jandie1505.playerlevels.core.PlayerLevels;
 import net.jandie1505.playerlevels.core.commands.subcommands.utils.OptionParser;
+import net.jandie1505.playerlevels.core.constants.MessageKeys;
 import net.jandie1505.playerlevels.core.constants.Permissions;
 import net.jandie1505.playerlevels.core.rewards.Reward;
 import org.bukkit.command.Command;
@@ -23,7 +24,7 @@ public class ManageRewardsListSubcommand implements TabCompletingCommandExecutor
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] a) {
 
         if (!Permissions.hasPermission(sender, Permissions.MANAGE_REWARDS)) {
-            sender.sendRichMessage("<red>No permission");
+            sender.sendRichMessage(this.plugin.messages().optString(MessageKeys.GENERAL_NO_PERMISSION, ""));
             return true;
         }
 

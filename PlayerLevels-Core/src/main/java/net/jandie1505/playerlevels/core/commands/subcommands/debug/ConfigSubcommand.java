@@ -3,6 +3,7 @@ package net.jandie1505.playerlevels.core.commands.subcommands.debug;
 import net.chaossquad.mclib.command.TabCompletingCommandExecutor;
 import net.chaossquad.mclib.commands.DataStorageEditorCommand;
 import net.jandie1505.playerlevels.core.PlayerLevels;
+import net.jandie1505.playerlevels.core.constants.MessageKeys;
 import net.jandie1505.playerlevels.core.constants.Permissions;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -23,7 +24,7 @@ public class ConfigSubcommand implements TabCompletingCommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
 
         if (sender != Bukkit.getConsoleSender()) {
-            sender.sendRichMessage("<red>No permission");
+            sender.sendRichMessage(this.plugin.messages().optString(MessageKeys.GENERAL_NO_PERMISSION, ""));
             return true;
         }
 
@@ -34,7 +35,7 @@ public class ConfigSubcommand implements TabCompletingCommandExecutor {
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
 
         if (!Permissions.hasPermission(sender, Permissions.DEBUG)) {
-            sender.sendRichMessage("<red>No permission");
+            sender.sendRichMessage(this.plugin.messages().optString(MessageKeys.GENERAL_NO_PERMISSION, ""));
             return List.of();
         }
 

@@ -3,6 +3,7 @@ package net.jandie1505.playerlevels.core.commands.subcommands.debug;
 import com.zaxxer.hikari.HikariDataSource;
 import net.chaossquad.mclib.command.TabCompletingCommandExecutor;
 import net.jandie1505.playerlevels.core.PlayerLevels;
+import net.jandie1505.playerlevels.core.constants.MessageKeys;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
@@ -24,7 +25,7 @@ public class DatabaseSubcommand implements TabCompletingCommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
 
         if (sender != Bukkit.getConsoleSender()) {
-            sender.sendRichMessage("<red>No permission");
+            sender.sendRichMessage(this.plugin.messages().optString(MessageKeys.GENERAL_NO_PERMISSION, ""));
             return true;
         }
 

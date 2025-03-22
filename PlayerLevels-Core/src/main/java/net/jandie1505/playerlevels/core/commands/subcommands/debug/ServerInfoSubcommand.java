@@ -2,6 +2,7 @@ package net.jandie1505.playerlevels.core.commands.subcommands.debug;
 
 import net.chaossquad.mclib.command.TabCompletingCommandExecutor;
 import net.jandie1505.playerlevels.core.PlayerLevels;
+import net.jandie1505.playerlevels.core.constants.MessageKeys;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -21,7 +22,7 @@ public class ServerInfoSubcommand implements TabCompletingCommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
 
         if (sender != Bukkit.getConsoleSender()) {
-            sender.sendRichMessage("<red>No permission");
+            sender.sendRichMessage(this.plugin.messages().optString(MessageKeys.GENERAL_NO_PERMISSION, ""));
             return true;
         }
 

@@ -44,7 +44,7 @@ public class InfoSubcommand implements TabCompletingCommandExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] a) {
 
         if (!Permissions.hasPermission(sender, Permissions.USE)) {
-            sender.sendRichMessage("<red>No permission");
+            sender.sendRichMessage(this.plugin.messages().optString(MessageKeys.GENERAL_NO_PERMISSION, ""));
             return true;
         }
 

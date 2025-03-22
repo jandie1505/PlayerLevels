@@ -9,11 +9,13 @@ import net.jandie1505.playerlevels.core.constants.MessageKeys;
 import net.jandie1505.playerlevels.core.constants.Permissions;
 import net.jandie1505.playerlevels.core.leveler.Leveler;
 import net.jandie1505.playerlevels.core.messages.TagResolvers;
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -59,6 +61,16 @@ public class PlayerLevelsCommand extends SubcommandCommand {
         }
 
         sender.sendRichMessage(this.plugin.messages().optString(MessageKeys.INFO_OWN, ""), TagResolvers.leveler("leveler", leveler), TagResolvers.level("level", leveler.getData().level()));
+    }
+
+    @Override
+    protected void onExecutionWithUnknownSubcommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args) {
+        sender.sendRichMessage(this.plugin.messages().optString(MessageKeys.GENERAL_UNKNOWN_SUBCOMMAND, ""));
+    }
+
+    @Override
+    protected void onExecutionWithoutPermission(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args, @Nullable String subcommand) {
+        sender.sendRichMessage(this.plugin.messages().optString(MessageKeys.GENERAL_NO_PERMISSION, ""));
     }
 
 }
