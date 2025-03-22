@@ -148,7 +148,7 @@ public class InfoSubcommand implements TabCompletingCommandExecutor {
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] args) {
 
-        if (args.length == 1) {
+        if (args.length == 1 && Permissions.hasPermission(sender, Permissions.COMMAND_INFO_VIEW_OTHERS)) {
             return Bukkit.getOnlinePlayers().stream().map(Player::getName).toList();
         }
 

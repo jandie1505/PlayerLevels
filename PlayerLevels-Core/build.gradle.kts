@@ -5,7 +5,7 @@ plugins {
 
 dependencies {
     implementation(project(":PlayerLevels-API"))
-    implementation("net.chaossquad:mclib:coreexecutable-managedlistener-managedentity-4538aad9567f5a34cbee51ef65d6a57d22b781e3")
+    implementation("net.chaossquad:mclib:master-d7d92b1765d275ae2aa8669a7e1b36fd809de861")
     implementation("com.zaxxer:HikariCP:6.2.1")
     implementation("org.json:json:20250107")
     implementation("org.mariadb.jdbc:mariadb-java-client:3.4.1")

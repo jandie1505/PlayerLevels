@@ -6,8 +6,10 @@ import net.chaossquad.mclib.command.TabCompletingCommandExecutor;
 import net.jandie1505.playerlevels.core.PlayerLevels;
 import net.jandie1505.playerlevels.core.commands.subcommands.*;
 import net.jandie1505.playerlevels.core.constants.MessageKeys;
+import net.jandie1505.playerlevels.core.constants.Permissions;
 import net.jandie1505.playerlevels.core.leveler.Leveler;
 import net.jandie1505.playerlevels.core.messages.TagResolvers;
+import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -35,11 +37,11 @@ public class PlayerLevelsCommand extends SubcommandCommand {
             }
         }));
 
-        this.addSubcommand("manage", SubcommandEntry.of(new ManageSubcommand(this.plugin)));
-        this.addSubcommand("debug", SubcommandEntry.of(new DebugSubcommand(this.plugin)));
-        this.addSubcommand("info", SubcommandEntry.of(new InfoSubcommand(this.plugin)));
-        this.addSubcommand("top", SubcommandEntry.of(new TopSubcommand(this.plugin)));
-        this.addSubcommand("milestones", SubcommandEntry.of(new MilestonesSubcommand(this.plugin)));
+        this.addSubcommand("manage", SubcommandEntry.of(new ManageSubcommand(this.plugin), sender -> Permissions.hasPermission(sender, Permissions.MANAGE_PLAYERS, Permissions.COMMAND_REWARDS)));
+        this.addSubcommand("debug", SubcommandEntry.of(new DebugSubcommand(this.plugin), sender -> sender == Bukkit.getConsoleSender()));
+        this.addSubcommand("info", SubcommandEntry.of(new InfoSubcommand(this.plugin), sender -> Permissions.hasPermission(sender, Permissions.USE)));
+        this.addSubcommand("top", SubcommandEntry.of(new TopSubcommand(this.plugin), sender -> Permissions.hasPermission(sender, Permissions.COMMAND_INFO_VIEW_OTHERS)));
+        this.addSubcommand("milestones", SubcommandEntry.of(new MilestonesSubcommand(this.plugin), sender -> Permissions.hasPermission(sender, Permissions.COMMAND_REWARDS)));
     }
 
     @Override
