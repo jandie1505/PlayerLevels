@@ -40,7 +40,7 @@ public class PlayerLevelsCommand extends SubcommandCommand {
         }));
 
         this.addSubcommand("manage", SubcommandEntry.of(new ManageSubcommand(this.plugin), sender -> Permissions.hasPermission(sender, Permissions.MANAGE_PLAYERS, Permissions.MANAGE_REWARDS)));
-        this.addSubcommand("debug", SubcommandEntry.of(new DebugSubcommand(this.plugin), sender -> sender == Bukkit.getConsoleSender()));
+        this.addSubcommand("debug", SubcommandEntry.of(new DebugSubcommand(this.plugin), Permissions::hasPermission));
         this.addSubcommand("info", SubcommandEntry.of(new InfoSubcommand(this.plugin), sender -> Permissions.hasPermission(sender, Permissions.USE)));
         this.addSubcommand("top", SubcommandEntry.of(new TopSubcommand(this.plugin), sender -> Permissions.hasPermission(sender, Permissions.COMMAND_INFO_VIEW_OTHERS)));
         this.addSubcommand("milestones", SubcommandEntry.of(new MilestonesSubcommand(this.plugin), sender -> Permissions.hasPermission(sender, Permissions.COMMAND_REWARDS)));

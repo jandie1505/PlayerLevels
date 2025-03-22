@@ -7,6 +7,7 @@ import net.jandie1505.playerlevels.core.commands.subcommands.debug.CacheSubComma
 import net.jandie1505.playerlevels.core.commands.subcommands.debug.ConfigSubcommand;
 import net.jandie1505.playerlevels.core.commands.subcommands.debug.DatabaseSubcommand;
 import net.jandie1505.playerlevels.core.commands.subcommands.debug.ServerInfoSubcommand;
+import net.jandie1505.playerlevels.core.constants.Permissions;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,7 +15,7 @@ public class DebugSubcommand extends SubcommandCommand {
     @NotNull private final PlayerLevels plugin;
 
     public DebugSubcommand(@NotNull PlayerLevels plugin) {
-        super(plugin, sender -> sender == Bukkit.getConsoleSender());
+        super(plugin, Permissions::hasPermission);
         this.plugin = plugin;
 
         this.addSubcommand("cache", SubcommandEntry.of(new CacheSubCommand(this.plugin)));
