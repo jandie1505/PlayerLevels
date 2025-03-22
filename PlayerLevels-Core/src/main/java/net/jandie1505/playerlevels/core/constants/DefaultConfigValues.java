@@ -30,11 +30,12 @@ public interface DefaultConfigValues {
         messages.set(MessageKeys.GENERAL_UNKNOWN_SUBCOMMAND, "<red>Unknown subcommand");
 
         messages.set(MessageKeys.INFO_OWN, """
-                        <gold>----- YOUR LEVELING PROGRESS -----
-                        Your level: <leveler:level>
-                        Total XP: <leveler:total_xp_formatted>
-                        Progress: <leveler:xp_formatted>/<leveler:xp_to_next_level_formatted> XP (<leveler:xp_remaining_formatted> XP remaining)
-                        Next milestones: <level:next_milestones>"""
+                <newline><gold>━━━ ✦ Your Leveling Progress ✦ ━━━
+                <gray>➥ Level: <green><leveler:level>
+                <gray>➥ Total XP: <aqua><leveler:total_xp_formatted>
+                <gray>➥ Fortschritt: <yellow><leveler:xp_formatted>/<leveler:xp_to_next_level_formatted> XP
+                <gray>   Only <red><leveler:xp_remaining_formatted> XP <gray>to the next level!
+                <gray>➥ Next milestones: <gold><level:next_milestones><newline>"""
         );
         messages.set(MessageKeys.INFO_OTHERS, "<green><leveler:name> is on level <leveler:level> and has <leveler:total_xp_formatted> XP");
 
