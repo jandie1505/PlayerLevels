@@ -10,6 +10,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.tag.Tag;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.intellij.lang.annotations.Subst;
 import org.jetbrains.annotations.NotNull;
 
@@ -199,6 +200,36 @@ public final class TagResolvers {
                             placeholder = Component.empty();
                         }
                     }
+                    default -> placeholder = Component.empty();
+                }
+
+                return Tag.inserting(placeholder);
+            } catch (Exception e) {
+                return Tag.inserting(Component.empty());
+            }
+
+        });
+    }
+
+    /**
+     * Resolves tags for a specified level.
+     * @param tagName tag name
+     * @param player player
+     * @return tag resolver
+     */
+    public static TagResolver player(@Subst("player") @NotNull String tagName, @NotNull Player player) {
+        return TagResolver.resolver(tagName, (argumentQueue, context) -> {
+            final String arg = argumentQueue.popOr(tagName + " tag (level resolver) requires an argument").value();
+
+            Component placeholder;
+
+            try {
+
+                switch (arg) {
+                    case "uuid" -> placeholder = Component.text(player.getUniqueId().toString());
+                    case "name" -> placeholder = Component.text(player.getName());
+                    case "display_name" -> placeholder = player.displayName();
+                    case "player_list_name" -> placeholder = player.playerListName();
                     default -> placeholder = Component.empty();
                 }
 

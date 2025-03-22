@@ -53,6 +53,25 @@ public interface DefaultConfigValues {
         messages.set(MessageKeys.PLACEHOLDER_REWARD_LOCKED, "<red>\uD83D\uDD12 Unlocks at level <reward:level></red>");
         messages.set(MessageKeys.PLACEHOLDER_REWARD_UNKNOWN_UNLOCK_STATUS, "<yellow>Unlock status unknown");
 
+        messages.set(MessageKeys.ANNOUNCEMENT_LEVELUP_SELF, """
+                
+                <green>⬆ Congratulations! You just reached level <leveler:level>!<interval_rewards_list><newline>""");
+        messages.set(MessageKeys.ANNOUNCEMENT_LEVELUP_OTHERS, "<newline><yellow>⬆ <player:display_name> <reset><yellow>just leveled up to <leveler:level>!<newline>");
+        messages.set(MessageKeys.ANNOUNCEMENT_LEVELUP_REWARD_LIST_TITLE, "<newline><newline><gray>You received the following rewards:");
+        messages.set(MessageKeys.ANNOUNCEMENT_LEVELUP_REWARD_LIST_ENTRY, "<gray>➥ <green><reward:name>");
+        messages.set(MessageKeys.ANNOUNCEMENT_MILESTONE_UNLOCKED_SELF, """
+                <newline><green><bold>✔ You have unlocked a new milestone!<reset>
+                <gray>➥ <bold><reward:name>
+                <gray>➥ <italic><reward:description>
+                <gray>➥ Received at level <green><level><newline>"""
+        );
+        messages.set(MessageKeys.ANNOUNCEMENT_MILESTONE_UNLOCKED_OTHERS, """
+                <newline><yellow><player:display_name> <reset><yellow>has unlocked a new milestone!
+                <gray>➥ <bold><reward:name>
+                <gray>➥ Unlocked at level <green><reward:level><newline>"""
+        );
+        messages.set(MessageKeys.ANNOUNCEMENT_INTERVAL_REWARD_UNLOCKED, "");
+
         return messages;
     }
 

@@ -10,6 +10,7 @@ import net.jandie1505.playerlevels.core.database.DatabaseManager;
 import net.jandie1505.playerlevels.core.leveler.Leveler;
 import net.jandie1505.playerlevels.core.leveler.LevelingManager;
 import net.jandie1505.playerlevels.core.leveler.TopListManager;
+import net.jandie1505.playerlevels.core.messages.AnnouncementHandler;
 import net.jandie1505.playerlevels.core.rewards.RewardConfig;
 import net.jandie1505.playerlevels.core.rewards.RewardsManager;
 import net.jandie1505.playerlevels.core.rewards.RewardsRegistry;
@@ -104,6 +105,8 @@ public class PlayerLevels extends JavaPlugin implements PlayerLevelsAPI {
                 if (PlayerLevels.this.config().optBoolean(ConfigKeys.TOP_LIST_ENABLED, false)) PlayerLevels.this.topListManager.updateTopList();
             }
         }.runTaskTimerAsynchronously(this, 20, 60*60*20);
+
+        this.getServer().getPluginManager().registerEvents(new AnnouncementHandler(this), this);
 
         PlayerLevelsAPIProvider.setApi(this);
 

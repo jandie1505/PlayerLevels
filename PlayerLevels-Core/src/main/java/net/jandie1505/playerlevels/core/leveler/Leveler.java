@@ -115,6 +115,8 @@ public final class Leveler implements net.jandie1505.playerlevels.api.core.level
             requiredXP = this.manager.getXPForNextLevel(level, level + 1);
         }
 
+        if (level == levelAtStart) return;
+
         this.data.level(level);
         this.data.xp(xp);
 

@@ -6,3 +6,6 @@ commands:
   levels:
     description: Plugin command
     aliases: ['playerlevels','level']
+permissions:
+  playerlevels.admin:
+    default: op
