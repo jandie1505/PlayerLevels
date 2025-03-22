@@ -3,12 +3,8 @@ package net.jandie1505.playerlevels.core.commands.subcommands;
 import net.chaossquad.mclib.command.SubcommandCommand;
 import net.chaossquad.mclib.command.SubcommandEntry;
 import net.jandie1505.playerlevels.core.PlayerLevels;
-import net.jandie1505.playerlevels.core.commands.subcommands.debug.CacheSubCommand;
-import net.jandie1505.playerlevels.core.commands.subcommands.debug.ConfigSubcommand;
-import net.jandie1505.playerlevels.core.commands.subcommands.debug.DatabaseSubcommand;
-import net.jandie1505.playerlevels.core.commands.subcommands.debug.ServerInfoSubcommand;
+import net.jandie1505.playerlevels.core.commands.subcommands.debug.*;
 import net.jandie1505.playerlevels.core.constants.Permissions;
-import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
 public class DebugSubcommand extends SubcommandCommand {
@@ -18,10 +14,12 @@ public class DebugSubcommand extends SubcommandCommand {
         super(plugin, Permissions::hasPermission);
         this.plugin = plugin;
 
-        this.addSubcommand("cache", SubcommandEntry.of(new CacheSubCommand(this.plugin)));
-        this.addSubcommand("config", SubcommandEntry.of(new ConfigSubcommand(this.plugin)));
-        this.addSubcommand("database", SubcommandEntry.of(new DatabaseSubcommand(this.plugin)));
-        this.addSubcommand("server-info", SubcommandEntry.of(new ServerInfoSubcommand(this.plugin)));
+        this.addSubcommand("cache", SubcommandEntry.of(new DebugCacheSubcommand(this.plugin)));
+        this.addSubcommand("config", SubcommandEntry.of(new DebugConfigSubcommand(this.plugin)));
+        this.addSubcommand("messages", SubcommandEntry.of(new DebugMessagesSubcommand(this.plugin)));
+        this.addSubcommand("database", SubcommandEntry.of(new DebugDatabaseSubcommand(this.plugin)));
+        this.addSubcommand("server-info", SubcommandEntry.of(new DebugServerInfoSubcommand(this.plugin)));
+        this.addSubcommand("reload", SubcommandEntry.of(new DebugReloadSubcommand(this.plugin)));
     }
 
 }

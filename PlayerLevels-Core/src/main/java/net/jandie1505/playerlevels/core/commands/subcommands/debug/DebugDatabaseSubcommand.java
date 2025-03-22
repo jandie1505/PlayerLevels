@@ -7,7 +7,6 @@ import net.jandie1505.playerlevels.core.constants.MessageKeys;
 import net.jandie1505.playerlevels.core.constants.Permissions;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -15,10 +14,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class DatabaseSubcommand implements TabCompletingCommandExecutor {
+public class DebugDatabaseSubcommand implements TabCompletingCommandExecutor {
     @NotNull private final PlayerLevels plugin;
 
-    public DatabaseSubcommand(@NotNull PlayerLevels plugin) {
+    public DebugDatabaseSubcommand(@NotNull PlayerLevels plugin) {
         this.plugin = plugin;
     }
 

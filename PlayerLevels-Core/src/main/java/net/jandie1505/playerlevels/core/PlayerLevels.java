@@ -44,41 +44,7 @@ public class PlayerLevels extends JavaPlugin implements PlayerLevelsAPI {
     @Override
     public void onEnable() {
 
-        this.config.clear();
-        this.config.merge(DefaultConfigValues.getConfig());
-
-        try {
-
-            DataStorage loadedStorage = DSSerializer.loadConfig(new File(this.getDataFolder(), "config.yml"));
-            if (loadedStorage != null) {
-                this.config.merge(loadedStorage);
-                this.getLogger().info("Config loaded successfully");
-            } else {
-                DSSerializer.saveConfig(this.config, new File(this.getDataFolder(), "config.yml"));
-                this.getLogger().info("Config created successfully");
-            }
-
-        } catch (Exception e) {
-            this.getLogger().log(Level.WARNING, "Failed to load config. Using default values.", e);
-        }
-
-        this.messages.clear();
-        this.messages.merge(DefaultConfigValues.getMessages());
-
-        try {
-
-            DataStorage loadedStorage = DSSerializer.loadConfig(new File(this.getDataFolder(), "messages.yml"));
-            if (loadedStorage != null) {
-                this.messages.merge(loadedStorage);
-                this.getLogger().info("Messages config loaded successfully");
-            } else {
-                DSSerializer.saveConfig(this.messages, new File(this.getDataFolder(), "messages.yml"));
-                this.getLogger().info("Messages config created successfully");
-            }
-
-        } catch (Exception e) {
-            this.getLogger().log(Level.WARNING, "Failed to load messages config. Using default values.", e);
-        }
+        this.reloadConfig(true, true);
 
         this.databaseManager = new DatabaseManager(this);
         this.databaseManager.setupDatabase();
@@ -141,6 +107,56 @@ public class PlayerLevels extends JavaPlugin implements PlayerLevelsAPI {
         this.config.clear();
         this.messages.clear();
         PlayerLevelsAPIProvider.setApi(null);
+    }
+
+    // ----- CONFIG -----
+
+    public boolean reloadConfig(boolean clear, boolean mergeDefaults) {
+
+        if (clear) this.config.clear();
+        if (mergeDefaults) this.config.merge(DefaultConfigValues.getConfig());
+
+        try {
+
+            DataStorage loadedStorage = DSSerializer.loadConfig(new File(this.getDataFolder(), "config.yml"));
+            if (loadedStorage != null) {
+                this.config.merge(loadedStorage);
+                this.getLogger().info("Config loaded successfully");
+                return true;
+            } else {
+                DSSerializer.saveConfig(this.config, new File(this.getDataFolder(), "config.yml"));
+                this.getLogger().info("Config created successfully");
+                return true;
+            }
+
+        } catch (Exception e) {
+            this.getLogger().log(Level.WARNING, "Failed to load config. Using default values.", e);
+            return false;
+        }
+    }
+
+    public boolean reloadMessages(boolean clear, boolean mergeDefaults) {
+
+        if (clear) this.messages.clear();
+        if (mergeDefaults) this.messages.merge(DefaultConfigValues.getMessages());
+
+        try {
+
+            DataStorage loadedStorage = DSSerializer.loadConfig(new File(this.getDataFolder(), "messages.yml"));
+            if (loadedStorage != null) {
+                this.messages.merge(loadedStorage);
+                this.getLogger().info("Messages config loaded successfully");
+                return true;
+            } else {
+                DSSerializer.saveConfig(this.messages, new File(this.getDataFolder(), "messages.yml"));
+                this.getLogger().info("Messages config created successfully");
+                return true;
+            }
+
+        } catch (Exception e) {
+            this.getLogger().log(Level.WARNING, "Failed to load messages config. Using default values.", e);
+            return false;
+        }
     }
 
     // ----- OTHER -----

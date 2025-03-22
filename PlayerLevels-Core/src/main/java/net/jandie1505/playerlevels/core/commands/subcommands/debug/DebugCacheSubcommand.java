@@ -22,10 +22,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public class CacheSubCommand implements TabCompletingCommandExecutor {
+public class DebugCacheSubcommand implements TabCompletingCommandExecutor {
     @NotNull private final PlayerLevels plugin;
 
-    public CacheSubCommand(@NotNull PlayerLevels plugin) {
+    public DebugCacheSubcommand(@NotNull PlayerLevels plugin) {
         this.plugin = plugin;
     }
 

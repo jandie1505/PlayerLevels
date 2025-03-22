@@ -6,7 +6,6 @@ import net.jandie1505.playerlevels.core.PlayerLevels;
 import net.jandie1505.playerlevels.core.constants.ConfigKeys;
 import net.jandie1505.playerlevels.core.constants.MessageKeys;
 import net.jandie1505.playerlevels.core.constants.Permissions;
-import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -15,10 +14,10 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Set;
 
-public class ConfigSubcommand implements TabCompletingCommandExecutor {
+public class DebugConfigSubcommand implements TabCompletingCommandExecutor {
     @NotNull private final PlayerLevels plugin;
 
-    public ConfigSubcommand(@NotNull PlayerLevels plugin) {
+    public DebugConfigSubcommand(@NotNull PlayerLevels plugin) {
         this.plugin = plugin;
     }
 
