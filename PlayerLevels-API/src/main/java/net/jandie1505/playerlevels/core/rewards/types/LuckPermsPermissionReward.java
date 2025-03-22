@@ -29,6 +29,12 @@ public class LuckPermsPermissionReward implements RewardExecutor, RewardConditio
     @Override
     public boolean isApplied(@NotNull Reward reward, @NotNull Leveler player, int checkedLevel) {
 
+        try {
+            Class.forName("net.luckperms.api.LuckPermsProvider");
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
+
         User user = LuckPermsProvider.get().getUserManager().getUser(player.getPlayerUUID());
         if (user == null) return false;
 
@@ -37,6 +43,12 @@ public class LuckPermsPermissionReward implements RewardExecutor, RewardConditio
 
     @Override
     public boolean onApply(@NotNull Reward reward, @NotNull Leveler player, int level) {
+
+        try {
+            Class.forName("net.luckperms.api.LuckPermsProvider");
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
 
         User user = LuckPermsProvider.get().getUserManager().getUser(player.getPlayerUUID());
         if (user == null) return false;
