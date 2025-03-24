@@ -67,7 +67,7 @@ public class PlayerLevelsPAPIExpansion extends PlaceholderExpansion {
                 case "total_xp" -> String.valueOf(getXPForLevel(entry.level()) + entry.xp());
                 case "total_xp_formatted" -> Formatters.formatXP(getXPForLevel(entry.level()) + entry.xp());
                 case "uuid" -> entry.playerUUID().toString();
-                case "name" -> entry.name();
+                case "name" -> entry.name() != null ? entry.name() : "???";
                 case "level_next" -> String.valueOf(entry.level() + 1);
                 case "xp_current_level" -> String.valueOf(getXPForLevel(entry.level()));
                 case "xp_current_level_formatted" -> Formatters.formatXP(getXPForLevel(entry.level()));
