@@ -79,7 +79,7 @@ public class TopSubcommand implements TabCompletingCommandExecutor {
                     .appendNewline()
                     .append(MiniMessage.miniMessage().deserialize(
                             this.plugin.messages().optString(MessageKeys.TOPLIST_ENTRY, ""),
-                            this.tagResolver(entry)
+                            this.tagResolver(entry, i + 1)
                     ));
         }
 
@@ -102,7 +102,7 @@ public class TopSubcommand implements TabCompletingCommandExecutor {
         return List.of();
     }
 
-    private TagResolver tagResolver(@NotNull TopListManager.TopListEntry entry) {
+    private TagResolver tagResolver(@NotNull TopListManager.TopListEntry entry, int place) {
         return TagResolver.resolver("entry", (argumentQueue, context) -> {
             final String arg = argumentQueue.popOr("entry" + " tag requires an argument").value();
 
@@ -111,6 +111,7 @@ public class TopSubcommand implements TabCompletingCommandExecutor {
             try {
 
                 switch (arg) {
+                    case "place" -> placeholder = Component.text(place);
                     case "level" -> placeholder = Component.text(entry.level());
                     case "xp" -> placeholder = Component.text(entry.xp());
                     case "xp_formatted" -> placeholder = Component.text(Formatters.formatXP(entry.xp()));
