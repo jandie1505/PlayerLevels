@@ -9,3 +9,23 @@ commands:
 permissions:
   playerlevels.admin:
     default: op
+    description: Access to all commands
+  playerlevels.manage_players:
+    default: op
+    description: Manage player data
+  playerlevels.manage_rewards:
+    default: op
+    description: Manage rewards
+  playerlevels.toplist:
+    description: Use /levels top
+  playerlevels.command.rewards:
+    description: Show milestones using /levels milestones
+  playerlevels.info.view_other:
+    description: Show leveling information of other players using /levels info PLAYER
+  playerlevels.use:
+    description: Use /levels in general
+  playerlevels.*:
+    description: Wildcard permission which grants all permissions
+    default: op
+    children: ['playerlevels.admin']
+softdepend: ['LuckPerms']
