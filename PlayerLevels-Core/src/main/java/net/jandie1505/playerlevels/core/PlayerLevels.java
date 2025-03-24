@@ -45,6 +45,7 @@ public class PlayerLevels extends JavaPlugin implements PlayerLevelsAPI {
     public void onEnable() {
 
         this.reloadConfig(true, true);
+        this.reloadMessages(true, true);
 
         this.databaseManager = new DatabaseManager(this);
         this.databaseManager.setupDatabase();
