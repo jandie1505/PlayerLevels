@@ -101,6 +101,13 @@ public class PlayerLevelsPAPIExpansion extends PlaceholderExpansion {
                 case "xp_to_next_level_formatted" -> Formatters.formatXP(getXPForNextLevel(leveler.getData().level(), leveler.getData().level() + 1));
                 case "xp_remaining" -> String.valueOf(getXPForNextLevel(leveler.getData().level(), leveler.getData().level() + 1) - leveler.getData().xp());
                 case "xp_remaining_formatted" -> Formatters.formatXP(getXPForNextLevel(leveler.getData().level(), leveler.getData().level() + 1) - leveler.getData().xp());
+                case "xp_progress_bar" -> {
+                    double xp = leveler.getData().xp();
+                    double requiredXP = getXPForNextLevel(leveler.getData().level(), leveler.getData().level() + 1);
+                    if (requiredXP == 0) requiredXP = 1;
+                    double percentage = xp / requiredXP;
+                    yield createProgressBar(percentage);
+                }
                 default -> "invalid_placeholder";
             };
         } else {
@@ -122,6 +129,17 @@ public class PlayerLevelsPAPIExpansion extends PlaceholderExpansion {
         } catch (Exception e) {
             return 0;
         }
+    }
+
+    private static String createProgressBar(double progress) {
+        int filledCount = (int) Math.round(10.0 * progress);
+        String bar = "";
+
+        for (int i = 0; i < 10; i++) {
+            bar = bar + (i < filledCount ? "§a■" : "§7■");
+        }
+
+        return bar;
     }
 
 }
