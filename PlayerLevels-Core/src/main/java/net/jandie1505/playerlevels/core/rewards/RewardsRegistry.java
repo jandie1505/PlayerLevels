@@ -96,7 +96,16 @@ public final class RewardsRegistry implements net.jandie1505.playerlevels.api.co
 
                 switch (section.optString("apply_type", null)) {
                     case "milestone" -> {
-                        MilestoneRewardData data = creator.createMilestoneReward(section);
+                        MilestoneRewardData data;
+                        try {
+                            data = creator.createMilestoneReward(section);
+                        } catch (Exception e) {
+                            this.getPlugin().getLogger().log(Level.WARNING, "Exception while creating reward " + id + " from config.", e);
+                            continue;
+                        } catch (Throwable t) {
+                            this.getPlugin().getLogger().log(Level.SEVERE, "A throwable which is not an exception has been thrown while creating milestone reward. " + id + "DO NOT IGNORE THIS!", entry);
+                            continue;
+                        }
 
                         if (data == null) {
                             this.plugin.getLogger().warning("Creator of milestone reward " + id + " returned null. This can be caused by configuration errors.");
@@ -108,7 +117,16 @@ public final class RewardsRegistry implements net.jandie1505.playerlevels.api.co
 
                     }
                     case "interval" -> {
-                        IntervalRewardData data = creator.createIntervalReward(section);
+                        IntervalRewardData data;
+                        try {
+                            data = creator.createIntervalReward(section);
+                        } catch (Exception e) {
+                            this.getPlugin().getLogger().log(Level.WARNING, "Exception while creating reward " + id + " from config.", e);
+                            continue;
+                        } catch (Throwable t) {
+                            this.getPlugin().getLogger().log(Level.SEVERE, "A throwable which is not an exception has been thrown while creating milestone reward. " + id + "DO NOT IGNORE THIS!", entry);
+                            continue;
+                        }
 
                         if (data == null) {
                             this.plugin.getLogger().warning("Creator of interval reward " + id + " returned null. This can be caused by configuration errors.");
