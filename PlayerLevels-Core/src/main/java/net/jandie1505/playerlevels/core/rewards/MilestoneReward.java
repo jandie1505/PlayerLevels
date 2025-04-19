@@ -4,6 +4,8 @@ import net.jandie1505.playerlevels.core.leveler.Leveler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.logging.Level;
+
 public class MilestoneReward extends Reward implements net.jandie1505.playerlevels.api.core.reward.MilestoneReward {
     private final int level;
     @NotNull private final RewardCondition condition;
@@ -30,7 +32,21 @@ public class MilestoneReward extends Reward implements net.jandie1505.playerleve
             return false;
         }
 
-        return !this.condition.isApplied(this, leveler, checkedLevel);
+        // Check if the reward has already been applied with the custom condition
+        try {
+            return !this.condition.isApplied(this, leveler, checkedLevel);
+        } catch (Exception e) {
+            MilestoneReward.this.getManager().getPlugin().getLogger().log(Level.WARNING, "Exception while applying reward " + MilestoneReward.this.getId() + " to player " + leveler.getPlayerUUID(), e);
+            return false;
+        } catch (Throwable t) {
+            MilestoneReward.this.setEnabled(false);
+            MilestoneReward.this.getManager().getPlugin().getLogger().log(Level.SEVERE,
+                    "A throwable which is not an exception has been thrown in isApplied from reward " + MilestoneReward.this.getId() + " to player " + leveler.getPlayerUUID() + " " +
+                            "The reward has been disabled for safety reasons. DO NOT IGNORE THIS!",
+                    t
+            );
+            return false;
+        }
     }
 
     /**

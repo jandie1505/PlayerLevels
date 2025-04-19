@@ -94,6 +94,14 @@ public abstract class Reward implements net.jandie1505.playerlevels.api.core.rew
                         } catch (Exception e) {
                             Reward.this.getManager().getPlugin().getLogger().log(Level.WARNING, "Exception while applying reward " + Reward.this.id + " to player " + leveler.getPlayerUUID(), e);
                             return;
+                        } catch (Throwable throwable) {
+                            Reward.this.enabled = false;
+                            Reward.this.getManager().getPlugin().getLogger().log(Level.SEVERE,
+                                    "A throwable which is not an exception has been thrown in onApply from reward " + Reward.this.id + " to player " + leveler.getPlayerUUID() + " " +
+                                            "The reward has been disabled for safety reasons. DO NOT IGNORE THIS!",
+                                    throwable
+                            );
+                            return;
                         }
 
                         // Do not mark the event as applied when it was unsuccessful

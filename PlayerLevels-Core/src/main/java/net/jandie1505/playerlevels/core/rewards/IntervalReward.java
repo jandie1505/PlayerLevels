@@ -7,6 +7,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 
 public class IntervalReward extends Reward implements net.jandie1505.playerlevels.api.core.reward.IntervalReward {
     private final int start;
@@ -42,7 +43,20 @@ public class IntervalReward extends Reward implements net.jandie1505.playerlevel
         }
 
         // Check if the reward has already been applied with the custom condition
-        return !this.customCondition.isApplied(this, leveler, checkedLevel);
+        try {
+            return !this.customCondition.isApplied(this, leveler, checkedLevel);
+        } catch (Exception e) {
+            IntervalReward.this.getManager().getPlugin().getLogger().log(Level.WARNING, "Exception while applying reward " + IntervalReward.this.getId() + " to player " + leveler.getPlayerUUID(), e);
+            return false;
+        } catch (Throwable t) {
+            IntervalReward.this.setEnabled(false);
+            IntervalReward.this.getManager().getPlugin().getLogger().log(Level.SEVERE,
+                    "A throwable which is not an exception has been thrown in isApplied from reward " + IntervalReward.this.getId() + " to player " + leveler.getPlayerUUID() + " " +
+                            "The reward has been disabled for safety reasons. DO NOT IGNORE THIS!",
+                    t
+            );
+            return false;
+        }
     }
 
     @Override
