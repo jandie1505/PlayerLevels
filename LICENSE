@@ -1,0 +1,7 @@
+DUAL-LICENSE: GPLv3 AND MIT
+
+This project uses a multi-license setup.
+Each module directory contains its own LICENSE file.
+
+To summarize it: The API is licensed under the MIT License, everything else under the GPLv3.
+If there is no LICENSE file, the content is licensed under the GPLv3 License.
