@@ -9,6 +9,7 @@ dependencies {
     implementation("net.objecthunter:exp4j:0.4.8")
     compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
     compileOnly("net.luckperms:api:5.4")
+    compileOnly("org.black_ixx:playerpoints:3.3.0")
 }
 
 java {

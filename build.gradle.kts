@@ -21,6 +21,10 @@ allprojects {
             name = "placeholder-api"
             url = uri("https://repo.extendedclip.com/content/repositories/placeholderapi/")
         }
+        maven {
+            name = "rosewood-repo"
+            url = uri("https://repo.rosewooddev.io/repository/public/")
+        }
     }
 }
 

@@ -28,4 +28,4 @@ permissions:
     description: Wildcard permission which grants all permissions
     default: op
     children: ['playerlevels.admin']
-softdepend: ['LuckPerms']
+softdepend: ['LuckPerms', 'PlayerPoints']

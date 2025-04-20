@@ -6,6 +6,7 @@ import net.jandie1505.playerlevels.core.PlayerLevels;
 import net.jandie1505.playerlevels.core.constants.DefaultConfigValues;
 import net.jandie1505.playerlevels.core.rewards.types.CommandReward;
 import net.jandie1505.playerlevels.core.rewards.types.LuckPermsPermissionReward;
+import net.jandie1505.playerlevels.core.rewards.types.PlayerPointsReward;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,6 +26,7 @@ public final class RewardsRegistry implements net.jandie1505.playerlevels.api.co
 
         this.creators.put("command", new CommandReward.Creator());
         this.creators.put("luckperms", new LuckPermsPermissionReward.Creator());
+        this.creators.put("playerpoints", new PlayerPointsReward.Creator());
     }
 
     // ----- MANAGE CREATORS -----
