@@ -42,12 +42,6 @@ public class InfoSubcommand implements TabCompletingCommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String @NotNull [] a) {
-
-        if (!Permissions.hasPermission(sender, Permissions.USE)) {
-            sender.sendRichMessage(this.plugin.messages().optString(MessageKeys.GENERAL_NO_PERMISSION, ""));
-            return true;
-        }
-
         OptionParser.Result args = OptionParser.parse(a);
 
         if (args.args().length > 0) {

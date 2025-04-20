@@ -12,7 +12,6 @@ public interface Permissions {
     String TOPLIST = "playerlevels.toplist";
     String COMMAND_REWARDS = "playerlevels.command.rewards";
     String COMMAND_INFO_VIEW_OTHERS = "playerlevels.command.info.view_other";
-    String USE = "playerlevels.use";
 
     /**
      * Returns if the specified sender has at least one of the specified permissions.<br/>

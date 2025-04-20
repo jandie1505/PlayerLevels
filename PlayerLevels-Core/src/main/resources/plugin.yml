@@ -22,8 +22,6 @@ permissions:
     description: Show milestones using /levels milestones
   playerlevels.info.view_other:
     description: Show leveling information of other players using /levels info PLAYER
-  playerlevels.use:
-    description: Use /levels in general
   playerlevels.*:
     description: Wildcard permission which grants all permissions
     default: op
