@@ -6,6 +6,7 @@ plugins {
 
 dependencies {
     implementation("net.chaossquad:mclib:master-3fdcf972520b59608457e3fe51f5224ec6d2045d")
+    implementation("net.objecthunter:exp4j:0.4.8")
     compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
     compileOnly("net.luckperms:api:5.4")
 }
@@ -15,7 +16,14 @@ java {
     withJavadocJar()
 }
 
+tasks.jar {
+    archiveClassifier.set("original")
+}
+
 tasks.shadowJar {
+
+    // Set classifier
+    archiveClassifier.set("")
 
     // Relocate everything
     isEnableRelocation = true
@@ -27,6 +35,10 @@ tasks.shadowJar {
     // SLF4J special case: keep the references in the class files not-relocated but do not add them because paper already has them
     exclude("org/slf4j/**")
     relocate("org.slf4j", "org.slf4j")
+}
+
+tasks.build {
+    dependsOn("shadowJar")
 }
 
 // gradle publish{PUBLICATION_NAME}To{REPOSITORY_NAME}Repository

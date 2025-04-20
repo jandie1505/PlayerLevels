@@ -13,7 +13,14 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
 }
 
+tasks.jar {
+    archiveClassifier.set("original")
+}
+
 tasks.shadowJar {
+
+    // Set classifier
+    archiveClassifier.set("")
 
     // Relocate everything
     isEnableRelocation = true
