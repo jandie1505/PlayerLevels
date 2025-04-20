@@ -14,11 +14,17 @@ dependencies {
 }
 
 tasks.shadowJar {
-    from(project(":PlayerLevels-API").tasks.jar)
-    relocate("net.chaossquad.mclib", "net.jandie1505.playerlevels.dependencies.net.chaossquad.mclib")
-    relocate("com.zaxxer.hikari", "net.jandie1505.playerlevels.dependencies.com.zaxxer.hikari")
-    relocate("org.json", "net.jandie1505.playerlevels.dependencies.org.json")
-    relocate("net.objecthunter.exp4j", "net.jandie1505.playerlevels.dependencies.net.objecthunter.exp4j")
+
+    // Relocate everything
+    isEnableRelocation = true
+    relocationPrefix = "net.jandie1505.playerlevels.libs"
+
+    // Exclude own plugin to prevent the api from getting relocated
+    relocate("net.jandie1505.playerlevels", "net.jandie1505.playerlevels")
+
+    // SLF4J special case: keep the references in the class files not-relocated but do not add them because paper already has them
+    exclude("org/slf4j/**")
+    relocate("org.slf4j", "org.slf4j")
 }
 
 tasks.build {

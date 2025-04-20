@@ -16,7 +16,17 @@ java {
 }
 
 tasks.shadowJar {
-    relocate("net.chaossquad.mclib", "net.jandie1505.playerlevels.dependencies.mclib")
+
+    // Relocate everything
+    isEnableRelocation = true
+    relocationPrefix = "net.jandie1505.playerlevels.libs"
+
+    // Exclude own plugin to prevent the api from getting relocated
+    relocate("net.jandie1505.playerlevels", "net.jandie1505.playerlevels")
+
+    // SLF4J special case: keep the references in the class files not-relocated but do not add them because paper already has them
+    exclude("org/slf4j/**")
+    relocate("org.slf4j", "org.slf4j")
 }
 
 // gradle publish{PUBLICATION_NAME}To{REPOSITORY_NAME}Repository
