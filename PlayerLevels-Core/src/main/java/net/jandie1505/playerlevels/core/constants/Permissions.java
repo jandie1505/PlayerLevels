@@ -9,7 +9,7 @@ public interface Permissions {
     String DEBUG = "playerlevels.debug";
     String MANAGE_PLAYERS = "playerlevels.manage_players";
     String MANAGE_REWARDS = "playerlevels.manage_rewards";
-    String TOPLIST = "playerlevels.toplist";
+    String TOPLIST = "playerlevels.command.toplist";
     String COMMAND_REWARDS = "playerlevels.command.rewards";
     String COMMAND_INFO_VIEW_OTHERS = "playerlevels.command.info.view_other";
 

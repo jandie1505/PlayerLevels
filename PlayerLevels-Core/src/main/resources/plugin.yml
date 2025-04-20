@@ -16,11 +16,11 @@ permissions:
   playerlevels.manage_rewards:
     default: op
     description: Manage rewards
-  playerlevels.toplist:
+  playerlevels.command.toplist:
     description: Use /levels top
   playerlevels.command.rewards:
     description: Show milestones using /levels milestones
-  playerlevels.info.view_other:
+  playerlevels.command.info.view_other:
     description: Show leveling information of other players using /levels info PLAYER
   playerlevels.*:
     description: Wildcard permission which grants all permissions
