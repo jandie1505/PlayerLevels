@@ -8,12 +8,10 @@ import org.jetbrains.annotations.Nullable;
  * @param id reward id
  * @param serverId server id
  * @param name name
- * @param description description
  */
 public record RewardConfig(
         @NotNull String id,
         @Nullable String serverId,
-        @NotNull String name,
-        @NotNull String description
+        @NotNull String name
 ) {
 }

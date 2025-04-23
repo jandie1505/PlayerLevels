@@ -1,5 +1,7 @@
 package net.jandie1505.playerlevels.api.core.reward;
 
+import net.kyori.adventure.text.Component;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -56,9 +58,19 @@ public interface Reward {
     @NotNull String getName();
 
     /**
+     * Returns the description.<br/>
+     * A description can be dependent on the level of a player.
+     * @param level level (-1 if not provided)
+     * @return description
+     */
+    @ApiStatus.Experimental
+    @NotNull Component getDescription(int level);
+
+    /**
      * Description of the reward.
      * @return description
      */
-    @NotNull String getDescription();
+    @ApiStatus.Experimental
+    @NotNull Component getDescription();
 
 }

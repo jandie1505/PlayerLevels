@@ -170,7 +170,7 @@ public final class TagResolvers {
                     case "id" -> placeholder = Component.text(reward.getId());
                     case "type" -> placeholder = Component.text(reward.getClass().getSimpleName());
                     case "name" -> placeholder = Component.text(reward.getName());
-                    case "description" -> placeholder = Component.text(reward.getDescription());
+                    case "description" -> placeholder = reward.getDescription();
                     case "limit" -> placeholder = Component.text(reward.getLimit());
                     case "enabled" -> placeholder = Component.text(reward.isEnabled());
                     case "requiresOnlinePlayer" -> placeholder = Component.text(reward.requiresOnlinePlayer());

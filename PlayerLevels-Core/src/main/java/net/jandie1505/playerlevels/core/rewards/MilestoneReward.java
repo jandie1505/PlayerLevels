@@ -10,14 +10,14 @@ public class MilestoneReward extends Reward implements net.jandie1505.playerleve
     private final int level;
     @NotNull private final RewardCondition condition;
 
-    protected MilestoneReward(@NotNull RewardsManager manager, @NotNull String id, @Nullable String serverId, int level, @NotNull RewardExecutor executor, @Nullable RewardCondition condition, boolean requireOnlinePlayer, @NotNull String name, @Nullable String description) {
-        super(manager, id, serverId, executor, requireOnlinePlayer, level, name, description);
+    protected MilestoneReward(@NotNull RewardsManager manager, @NotNull String id, @Nullable String serverId, int level, @NotNull RewardExecutor executor, @Nullable RewardCondition condition, boolean requireOnlinePlayer, @NotNull String name, @Nullable RewardDescriptionProvider descriptionProvider) {
+        super(manager, id, serverId, executor, requireOnlinePlayer, level, name, descriptionProvider);
         this.level = level;
         this.condition = condition != null ? condition : net.jandie1505.playerlevels.api.core.reward.MilestoneReward.DEFAULT_CONDITION;
     }
 
     protected MilestoneReward(@NotNull RewardsManager manager, @NotNull RewardConfig config, @NotNull MilestoneRewardData data) {
-        this(manager, config.id(), config.serverId(), data.level(), data.executor(), data.condition(), data.requiresOnlinePlayer(), config.name(), config.description());
+        this(manager, config.id(), config.serverId(), data.level(), data.executor(), data.condition(), data.requiresOnlinePlayer(), config.name(), data.descriptionProvider());
     }
 
     @Override

@@ -6,6 +6,9 @@ import net.jandie1505.playerlevels.api.core.reward.IntervalReward;
 import net.jandie1505.playerlevels.api.core.reward.MilestoneReward;
 import net.jandie1505.playerlevels.api.core.reward.Reward;
 import net.jandie1505.playerlevels.core.rewards.*;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -13,15 +16,17 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * This is a reward that executes a command when it is applied.<br/>
- * You can get the data using {@link CommandReward#createInterval(String, boolean, SenderType, int, int, int)}.
+ * You can get the data using {@link #createMilestone(String, boolean, SenderType, Component, int)} or {@link #createMilestone(String, boolean, SenderType, Component, int)}.
  */
-public class CommandReward implements RewardExecutor {
+public class CommandReward implements RewardExecutor, RewardDescriptionProvider {
     @NotNull private final String command;
     @NotNull private final SenderType senderType;
+    @Nullable private final Component description;
 
-    private CommandReward(@NotNull String command, @NotNull SenderType senderType) {
+    private CommandReward(@NotNull String command, @NotNull SenderType senderType, @Nullable Component description) {
         this.command = command;
         this.senderType = senderType;
+        this.description = description;
     }
 
     @Override
@@ -60,7 +65,7 @@ public class CommandReward implements RewardExecutor {
         cmd = cmd.replace("{reward_server_id}", serverId != null ? serverId : " ");
 
         // Prevents changing the command structure
-        String description = reward.getDescription();
+        String description = PlainTextComponentSerializer.plainText().serialize(reward.getDescription(level));
         cmd = cmd.replace("{reward_description}", description.isEmpty() ? " " : description);
 
         // RUN COMMAND
@@ -79,6 +84,11 @@ public class CommandReward implements RewardExecutor {
                 return false;
             }
         }
+    }
+
+    @Override
+    public @Nullable Component getDescription(int level) {
+        return this.description;
     }
 
     /**
@@ -108,6 +118,7 @@ public class CommandReward implements RewardExecutor {
      * @param command the command that should be executed
      * @param requiresOnlinePlayer if the command requires the player to be online
      * @param senderType {@link SenderType}
+     * @param description reward description
      * @param level the level the reward should be applied
      * @return milestone reward data
      */
@@ -115,9 +126,11 @@ public class CommandReward implements RewardExecutor {
             @NotNull String command,
             boolean requiresOnlinePlayer,
             @NotNull SenderType senderType,
+            @Nullable Component description,
             int level
     ) {
-        return new MilestoneRewardData(new CommandReward(command, senderType), null, requiresOnlinePlayer, level);
+        CommandReward reward = new CommandReward(command, senderType, description);
+        return new MilestoneRewardData(reward, null, reward, requiresOnlinePlayer, level);
     }
 
     /**
@@ -126,6 +139,7 @@ public class CommandReward implements RewardExecutor {
      * @param command the command that should be executed
      * @param requiresOnlinePlayer if the command requires the player to be online
      * @param senderType {@link SenderType}
+     * @param description reward description
      * @param start interval start
      * @param interval interval in levels the player should get the reward applied
      * @param limit the reward will not be applied for levels higher/equal than this
@@ -134,12 +148,14 @@ public class CommandReward implements RewardExecutor {
     public static IntervalRewardData createInterval(
             @NotNull String command,
             boolean requiresOnlinePlayer,
-            SenderType senderType,
+            @NotNull SenderType senderType,
+            @Nullable Component description,
             int start,
             int interval,
             int limit
     ) {
-        return new IntervalRewardData(new CommandReward(command, senderType), null, requiresOnlinePlayer, start, interval, limit);
+        CommandReward reward = new CommandReward(command, senderType, description);
+        return new IntervalRewardData(reward, null, reward, requiresOnlinePlayer, start, interval, limit);
     }
 
     // ----- CREATOR -----
@@ -160,10 +176,13 @@ public class CommandReward implements RewardExecutor {
             String command = data.optString("command", null);
             if (command == null) throw new IllegalArgumentException("command is null");
 
+            String description = data.optString("description", null);
+
             return createMilestone(
                     command,
                     data.optBoolean("requires_online_player", true),
                     SenderType.valueOf(data.optString("sender_type", "").toUpperCase()),
+                    description != null ? MiniMessage.miniMessage().deserialize(description) : Component.empty(),
                     data.optInt("level", 1)
             );
         }
@@ -174,10 +193,13 @@ public class CommandReward implements RewardExecutor {
             String command = data.optString("command", null);
             if (command == null) throw new IllegalArgumentException("command is null");
 
+            String description = data.optString("description", null);
+
             return createInterval(
                     command,
                     data.optBoolean("requires_online_player", true),
                     SenderType.valueOf(data.optString("sender_type", "").toUpperCase()),
+                    description != null ? MiniMessage.miniMessage().deserialize(description) : Component.empty(),
                     data.optInt("start", 1),
                     data.optInt("interval", 1),
                     data.optInt("limit", 1)
