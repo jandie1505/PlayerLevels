@@ -34,7 +34,7 @@ public class AnnouncementHandler implements Listener {
         if (player == null) return;
 
         String ownMessage = this.plugin.messages().optString(MessageKeys.ANNOUNCEMENT_LEVELUP_SELF, null);
-        if (ownMessage != null) {
+        if (ownMessage != null && !ownMessage.isEmpty()) {
             player.sendRichMessage(
                     ownMessage,
                     TagResolvers.leveler("leveler", event.getLeveler()),
@@ -46,7 +46,7 @@ public class AnnouncementHandler implements Listener {
         }
 
         String othersMessage = this.plugin.messages().optString(MessageKeys.ANNOUNCEMENT_LEVELUP_OTHERS, null);
-        if (othersMessage != null) {
+        if (othersMessage != null && !othersMessage.isEmpty()) {
             for (Player otherPlayer : Bukkit.getOnlinePlayers().stream().filter(p -> p != player).toList()) {
                 otherPlayer.sendRichMessage(
                         othersMessage,
@@ -67,7 +67,7 @@ public class AnnouncementHandler implements Listener {
         if (event.getReward() instanceof MilestoneReward milestone) {
 
             String ownMessage = this.plugin.messages().optString(MessageKeys.ANNOUNCEMENT_MILESTONE_UNLOCKED_SELF, null);
-            if (ownMessage != null) {
+            if (ownMessage != null && !ownMessage.isEmpty()) {
                 player.sendRichMessage(
                         ownMessage,
                         TagResolvers.leveler("leveler", event.getLeveler()),
@@ -78,7 +78,7 @@ public class AnnouncementHandler implements Listener {
             }
 
             String othersMessage = this.plugin.messages().optString(MessageKeys.ANNOUNCEMENT_MILESTONE_UNLOCKED_OTHERS, null);
-            if (othersMessage != null) {
+            if (othersMessage != null && !othersMessage.isEmpty()) {
                 for (Player otherPlayer : Bukkit.getOnlinePlayers().stream().filter(p -> p != player).toList()) {
                     otherPlayer.sendRichMessage(
                             othersMessage,
@@ -92,7 +92,7 @@ public class AnnouncementHandler implements Listener {
 
         } else if (event.getReward() instanceof IntervalReward reward) {
             String ownMessage = this.plugin.messages().optString(MessageKeys.ANNOUNCEMENT_INTERVAL_REWARD_UNLOCKED, null);
-            if (ownMessage != null) {
+            if (ownMessage != null && !ownMessage.isEmpty()) {
                 player.sendRichMessage(
                         ownMessage,
                         TagResolvers.leveler("leveler", event.getLeveler()),
