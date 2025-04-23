@@ -5,9 +5,12 @@ import net.jandie1505.playerlevels.core.PlayerLevels;
 import net.jandie1505.playerlevels.core.commands.subcommands.utils.OptionParser;
 import net.jandie1505.playerlevels.core.constants.MessageKeys;
 import net.jandie1505.playerlevels.core.constants.Permissions;
+import net.jandie1505.playerlevels.core.messages.TagResolvers;
 import net.jandie1505.playerlevels.core.rewards.IntervalReward;
 import net.jandie1505.playerlevels.core.rewards.MilestoneReward;
 import net.jandie1505.playerlevels.core.rewards.Reward;
+import net.kyori.adventure.text.minimessage.tag.Tag;
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
@@ -58,7 +61,7 @@ public class ManageRewardsInfoSubcommand implements TabCompletingCommandExecutor
             sender.sendRichMessage("<gold>ServerId: " + reward.getServerId());
             sender.sendRichMessage("<gold>Limit: " + (reward.getLimit() > 0 ? "" + reward.getLimit() : "no limit"));
             sender.sendRichMessage("<gold>Enabled: " + reward.isEnabled());
-            sender.sendRichMessage("<gold>Description: " + reward.getDescription());
+            sender.sendRichMessage("<gold>Description: <description>", TagResolver.resolver("description", Tag.inserting(reward.getDescription(-1))));
         }
 
         return true;

@@ -13,6 +13,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.intellij.lang.annotations.Subst;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.Objects;
@@ -156,9 +157,10 @@ public final class TagResolvers {
      * Resolves tags about rewards.
      * @param tagName tag name
      * @param reward reward
+     * @param ctx leveler context
      * @return resolver
      */
-    public static TagResolver reward(@Subst("reward") @NotNull String tagName, @NotNull Reward reward) {
+    public static TagResolver reward(@Subst("reward") @NotNull String tagName, @NotNull Reward reward, @Nullable RewardContext ctx) {
         return TagResolver.resolver(tagName, (argumentQueue, context) -> {
             final String arg = argumentQueue.popOr(tagName + " tag (reward resolver) requires an argument").value();
 
@@ -170,7 +172,8 @@ public final class TagResolvers {
                     case "id" -> placeholder = Component.text(reward.getId());
                     case "type" -> placeholder = Component.text(reward.getClass().getSimpleName());
                     case "name" -> placeholder = Component.text(reward.getName());
-                    case "description" -> placeholder = Component.text(reward.getDescription());
+                    case "description" -> placeholder = ctx != null ? reward.getDescription(ctx.level()) : reward.getDescription(-1);
+                    case "description_nocontext" -> placeholder = reward.getDescription();
                     case "limit" -> placeholder = Component.text(reward.getLimit());
                     case "enabled" -> placeholder = Component.text(reward.isEnabled());
                     case "requiresOnlinePlayer" -> placeholder = Component.text(reward.requiresOnlinePlayer());
@@ -200,6 +203,7 @@ public final class TagResolvers {
                             placeholder = Component.empty();
                         }
                     }
+                    case "current_level" -> placeholder = ctx != null ? Component.text(ctx.level()) : Component.empty();
                     default -> placeholder = Component.empty();
                 }
 
@@ -210,6 +214,22 @@ public final class TagResolvers {
 
         });
     }
+
+    /**
+     * Resolves tags about rewards.
+     * @param tagName tag name
+     * @param reward reward
+     * @return resolver
+     */
+    public static TagResolver reward(@Subst("reward") @NotNull String tagName, @NotNull Reward reward) {
+        return reward(tagName, reward, null);
+    }
+
+    /**
+     * Contains information about a leveler for the reward tag resolvers.
+     * @param level player level
+     */
+    public record RewardContext(int level) {}
 
     /**
      * Resolves tags for a specified level.

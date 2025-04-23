@@ -4,6 +4,8 @@ import net.chaossquad.mclib.storage.DataStorage;
 import net.jandie1505.playerlevels.api.core.level.Leveler;
 import net.jandie1505.playerlevels.api.core.reward.Reward;
 import net.jandie1505.playerlevels.core.rewards.*;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
 import net.luckperms.api.node.Node;
@@ -15,15 +17,17 @@ import org.jetbrains.annotations.Nullable;
  * It also checks if the permission is still applied, even when the reward is already applied.<br/>
  * If the permission has been removed, it is re-applied.
  */
-public class LuckPermsPermissionReward implements RewardExecutor, RewardCondition {
+public class LuckPermsPermissionReward implements RewardExecutor, RewardCondition, RewardDescriptionProvider {
     @NotNull private final String permission;
+    @Nullable private final Component description;
 
     /**
      * Creates a LuckPermsPermissionReward.
      * @param permission permission to check for
      */
-    private LuckPermsPermissionReward(@NotNull String permission) {
+    private LuckPermsPermissionReward(@NotNull String permission, @Nullable Component description) {
         this.permission = permission;
+        this.description = description;
     }
 
     @Override
@@ -65,30 +69,21 @@ public class LuckPermsPermissionReward implements RewardExecutor, RewardConditio
         return permission;
     }
 
+    @Override
+    public @Nullable Component getDescription(int level) {
+        return this.description;
+    }
+
     /**
      * Creates a new milestone LuckPermsPermissionReward.
+     * @param description reward description
      * @param permission permission to check for
      * @param level level to check for
      * @return data of created reward
      */
-    public static MilestoneRewardData createMilestoneRewardData(String permission, int level) {
-        LuckPermsPermissionReward reward = new LuckPermsPermissionReward(permission);
-        return new MilestoneRewardData(reward, reward, true, level);
-    }
-
-    /**
-     * Creates a new interval LuckPermsPermissionReward.
-     * @param permission permission to check for
-     * @param start start
-     * @param interval interval
-     * @param limit limit
-     * @return data of created reward
-     * @deprecated Useless as an interval reward. Use {@link LuckPermsPermissionReward#createMilestoneRewardData(String, int)} instead.
-     */
-    @Deprecated
-    public static IntervalRewardData createIntervalRewardData(String permission, int start, int interval, int limit) {
-        LuckPermsPermissionReward reward = new LuckPermsPermissionReward(permission);
-        return new IntervalRewardData(reward, reward, true, start, interval, limit);
+    public static MilestoneRewardData createMilestoneRewardData(@NotNull String permission, @Nullable Component description, int level) {
+        LuckPermsPermissionReward reward = new LuckPermsPermissionReward(permission, description);
+        return new MilestoneRewardData(reward, reward, reward, true, level);
     }
 
     /**
@@ -107,24 +102,12 @@ public class LuckPermsPermissionReward implements RewardExecutor, RewardConditio
             String permission = data.optString("permission", null);
             if (permission == null) throw new NullPointerException("permission is null");
 
+            String description = data.optString("description", null);
+
             return createMilestoneRewardData(
                     permission,
+                    description != null ? MiniMessage.miniMessage().deserialize(description) : Component.empty(),
                     data.optInt("level", 0)
-            );
-        }
-
-        @Override
-        @Deprecated
-        public @Nullable IntervalRewardData createIntervalReward(@NotNull DataStorage data) {
-
-            String permission = data.optString("permission", null);
-            if (permission == null) throw new NullPointerException("permission is null");
-
-            return createIntervalRewardData(
-                    permission,
-                    data.optInt("start", 1),
-                    data.optInt("interval", 1),
-                    data.optInt("limit", 1)
             );
         }
     }

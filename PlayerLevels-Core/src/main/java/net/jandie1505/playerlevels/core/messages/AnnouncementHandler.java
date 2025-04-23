@@ -34,24 +34,19 @@ public class AnnouncementHandler implements Listener {
         if (player == null) return;
 
         String ownMessage = this.plugin.messages().optString(MessageKeys.ANNOUNCEMENT_LEVELUP_SELF, null);
-        if (ownMessage != null) {
+        if (ownMessage != null && !ownMessage.isEmpty()) {
             player.sendRichMessage(
                     ownMessage,
                     TagResolvers.leveler("leveler", event.getLeveler()),
                     TagResolvers.player("player", player),
                     TagResolver.resolver("old_level", Tag.inserting(Component.text(event.getOldLevel()))),
                     TagResolver.resolver("new_level", Tag.inserting(Component.text(event.getNewLevel()))),
-                    this.intervalRewardsListOnLevelUp("interval_rewards_list",this.plugin.getRewardsManager().getRewardsInternal().values().stream()
-                            .filter(Reward::isEnabled)
-                            .filter(reward -> reward instanceof IntervalReward)
-                            .filter(reward -> ((IntervalReward) reward).isInInterval(event.getNewLevel()))
-                            .toList()
-                    )
+                    this.intervalRewardsListOnLevelUp("interval_rewards_list", event)
             );
         }
 
         String othersMessage = this.plugin.messages().optString(MessageKeys.ANNOUNCEMENT_LEVELUP_OTHERS, null);
-        if (othersMessage != null) {
+        if (othersMessage != null && !othersMessage.isEmpty()) {
             for (Player otherPlayer : Bukkit.getOnlinePlayers().stream().filter(p -> p != player).toList()) {
                 otherPlayer.sendRichMessage(
                         othersMessage,
@@ -72,24 +67,24 @@ public class AnnouncementHandler implements Listener {
         if (event.getReward() instanceof MilestoneReward milestone) {
 
             String ownMessage = this.plugin.messages().optString(MessageKeys.ANNOUNCEMENT_MILESTONE_UNLOCKED_SELF, null);
-            if (ownMessage != null) {
+            if (ownMessage != null && !ownMessage.isEmpty()) {
                 player.sendRichMessage(
                         ownMessage,
                         TagResolvers.leveler("leveler", event.getLeveler()),
                         TagResolvers.player("player", player),
-                        TagResolvers.reward("reward", milestone),
+                        TagResolvers.reward("reward", milestone, new TagResolvers.RewardContext(event.getLevel())),
                         TagResolver.resolver("level", Tag.inserting(Component.text(event.getLevel())))
                 );
             }
 
             String othersMessage = this.plugin.messages().optString(MessageKeys.ANNOUNCEMENT_MILESTONE_UNLOCKED_OTHERS, null);
-            if (othersMessage != null) {
+            if (othersMessage != null && !othersMessage.isEmpty()) {
                 for (Player otherPlayer : Bukkit.getOnlinePlayers().stream().filter(p -> p != player).toList()) {
                     otherPlayer.sendRichMessage(
                             othersMessage,
                             TagResolvers.leveler("leveler", event.getLeveler()),
                             TagResolvers.player("player", player),
-                            TagResolvers.reward("reward", milestone),
+                            TagResolvers.reward("reward", milestone, new TagResolvers.RewardContext(event.getLevel())),
                             TagResolver.resolver("level", Tag.inserting(Component.text(event.getLevel())))
                     );
                 }
@@ -97,12 +92,12 @@ public class AnnouncementHandler implements Listener {
 
         } else if (event.getReward() instanceof IntervalReward reward) {
             String ownMessage = this.plugin.messages().optString(MessageKeys.ANNOUNCEMENT_INTERVAL_REWARD_UNLOCKED, null);
-            if (ownMessage != null) {
+            if (ownMessage != null && !ownMessage.isEmpty()) {
                 player.sendRichMessage(
                         ownMessage,
                         TagResolvers.leveler("leveler", event.getLeveler()),
                         TagResolvers.player("player", player),
-                        TagResolvers.reward("reward", reward),
+                        TagResolvers.reward("reward", reward, new TagResolvers.RewardContext(event.getLevel())),
                         TagResolver.resolver("level", Tag.inserting(Component.text(event.getLevel())))
                 );
             }
@@ -110,7 +105,14 @@ public class AnnouncementHandler implements Listener {
 
     }
 
-    private TagResolver intervalRewardsListOnLevelUp(@Subst("interval_rewards_list") String tagName, @NotNull List<Reward> rewards) {
+    private TagResolver intervalRewardsListOnLevelUp(@Subst("interval_rewards_list") String tagName, @NotNull LevelUpEvent event) {
+        List<IntervalReward> rewards = this.plugin.getRewardsManager().getRewardsInternal().values().stream()
+                .filter(Reward::isEnabled)
+                .filter(reward -> reward instanceof IntervalReward)
+                .map(reward -> (IntervalReward) reward)
+                .filter(reward -> reward.isInInterval(event.getNewLevel()))
+                .toList();
+
         if (rewards.isEmpty()) return TagResolver.resolver(tagName, Tag.inserting(Component.empty()));
 
         Component text = Component.empty().append(MiniMessage.miniMessage().deserialize(this.plugin.messages().optString(MessageKeys.ANNOUNCEMENT_LEVELUP_REWARD_LIST_TITLE, "")));
@@ -118,7 +120,10 @@ public class AnnouncementHandler implements Listener {
         for (Reward reward : rewards) {
             text = text
                     .appendNewline()
-                    .append(MiniMessage.miniMessage().deserialize(this.plugin.messages().optString(MessageKeys.ANNOUNCEMENT_LEVELUP_REWARD_LIST_ENTRY, ""), TagResolvers.reward("reward", reward)));
+                    .append(
+                            MiniMessage.miniMessage().deserialize(this.plugin.messages().optString(MessageKeys.ANNOUNCEMENT_LEVELUP_REWARD_LIST_ENTRY, ""),
+                                    TagResolvers.reward("reward", reward, new TagResolvers.RewardContext(event.getNewLevel())))
+                    );
         }
 
         return TagResolver.resolver(tagName, Tag.inserting(text));

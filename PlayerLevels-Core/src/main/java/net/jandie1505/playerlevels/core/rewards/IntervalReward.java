@@ -15,8 +15,8 @@ public class IntervalReward extends Reward implements net.jandie1505.playerlevel
     private final int limit;
     @NotNull private final RewardCondition customCondition;
 
-    public IntervalReward(@NotNull RewardsManager manager, @NotNull String id, @Nullable String serverId, int start, int interval, int limit, @NotNull RewardExecutor executor, @Nullable RewardCondition customCondition, boolean requireOnlinePlayer, @NotNull String name, @Nullable String description) {
-        super(manager, id, serverId, executor, requireOnlinePlayer, limit, name, description);
+    public IntervalReward(@NotNull RewardsManager manager, @NotNull String id, @Nullable String serverId, int start, int interval, int limit, @NotNull RewardExecutor executor, @Nullable RewardCondition customCondition, boolean requireOnlinePlayer, @NotNull String name, @Nullable RewardDescriptionProvider descriptionProvider) {
+        super(manager, id, serverId, executor, requireOnlinePlayer, limit, name, descriptionProvider);
         this.start = start > 0 ? start : 1;
         this.interval = interval > 0 ? interval : 1;
         this.limit = limit;
@@ -24,7 +24,7 @@ public class IntervalReward extends Reward implements net.jandie1505.playerlevel
     }
 
     public IntervalReward(@NotNull RewardsManager manager, @NotNull RewardConfig config, @NotNull IntervalRewardData data) {
-        this(manager, config.id(), config.serverId(), data.start(), data.interval(), data.limit(), data.executor(), data.customCondition(), data.requiresPlayerOnline(), config.name(), config.description());
+        this(manager, config.id(), config.serverId(), data.start(), data.interval(), data.limit(), data.executor(), data.customCondition(), data.requiresPlayerOnline(), config.name(), data.descriptionProvider());
     }
 
     // ----- CONDITIONS -----

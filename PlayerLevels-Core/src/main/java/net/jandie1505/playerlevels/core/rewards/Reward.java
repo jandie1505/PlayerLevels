@@ -4,6 +4,8 @@ import net.jandie1505.playerlevels.core.events.RewardAppliedEvent;
 import net.jandie1505.playerlevels.core.events.RewardApplyEvent;
 import net.jandie1505.playerlevels.core.leveler.Leveler;
 import net.jandie1505.playerlevels.core.leveler.ReceivedReward;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.ApiStatus;
@@ -20,7 +22,7 @@ public abstract class Reward implements net.jandie1505.playerlevels.api.core.rew
     private final boolean requireOnlinePlayer;
     private final int limit;
     @NotNull private final String name;
-    @NotNull private final String description;
+    @NotNull private final RewardDescriptionProvider descriptionProvider;
     private boolean enabled;
 
     protected Reward(
@@ -31,7 +33,7 @@ public abstract class Reward implements net.jandie1505.playerlevels.api.core.rew
             boolean requireOnlinePlayer,
             int limit,
             @NotNull String name,
-            @Nullable String description
+            @Nullable RewardDescriptionProvider descriptionProvider
     ) {
         this.manager = manager;
         this.id = id;
@@ -40,7 +42,7 @@ public abstract class Reward implements net.jandie1505.playerlevels.api.core.rew
         this.requireOnlinePlayer = requireOnlinePlayer;
         this.limit = limit;
         this.name = name;
-        this.description = description != null ? description : "";
+        this.descriptionProvider = descriptionProvider != null ? descriptionProvider : (level) -> Component.empty();
         this.enabled = true;
     }
 
@@ -49,7 +51,6 @@ public abstract class Reward implements net.jandie1505.playerlevels.api.core.rew
     /**
      * Applies the event if all conditions are met.
      * @param leveler leveler
-     * @return success
      */
     @SuppressWarnings("UnusedReturnValue")
     public final void apply(@NotNull Leveler leveler) {
@@ -193,8 +194,36 @@ public abstract class Reward implements net.jandie1505.playerlevels.api.core.rew
         return name;
     }
 
-    public final @NotNull String getDescription() {
-        return description;
+    /**
+     * Returns the description.<br/>
+     * A description can be dependent on the level of a player.
+     * @param level level (-1 if not provided)
+     * @return description
+     */
+    public final @NotNull Component getDescription(int level) {
+        try {
+            Component description = this.descriptionProvider.getDescription(level);
+            return description != null ? description : Component.empty();
+        } catch (Exception e) {
+            Reward.this.getManager().getPlugin().getLogger().log(Level.WARNING, "Exception while getting description of reward " + Reward.this.id + " for level " + level, e);
+            return Component.empty();
+        } catch (Throwable throwable) {
+            Reward.this.enabled = false;
+            Reward.this.getManager().getPlugin().getLogger().log(Level.SEVERE,
+                    "A throwable which is not an exception has been thrown in getDescription from reward " + Reward.this.id + " for level " + level + " " +
+                            "The reward has been disabled for safety reasons. DO NOT IGNORE THIS!",
+                    throwable
+            );
+            return Component.empty();
+        }
+    }
+
+    public final @NotNull Component getDescription(@NotNull Leveler leveler) {
+        return this.getDescription(leveler.getData().level());
+    }
+
+    public final @NotNull Component getDescription() {
+        return this.getDescription(-1);
     }
 
     public final boolean isEnabled() {

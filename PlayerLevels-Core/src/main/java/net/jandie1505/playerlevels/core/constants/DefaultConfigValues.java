@@ -59,7 +59,7 @@ public interface DefaultConfigValues {
                 <green>⬆ Congratulations! You just reached level <leveler:level>!<interval_rewards_list><newline>""");
         messages.set(MessageKeys.ANNOUNCEMENT_LEVELUP_OTHERS, "<newline><yellow>⬆ <player:display_name> <reset><yellow>just leveled up to <leveler:level>!<newline>");
         messages.set(MessageKeys.ANNOUNCEMENT_LEVELUP_REWARD_LIST_TITLE, "<newline><newline><gray>You received the following rewards:");
-        messages.set(MessageKeys.ANNOUNCEMENT_LEVELUP_REWARD_LIST_ENTRY, "<gray>➥ <green><reward:name>");
+        messages.set(MessageKeys.ANNOUNCEMENT_LEVELUP_REWARD_LIST_ENTRY, "<gray>➥ <green><reward:name>: <gray><reward:description>");
         messages.set(MessageKeys.ANNOUNCEMENT_MILESTONE_UNLOCKED_SELF, """
                 <newline><green><bold>✔ You have unlocked a new milestone!<reset>
                 <gray>➥ <bold><reward:name>

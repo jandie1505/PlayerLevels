@@ -90,8 +90,7 @@ public final class RewardsRegistry implements net.jandie1505.playerlevels.api.co
             RewardConfig rewardConfig = new RewardConfig(
                     id,
                     section.optString("server_id", null),
-                    Objects.requireNonNull(section.optString("name", "")),
-                    Objects.requireNonNull(section.optString("description", ""))
+                    Objects.requireNonNull(section.optString("name", ""))
             );
 
             try {
