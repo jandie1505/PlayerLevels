@@ -41,12 +41,7 @@ public class AnnouncementHandler implements Listener {
                     TagResolvers.player("player", player),
                     TagResolver.resolver("old_level", Tag.inserting(Component.text(event.getOldLevel()))),
                     TagResolver.resolver("new_level", Tag.inserting(Component.text(event.getNewLevel()))),
-                    this.intervalRewardsListOnLevelUp("interval_rewards_list",this.plugin.getRewardsManager().getRewardsInternal().values().stream()
-                            .filter(Reward::isEnabled)
-                            .filter(reward -> reward instanceof IntervalReward)
-                            .filter(reward -> ((IntervalReward) reward).isInInterval(event.getNewLevel()))
-                            .toList()
-                    )
+                    this.intervalRewardsListOnLevelUp("interval_rewards_list", event)
             );
         }
 
@@ -77,7 +72,7 @@ public class AnnouncementHandler implements Listener {
                         ownMessage,
                         TagResolvers.leveler("leveler", event.getLeveler()),
                         TagResolvers.player("player", player),
-                        TagResolvers.reward("reward", milestone),
+                        TagResolvers.reward("reward", milestone, new TagResolvers.RewardContext(event.getLevel())),
                         TagResolver.resolver("level", Tag.inserting(Component.text(event.getLevel())))
                 );
             }
@@ -89,7 +84,7 @@ public class AnnouncementHandler implements Listener {
                             othersMessage,
                             TagResolvers.leveler("leveler", event.getLeveler()),
                             TagResolvers.player("player", player),
-                            TagResolvers.reward("reward", milestone),
+                            TagResolvers.reward("reward", milestone, new TagResolvers.RewardContext(event.getLevel())),
                             TagResolver.resolver("level", Tag.inserting(Component.text(event.getLevel())))
                     );
                 }
@@ -102,7 +97,7 @@ public class AnnouncementHandler implements Listener {
                         ownMessage,
                         TagResolvers.leveler("leveler", event.getLeveler()),
                         TagResolvers.player("player", player),
-                        TagResolvers.reward("reward", reward),
+                        TagResolvers.reward("reward", reward, new TagResolvers.RewardContext(event.getLevel())),
                         TagResolver.resolver("level", Tag.inserting(Component.text(event.getLevel())))
                 );
             }
@@ -110,7 +105,14 @@ public class AnnouncementHandler implements Listener {
 
     }
 
-    private TagResolver intervalRewardsListOnLevelUp(@Subst("interval_rewards_list") String tagName, @NotNull List<Reward> rewards) {
+    private TagResolver intervalRewardsListOnLevelUp(@Subst("interval_rewards_list") String tagName, @NotNull LevelUpEvent event) {
+        List<IntervalReward> rewards = this.plugin.getRewardsManager().getRewardsInternal().values().stream()
+                .filter(Reward::isEnabled)
+                .filter(reward -> reward instanceof IntervalReward)
+                .map(reward -> (IntervalReward) reward)
+                .filter(reward -> reward.isInInterval(event.getNewLevel()))
+                .toList();
+
         if (rewards.isEmpty()) return TagResolver.resolver(tagName, Tag.inserting(Component.empty()));
 
         Component text = Component.empty().append(MiniMessage.miniMessage().deserialize(this.plugin.messages().optString(MessageKeys.ANNOUNCEMENT_LEVELUP_REWARD_LIST_TITLE, "")));
@@ -118,7 +120,10 @@ public class AnnouncementHandler implements Listener {
         for (Reward reward : rewards) {
             text = text
                     .appendNewline()
-                    .append(MiniMessage.miniMessage().deserialize(this.plugin.messages().optString(MessageKeys.ANNOUNCEMENT_LEVELUP_REWARD_LIST_ENTRY, ""), TagResolvers.reward("reward", reward)));
+                    .append(
+                            MiniMessage.miniMessage().deserialize(this.plugin.messages().optString(MessageKeys.ANNOUNCEMENT_LEVELUP_REWARD_LIST_ENTRY, ""),
+                                    TagResolvers.reward("reward", reward, new TagResolvers.RewardContext(event.getNewLevel())))
+                    );
         }
 
         return TagResolver.resolver(tagName, Tag.inserting(text));
