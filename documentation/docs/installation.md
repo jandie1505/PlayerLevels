@@ -5,6 +5,7 @@
 - MariaDB (or MySQL) database.
 
 ## Installation
+
 1. Download the plugin and put it into your `plugins` directory.
 2. (Re)start the server.
 3. Open `config.yml` and enter your database credentials. If you don't know how to do this, read the next chapter.
@@ -14,6 +15,7 @@
 
 ## Simple database setup
 This guide is for Linux. If you use a Windows server and, you are on your own (and btw, you shouldn't use Windows for servers unless you are a masochist).
+
 1. Install MariaDB: `sudo apt install mariadb-server mariadb-client` or `sudo dnf install mariadb-server`.
 2. Let it start on OS startup: `sudo systemctl enable --now mariadb`
 3. Start MariaDB setup: `sudo mariadb_secure_installation`.

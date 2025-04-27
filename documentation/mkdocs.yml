@@ -1,15 +1,16 @@
 site_name: PlayerLevels
 site_url: https://jandie1505.github.io/PlayerLevels/
 theme:
-  name: material
+  name: readthedocs
 
 nav:
   - Home: index.md
-  - Setup and Installation: installation.md
+  - Setup:
+    - Installation: installation.md
   - Using the plugin:
-      - Leveling: leveling.md
-      - Rewards: rewards.md
-      - Commands: commands.md
+    - Leveling: leveling.md
+    - Rewards: rewards.md
+    - Commands: commands.md
 
 markdown_extensions:
   - toc

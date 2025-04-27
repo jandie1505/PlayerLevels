@@ -5,6 +5,7 @@ The plugin has many commands. Here is an overview for all of them.
 This is the full command structure of the plugin:
 
 `/levels`
+
 - `info` (get level of other players)
 - `top` (show toplist)
 - `milestones` (show list of milestone rewards)
@@ -33,9 +34,7 @@ This is the full command structure of the plugin:
   
 As you can see, this is a huge number of commands. But you most likely only need a small amount of them.
 
-## Specific commands
-
-### Player commands
+## Player commands
 These commands are for normal players:
 
 | Command                | Permission                             | Use case                       |
@@ -45,8 +44,8 @@ These commands are for normal players:
 | `/level top [page]`    | `playerlevels.command.toplist`         | View the toplist.              |
 | `/level milestones`    | `playerlevels.command.rewards`         | View a list of all milestones. |
 
-### Management commands
-#### Players
+## Management commands
+### Players
 These commands are there for managing players:
 
 | Action                             | Command                                                                                                                                                                                  |
@@ -70,7 +69,7 @@ You might have already noticed that those commands support some command options:
 | `--push=(true\|false)` | Most management commands will push their changes to the database immediately when they are done. If you don't want that, set this option to false. |
 | `--no-process`         | Most management commands will process (update) the player when they are done. Use this option if you don't want that.                              |
 
-#### Rewards
+### Rewards
 Those commands are for there for managing rewards:
 
 | Action                            | Description                                 |
@@ -82,7 +81,7 @@ Those commands are for there for managing rewards:
 
 All those commands have the permission `playerlevels.manage_rewards`.
 
-### Debug commands
+## Debug commands
 These commands are for debugging purposes:
 
 | Action                      | Description                                                                                                        |
