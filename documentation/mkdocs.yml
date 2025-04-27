@@ -4,10 +4,12 @@ theme:
   name: material
 
 nav:
-  - Startseite: index.md
-  - Module:
-      - Modul A: module-a.md
-      - Modul B: module-b.md
+  - Home: index.md
+  - Setup and Installation: installation.md
+  - Using the plugin:
+      - Leveling: leveling.md
+      - Rewards: rewards.md
+      - Commands: commands.md
 
 markdown_extensions:
   - toc

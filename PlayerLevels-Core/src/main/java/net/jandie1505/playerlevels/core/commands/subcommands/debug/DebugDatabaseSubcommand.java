@@ -30,7 +30,7 @@ public class DebugDatabaseSubcommand implements TabCompletingCommandExecutor {
         }
 
         if (args.length < 1) {
-            sender.sendMessage(Component.text("Usage: /playerlevels database (connect|disconnect|info)", NamedTextColor.RED));
+            sender.sendMessage(Component.text("Usage: /levels debug database (connect|disconnect|info)", NamedTextColor.RED));
             return true;
         }
 
