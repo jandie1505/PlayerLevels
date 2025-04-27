@@ -1,0 +1,15 @@
+site_name: PlayerLevels
+site_url: https://jandie1505.github.io/PlayerLevels/
+theme:
+  name: material
+
+nav:
+  - Startseite: index.md
+  - Module:
+      - Modul A: module-a.md
+      - Modul B: module-b.md
+
+markdown_extensions:
+  - toc
+  - admonition
+  - codehilite
