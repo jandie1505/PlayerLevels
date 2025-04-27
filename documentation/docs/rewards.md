@@ -5,8 +5,6 @@ The second of the two major features is the reward system.
 Rewards are "actions" which are applied to a player when that player reaches a specific level.  
 There are several types of rewards, and more can be added using the API.  
 Rewards can either be applied a single time when reaching a specific level or multiple times in a specific interval.
-  
-Rewards can be configured in the `rewards.yml` configuration file.
 
 ## Components of a reward
 This section explains what a reward consists of.
@@ -100,6 +98,7 @@ The level over which the reward is no longer applied.
 For example, if the interval is set to 10 and the limit to 50, the reward will only unlock on the levels 11, 21, 31 and 41, but NOT on 51, 61, etc...
 
 ## Configuration
+Rewards can be configured in the `rewards.yml` configuration file.
 
 ### Milestone reward
 ```yml
@@ -182,8 +181,16 @@ If a plugin registers a custom reward type, you can just configure it like the d
 ```yml
 test_custom_reward:
   # [...]
-  type: my_custom_type
+  type: my_custom_type    # <-- Use the type id of the custom reward here
   # [Options of the custom reward]
 ```
   
 If you are a developer who wants to add a custom reward type, you can find out more in the developer documentation.
+
+## Manage rewards
+You can also manage rewards using a command. But it is not as powerful as the player management command.  
+Here are some examples:
+- List rewards: `/levels manage rewards list`  
+- Get reward info: `/levels manage rewards info <id>`
+- Reload rewards.yml: `/levels manage rewards reload`
+- Enable/disable reward (not permanent, only for current server): `/levels rewards enable <id> true/false`
