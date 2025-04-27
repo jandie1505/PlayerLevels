@@ -164,6 +164,24 @@ public class LevelingManager implements net.jandie1505.playerlevels.api.core.lev
         }
     }
 
+    /**
+     * Erases the player from the database and from the cache asynchronously.
+     * @param playerUUID player uuid
+     * @return success (as a future)
+     */
+    public @NotNull CompletableFuture<Boolean> erasePlayerAsynchronously(@NotNull UUID playerUUID) {
+        CompletableFuture<Boolean> future = new CompletableFuture<>();
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                future.complete(LevelingManager.this.erasePlayer(playerUUID));
+            }
+        }.runTaskAsynchronously(this.plugin);
+
+        return future;
+    }
+
     // ----- FIND LEVELERS -----
 
     public @NotNull CompletableFuture<@NotNull List<@NotNull UUID>> findLevelerByName(@NotNull String name) {

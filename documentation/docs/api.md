@@ -160,3 +160,14 @@ This will return a result, which allows you to see if the sync was successful.
 Please note that the database always has priority.
 If there have been changes both in the database and locally, the data from the database is always adopted.
 If this happened, you will see it in the returned result.
+
+### Deleting a player
+If you want to, you can also delete a player completely from the database and cache:
+```java
+UUID playerId;
+LevelingManager levelingManager;
+levelingManager.erasePlayerAsynchronously(playerId);
+```
+
+It is recommended that the player is offline when you delete them,
+because if not, the plugin would just create a new Leveler instance.

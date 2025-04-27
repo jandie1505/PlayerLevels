@@ -29,6 +29,13 @@ public interface LevelingManager {
     @NotNull CompletableFuture<Leveler> loadLeveler(@NotNull UUID playerUUID);
 
     /**
+     * Erases the player from the database and from the cache asynchronously.
+     * @param playerUUID player uuid
+     * @return success (as a future)
+     */
+    @NotNull CompletableFuture<Boolean> erasePlayerAsynchronously(@NotNull UUID playerUUID);
+
+    /**
      * Returns the amount of xp for the specified level.
      * @param level level
      * @return xp
