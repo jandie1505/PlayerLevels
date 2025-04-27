@@ -12,4 +12,5 @@ public interface ConfigKeys {
     String TOP_LIST_LENGTH = "top_list.length";
     String PLAYER_COMMANDS_LOAD_PLAYERS = "player_commands.load_players";
     String PLAYER_COMMANDS_DATABASE_RATE_LIMIT = "player_commands.database_rate_limit";
+    String REMOVE_NON_EXISTENT_REWARD_ENTRIES = "remove_non_existent_reward_entries";
 }

@@ -1,5 +1,6 @@
 package net.jandie1505.playerlevels.core.leveler;
 
+import net.jandie1505.playerlevels.core.constants.ConfigKeys;
 import net.jandie1505.playerlevels.core.database.DatabaseSource;
 import net.jandie1505.playerlevels.core.events.LevelUpEvent;
 import org.bukkit.Bukkit;
@@ -89,7 +90,7 @@ public final class Leveler implements net.jandie1505.playerlevels.api.core.level
         try {
             this.levelUp();
             this.manager.getPlugin().getRewardsManager().processPlayer(this);
-            this.cleanupNotExistingRewards();
+            if (this.manager.getPlugin().config().optBoolean(ConfigKeys.REMOVE_NON_EXISTENT_REWARD_ENTRIES, false)) this.cleanupNotExistingRewards();
             this.updateCachedName();
         } catch (Exception e) {
             this.manager.getPlugin().getLogger().log(Level.SEVERE, "Manage values task of " + this.playerUUID + " threw an exception", e);
