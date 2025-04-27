@@ -7,10 +7,13 @@ nav:
   - Home: index.md
   - Setup:
     - Installation: installation.md
-  - Using the plugin:
+  - Plugin usage:
     - Leveling: leveling.md
     - Rewards: rewards.md
     - Commands: commands.md
+  - API:
+      - Getting started: api-getting-started.md
+      - Players: api-players.md
 
 markdown_extensions:
   - toc
