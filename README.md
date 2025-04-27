@@ -136,10 +136,10 @@ Here is the full overview of all player management commands:
 | Action                             | Command                                                                                                                                                                                 |
 |------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Player Info                        | `/levels manage players info <player> [--use-cache]`                                                                                                                                    |
-| Manage level                       | `/levels manage players level (get <player>\|set <level> <level>) [--use-cache\|--push=(true\|false)\|--no-update]`                                                                     |
-| Manage XP                          | `/levels xp (get <player>\|set <player> <xp>\|give <player> <xp>\|take <player> <xp>) [--use-cache\|--push=(true\|false)\|--no-update]`                                                 |
-| Manage player's received rewards   | `/levels manage players rewards <player> (list\|get <reward>\|set <reward> (blocked\|level) <value>\|reset <reward>\|delete <reward>) [--use-cache\|--push=(true\|false)\|--no-update]` |
-| Manage Cached Name                 | `/levels manage players cached-name <player> (get\|clear) [--use-cache\|--push=(true\|false)\|--no-update]`                                                                             |
+| Manage level                       | `/levels manage players level (get <player>\|set <level> <level>) [--use-cache\|--push=(true\|false)\|--no-process]`                                                                     |
+| Manage XP                          | `/levels xp (get <player>\|set <player> <xp>\|give <player> <xp>\|take <player> <xp>) [--use-cache\|--push=(true\|false)\|--no-process]`                                                 |
+| Manage player's received rewards   | `/levels manage players rewards <player> (list\|get <reward>\|set <reward> (blocked\|level) <value>\|reset <reward>\|delete <reward>) [--use-cache\|--push=(true\|false)\|--no-process]` |
+| Manage Cached Name                 | `/levels manage players cached-name <player> (get\|clear) [--use-cache\|--push=(true\|false)\|--no-process]`                                                                             |
 | Manually process player            | `/levels manage players update <player> [--use-cache\|--push=(true\|false)]`                                                                                                            |
 | Manually sync player with database | `/levels manage players sync <player>`                                                                                                                                                  |
 | Erase player from database         | `/levels manage players erase <player>`                                                                                                                                                 |
@@ -166,7 +166,7 @@ With the knowledge of the previous section, we can now look at the command optio
 |------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------|
 | `--use-cache`          | Most management commands will synchronize with the database before doing their stuff. If you don't want that, use this option.                     |
 | `--push=(true\|false)` | Most management commands will push their changes to the database immediately when they are done. If you don't want that, set this option to false. |
-| `--no-update`          | Most management commands will process (update) the player when they are done. Use this option if you don't want that.                              |
+| `--no-process`          | Most management commands will process (update) the player when they are done. Use this option if you don't want that.                              |
 
 You can see in the command overview where you can use which option.
 

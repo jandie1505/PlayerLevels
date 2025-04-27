@@ -82,7 +82,7 @@ public class ManagePlayersRewardsSubcommand extends ManagePlayersLevelerTemplate
 
                 ReceivedReward receivedReward = leveler.getData().getReceivedReward(id);
                 leveler.getData().removeReceivedReward(id);
-                if (!args.hasOption("no-update")) leveler.processAsynchronously();
+                if (!args.hasOption("no-process")) leveler.processAsynchronously();
 
                 if (receivedReward != null) {
                     sender.sendRichMessage("<green>Successfully deleted reward entry id");
@@ -108,7 +108,7 @@ public class ManagePlayersRewardsSubcommand extends ManagePlayersLevelerTemplate
                 }
 
                 receivedReward.reset();
-                if (!args.hasOption("no-update")) leveler.processAsynchronously();
+                if (!args.hasOption("no-process")) leveler.processAsynchronously();
                 sender.sendRichMessage("<green>Successfully reset reward entry");
                 return new Result(true);
             }
@@ -128,13 +128,13 @@ public class ManagePlayersRewardsSubcommand extends ManagePlayersLevelerTemplate
                     switch (args.args()[3]) {
                         case "blocked" -> {
                             receivedReward.blocked(Boolean.parseBoolean(args.args()[4]));
-                            if (!args.hasOption("no-update")) leveler.processAsynchronously();
+                            if (!args.hasOption("no-process")) leveler.processAsynchronously();
                             sender.sendRichMessage("<green>Successfully updated reward entry");
                             return new Result(true);
                         }
                         case "level" -> {
                             receivedReward.level(Integer.parseInt(args.args()[4]));
-                            if (!args.hasOption("no-update")) leveler.processAsynchronously();
+                            if (!args.hasOption("no-process")) leveler.processAsynchronously();
                             sender.sendRichMessage("<green>Successfully updated reward entry");
                             return new Result(true);
                         }
@@ -162,7 +162,7 @@ public class ManagePlayersRewardsSubcommand extends ManagePlayersLevelerTemplate
 
     @Override
     protected void onInvalidSyntax(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, OptionParser.@NotNull Result args) {
-        sender.sendRichMessage("<red>Usage: /levels manage players rewards <player> (list|get <reward>|set <reward> (blocked|level) <value>|reset <reward>|delete <reward>) [--use-cache|--push=(true|false)|--no-update]");
+        sender.sendRichMessage("<red>Usage: /levels manage players rewards <player> (list|get <reward>|set <reward> (blocked|level) <value>|reset <reward>|delete <reward>) [--use-cache|--push=(true|false)|--no-process]");
     }
 
     // ----- TAB COMPLETER -----
@@ -193,7 +193,7 @@ public class ManagePlayersRewardsSubcommand extends ManagePlayersLevelerTemplate
                         yield OptionParser.complete(sender, OptionParser.parse(args), Set.of("use-cache"), Map.of());
                     }
                     case "delete", "reset" -> {
-                        yield OptionParser.complete(sender, OptionParser.parse(args), Set.of("use-cache", "no-update"), Map.of("push", (sender1, args1) -> List.of("false", "true")));
+                        yield OptionParser.complete(sender, OptionParser.parse(args), Set.of("use-cache", "no-process"), Map.of("push", (sender1, args1) -> List.of("false", "true")));
                     }
                     case "set" -> {
                         yield List.of("blocked", "level");
@@ -208,7 +208,7 @@ public class ManagePlayersRewardsSubcommand extends ManagePlayersLevelerTemplate
 
                 switch (args[1].toLowerCase()) {
                     case "delete", "reset" -> {
-                        yield OptionParser.complete(sender, OptionParser.parse(args), Set.of("use-cache", "no-update"), Map.of("push", (sender1, args1) -> List.of("false", "true")));
+                        yield OptionParser.complete(sender, OptionParser.parse(args), Set.of("use-cache", "no-process"), Map.of("push", (sender1, args1) -> List.of("false", "true")));
                     }
                     case "set" -> {
 
@@ -234,7 +234,7 @@ public class ManagePlayersRewardsSubcommand extends ManagePlayersLevelerTemplate
             case 6, 7 -> {
 
                 if (args[1].equalsIgnoreCase("set")) {
-                    yield OptionParser.complete(sender, OptionParser.parse(args), Set.of("use-cache", "no-update"), Map.of("push", (sender1, args1) -> List.of("false", "true")));
+                    yield OptionParser.complete(sender, OptionParser.parse(args), Set.of("use-cache", "no-process"), Map.of("push", (sender1, args1) -> List.of("false", "true")));
                 }
 
                 yield List.of();

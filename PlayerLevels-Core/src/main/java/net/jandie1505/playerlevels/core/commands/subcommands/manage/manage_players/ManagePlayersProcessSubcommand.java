@@ -15,16 +15,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class ManagePlayersUpdateSubcommand extends ManagePlayersLevelerTemplateSubcommand {
+public class ManagePlayersProcessSubcommand extends ManagePlayersLevelerTemplateSubcommand {
 
-    public ManagePlayersUpdateSubcommand(@NotNull PlayerLevels plugin) {
+    public ManagePlayersProcessSubcommand(@NotNull PlayerLevels plugin) {
         super(plugin);
     }
 
     @Override
     protected Result onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, OptionParser.@NotNull Result args, @NotNull Leveler leveler) {
         leveler.processAsynchronously();
-        sender.sendRichMessage("<green>Scheduled updating player values");
+        sender.sendRichMessage("<green>Scheduled processing player values");
         return new Result(true);
     }
 
@@ -35,7 +35,7 @@ public class ManagePlayersUpdateSubcommand extends ManagePlayersLevelerTemplateS
 
     @Override
     protected void onInvalidSyntax(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, OptionParser.@NotNull Result args) {
-        sender.sendRichMessage("<red>Usage: /levels manage players update <player> [--use-cache|--push=(true|false)]");
+        sender.sendRichMessage("<red>Usage: /levels manage players process <player> [--use-cache|--push=(true|false)]");
     }
 
     @Override

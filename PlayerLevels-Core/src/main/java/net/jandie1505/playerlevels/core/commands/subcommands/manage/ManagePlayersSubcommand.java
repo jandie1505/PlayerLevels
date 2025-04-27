@@ -20,7 +20,7 @@ public class ManagePlayersSubcommand extends SubcommandCommand {
         this.addSubcommand("rewards", SubcommandEntry.of(new ManagePlayersRewardsSubcommand(this.plugin)));
         this.addSubcommand("cached-name", SubcommandEntry.of(new ManagePlayersCachedNameSubcommand(this.plugin)));
         this.addSubcommand("sync", SubcommandEntry.of(new ManagePlayersSyncSubcommand(this.plugin)));
-        this.addSubcommand("update", SubcommandEntry.of(new ManagePlayersUpdateSubcommand(this.plugin)));
+        this.addSubcommand("process", SubcommandEntry.of(new ManagePlayersProcessSubcommand(this.plugin)));
         this.addSubcommand("erase", SubcommandEntry.of(new ManagePlayersEraseSubcommand(this.plugin)));
     }
 

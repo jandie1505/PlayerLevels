@@ -47,7 +47,7 @@ public class ManagePlayersLevelSubcommand extends ManagePlayersLevelerTemplateSu
                         }
 
                         leveler.getData().level(level);
-                        if (!args.hasOption("no-update")) leveler.processAsynchronously();
+                        if (!args.hasOption("no-process")) leveler.processAsynchronously();
                         sender.sendMessage(Component.text("Updated level to " + leveler.getData().level(), NamedTextColor.GRAY));
                         return new Result(true);
                     } else {
@@ -76,7 +76,7 @@ public class ManagePlayersLevelSubcommand extends ManagePlayersLevelerTemplateSu
 
     @Override
     protected void onInvalidSyntax(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, OptionParser.@NotNull Result args) {
-        sender.sendMessage(Component.text("Usage: /playerlevels manage players level (get <player>|set <level> <level>) [--use-cache|--push=(true|false)|--no-update]", NamedTextColor.RED));
+        sender.sendMessage(Component.text("Usage: /playerlevels manage players level (get <player>|set <level> <level>) [--use-cache|--push=(true|false)|--no-process]", NamedTextColor.RED));
     }
 
     @Override
@@ -93,7 +93,7 @@ public class ManagePlayersLevelSubcommand extends ManagePlayersLevelerTemplateSu
                 }
 
             }
-            case 4, 5, 6 -> OptionParser.complete(sender, OptionParser.parse(args), Set.of("use-cache", "no-update"), Map.of("push", (sender1, args1) -> List.of("false", "true")));
+            case 4, 5, 6 -> OptionParser.complete(sender, OptionParser.parse(args), Set.of("use-cache", "no-process"), Map.of("push", (sender1, args1) -> List.of("false", "true")));
             default -> List.of();
         };
     }

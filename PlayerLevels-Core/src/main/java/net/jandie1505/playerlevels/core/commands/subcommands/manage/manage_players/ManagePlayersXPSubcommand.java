@@ -44,7 +44,7 @@ public class ManagePlayersXPSubcommand extends ManagePlayersLevelerTemplateSubco
                         if (value < 0) value = 0;
 
                         leveler.getData().xp(value);
-                        if (!args.hasOption("no-update")) leveler.processAsynchronously();
+                        if (!args.hasOption("no-process")) leveler.processAsynchronously();
                         sender.sendMessage(Component.text("Updated xp to " + leveler.getData().xp(), NamedTextColor.GRAY));
                         return new Result(true);
                     } else {
@@ -60,7 +60,7 @@ public class ManagePlayersXPSubcommand extends ManagePlayersLevelerTemplateSubco
                         if (value < 0) value = 0;
 
                         leveler.getData().xp(value);
-                        if (!args.hasOption("no-update")) leveler.processAsynchronously();
+                        if (!args.hasOption("no-process")) leveler.processAsynchronously();
                         sender.sendMessage(Component.text("Updated xp to " + leveler.getData().xp(), NamedTextColor.GRAY));
                         return new Result(true);
                     } else {
@@ -76,7 +76,7 @@ public class ManagePlayersXPSubcommand extends ManagePlayersLevelerTemplateSubco
                         if (value < 0) value = 0;
 
                         leveler.getData().xp(value);
-                        if (!args.hasOption("no-update")) leveler.processAsynchronously();
+                        if (!args.hasOption("no-process")) leveler.processAsynchronously();
                         sender.sendMessage(Component.text("Updated xp to " + leveler.getData().xp(), NamedTextColor.GRAY));
                         return new Result(true);
                     } else {
@@ -105,7 +105,7 @@ public class ManagePlayersXPSubcommand extends ManagePlayersLevelerTemplateSubco
 
     @Override
     protected void onInvalidSyntax(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, OptionParser.@NotNull Result args) {
-        sender.sendMessage(Component.text("Usage: /playerlevels xp (get <player>|set <player> <xp>|give <player> <xp>|take <player> <xp>) [--use-cache|--push=(true|false)|--no-update]", NamedTextColor.RED));
+        sender.sendMessage(Component.text("Usage: /playerlevels xp (get <player>|set <player> <xp>|give <player> <xp>|take <player> <xp>) [--use-cache|--push=(true|false)|--no-process]", NamedTextColor.RED));
     }
 
     @Override
@@ -135,7 +135,7 @@ public class ManagePlayersXPSubcommand extends ManagePlayersLevelerTemplateSubco
 
                 switch (args[1]) {
                     case "set", "give", "take" -> {
-                        yield OptionParser.complete(sender, OptionParser.parse(args), Set.of("use-cache", "no-update"), Map.of("push", (sender1, args1) -> List.of("false", "true")));
+                        yield OptionParser.complete(sender, OptionParser.parse(args), Set.of("use-cache", "no-process"), Map.of("push", (sender1, args1) -> List.of("false", "true")));
                     }
                     default -> {
                         yield List.of();

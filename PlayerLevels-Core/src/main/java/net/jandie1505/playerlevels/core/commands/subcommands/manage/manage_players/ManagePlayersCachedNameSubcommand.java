@@ -62,7 +62,7 @@ public class ManagePlayersCachedNameSubcommand extends ManagePlayersLevelerTempl
 
     @Override
     protected void onInvalidSyntax(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, OptionParser.@NotNull Result args) {
-        sender.sendMessage(Component.text("Usage: /playerlevels manage players cached-name <player> (get|clear) [--use-cache|--push=(true|false)|--no-update]", NamedTextColor.RED));
+        sender.sendMessage(Component.text("Usage: /playerlevels manage players cached-name <player> (get|clear) [--use-cache|--push=(true|false)|--no-process]", NamedTextColor.RED));
     }
 
     @Override
@@ -70,7 +70,7 @@ public class ManagePlayersCachedNameSubcommand extends ManagePlayersLevelerTempl
         return switch (args.length) {
             case 1 -> this.getPlugin().getServer().getOnlinePlayers().stream().map(Player::getName).toList();
             case 2 -> List.of("get", "clear");
-            case 3, 4, 5 -> OptionParser.complete(sender, OptionParser.parse(args), Set.of("use-cache", "no-update"), Map.of("push", (sender1, args1) -> List.of("false", "true")));
+            case 3, 4, 5 -> OptionParser.complete(sender, OptionParser.parse(args), Set.of("use-cache", "no-process"), Map.of("push", (sender1, args1) -> List.of("false", "true")));
             default -> List.of();
         };
     }

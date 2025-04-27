@@ -40,7 +40,7 @@ public class DebugCacheSubcommand implements TabCompletingCommandExecutor {
         OptionParser.Result args = OptionParser.parse(a);
 
         if (args.args().length < 1) {
-            sender.sendRichMessage("<red>Usage: /levels debug cache (list|refresh|drop <player> [--no-update|--confirm]|drop-all [--no-update|--confirm])");
+            sender.sendRichMessage("<red>Usage: /levels debug cache (list|refresh|drop <player> [--no-process|--confirm]|drop-all [--no-process|--confirm])");
             return true;
         }
 
@@ -71,7 +71,7 @@ public class DebugCacheSubcommand implements TabCompletingCommandExecutor {
                         return true;
                     }
 
-                    boolean update = !Boolean.parseBoolean(args.options().get("no-update"));
+                    boolean update = !Boolean.parseBoolean(args.options().get("no-process"));
 
                     if (args.hasOption("confirm")) {
 
@@ -96,7 +96,7 @@ public class DebugCacheSubcommand implements TabCompletingCommandExecutor {
                             );
                         } else {
                             message = message.append(Component.text("[CONFIRM]", NamedTextColor.DARK_RED)
-                                    .clickEvent(ClickEvent.runCommand("/levels debug cache drop --no-update " + playerUUID + " --confirm"))
+                                    .clickEvent(ClickEvent.runCommand("/levels debug cache drop --no-process " + playerUUID + " --confirm"))
                                     .hoverEvent(Component.text("Click to confirm", NamedTextColor.GRAY))
                             );
                         }
@@ -111,7 +111,7 @@ public class DebugCacheSubcommand implements TabCompletingCommandExecutor {
             }
             case "drop-all" -> {
 
-                boolean update = !Boolean.parseBoolean(args.options().get("no-update"));
+                boolean update = !Boolean.parseBoolean(args.options().get("no-process"));
 
                 if (args.hasOption("confirm")) {
                     this.plugin.getLevelManager().dropCaches(update);
@@ -129,7 +129,7 @@ public class DebugCacheSubcommand implements TabCompletingCommandExecutor {
                         );
                     } else {
                         message = message.append(Component.text("[CONFIRM]", NamedTextColor.DARK_RED)
-                                .clickEvent(ClickEvent.runCommand("/levels debug cache drop --no-update --confirm"))
+                                .clickEvent(ClickEvent.runCommand("/levels debug cache drop --no-process --confirm"))
                                 .hoverEvent(Component.text("Click to confirm", NamedTextColor.GRAY))
                         );
                     }
@@ -153,12 +153,12 @@ public class DebugCacheSubcommand implements TabCompletingCommandExecutor {
                 switch (args[0]) {
                     case "drop" -> {
                         List<String> list = new ArrayList<>();
-                        list.add("--no-update");
+                        list.add("--no-process");
                         list.addAll(Bukkit.getOnlinePlayers().stream().map(Player::getName).toList());
                         yield list;
                     }
                     case "drop-all" -> {
-                        yield List.of("--no-update");
+                        yield List.of("--no-process");
                     }
                     default -> {
                         yield List.of();
@@ -169,10 +169,10 @@ public class DebugCacheSubcommand implements TabCompletingCommandExecutor {
             case 3 -> {
 
                 if (args[0].equalsIgnoreCase("drop")) {
-                    if (args[1].equalsIgnoreCase("--no-update")) {
+                    if (args[1].equalsIgnoreCase("--no-process")) {
                         yield Bukkit.getOnlinePlayers().stream().map(Player::getName).toList();
                     } else {
-                        yield List.of("--no-update");
+                        yield List.of("--no-process");
                     }
                 } else {
                     yield List.of();
