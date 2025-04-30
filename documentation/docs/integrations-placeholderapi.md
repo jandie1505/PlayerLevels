@@ -4,6 +4,7 @@ PlayerLevels supports PlaceholderAPI.
 ### Installation
 PlaceholderAPI support is not integrated in the core plugin.
 You need to install a PlaceholderAPI expansion:
+  
 1. Download the PlaceholderAPI expansion JAR file.
 2. Put the expansion file into `plugins/PlaceholderAPI/expansions/`.
 3. Restart the server.
