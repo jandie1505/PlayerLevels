@@ -137,7 +137,7 @@ public class PlayerPointsReward implements RewardExecutor, RewardDescriptionProv
             int limit
     ) {
         PlayerPointsReward reward = new PlayerPointsReward(formula, description);
-        return new IntervalRewardData(reward, null, reward, true, start, interval, limit);
+        return new IntervalRewardData(reward, reward, true, start, interval, limit);
     }
 
     // ----- OTHER STUFF -----

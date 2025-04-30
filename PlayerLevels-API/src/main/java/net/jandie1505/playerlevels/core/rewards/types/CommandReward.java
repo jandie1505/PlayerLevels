@@ -155,7 +155,7 @@ public class CommandReward implements RewardExecutor, RewardDescriptionProvider 
             int limit
     ) {
         CommandReward reward = new CommandReward(command, senderType, description);
-        return new IntervalRewardData(reward, null, reward, requiresOnlinePlayer, start, interval, limit);
+        return new IntervalRewardData(reward, reward, requiresOnlinePlayer, start, interval, limit);
     }
 
     // ----- CREATOR -----

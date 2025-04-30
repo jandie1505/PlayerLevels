@@ -13,18 +13,16 @@ public class IntervalReward extends Reward implements net.jandie1505.playerlevel
     private final int start;
     private final int interval;
     private final int limit;
-    @NotNull private final RewardCondition customCondition;
 
-    public IntervalReward(@NotNull RewardsManager manager, @NotNull String id, @Nullable String serverId, int start, int interval, int limit, @NotNull RewardExecutor executor, @Nullable RewardCondition customCondition, boolean requireOnlinePlayer, @NotNull String name, @Nullable RewardDescriptionProvider descriptionProvider) {
+    public IntervalReward(@NotNull RewardsManager manager, @NotNull String id, @Nullable String serverId, int start, int interval, int limit, @NotNull RewardExecutor executor, boolean requireOnlinePlayer, @NotNull String name, @Nullable RewardDescriptionProvider descriptionProvider) {
         super(manager, id, serverId, executor, requireOnlinePlayer, limit, name, descriptionProvider);
         this.start = start > 0 ? start : 1;
         this.interval = interval > 0 ? interval : 1;
         this.limit = limit;
-        this.customCondition = customCondition != null ? customCondition : net.jandie1505.playerlevels.api.core.reward.IntervalReward.DEFAULT_CONDITION;
     }
 
     public IntervalReward(@NotNull RewardsManager manager, @NotNull RewardConfig config, @NotNull IntervalRewardData data) {
-        this(manager, config.id(), config.serverId(), data.start(), data.interval(), data.limit(), data.executor(), data.customCondition(), data.requiresPlayerOnline(), config.name(), data.descriptionProvider());
+        this(manager, config.id(), config.serverId(), data.start(), data.interval(), data.limit(), data.executor(), data.requiresPlayerOnline(), config.name(), data.descriptionProvider());
     }
 
     // ----- CONDITIONS -----
@@ -37,26 +35,8 @@ public class IntervalReward extends Reward implements net.jandie1505.playerlevel
             return false;
         }
 
-        // Condition is not met when the reward has already been applied for the level
-        if (leveler.getData().getOrCreateReceivedReward(this.getId()).level() >= checkedLevel) {
-            return false;
-        }
-
-        // Check if the reward has already been applied with the custom condition
-        try {
-            return !this.customCondition.isApplied(this, leveler, checkedLevel);
-        } catch (Exception e) {
-            IntervalReward.this.getManager().getPlugin().getLogger().log(Level.WARNING, "Exception while applying reward " + IntervalReward.this.getId() + " to player " + leveler.getPlayerUUID(), e);
-            return false;
-        } catch (Throwable t) {
-            IntervalReward.this.setEnabled(false);
-            IntervalReward.this.getManager().getPlugin().getLogger().log(Level.SEVERE,
-                    "A throwable which is not an exception has been thrown in isApplied from reward " + IntervalReward.this.getId() + " to player " + leveler.getPlayerUUID() + " " +
-                            "The reward has been disabled for safety reasons. DO NOT IGNORE THIS!",
-                    t
-            );
-            return false;
-        }
+        // The Condition is not met when the reward has already been applied for the level
+        return leveler.getData().getOrCreateReceivedReward(this.getId()).level() < checkedLevel;
     }
 
     @Override
