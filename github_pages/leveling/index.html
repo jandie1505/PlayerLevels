@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://jandie1505.github.io/PlayerLevels/leveling/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Leveling - PlayerLevels</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Leveling";
+        var mkdocs_page_input_path = "leveling.md";
+        var mkdocs_page_url = "/PlayerLevels/leveling/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> PlayerLevels
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Setup</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Plugin usage</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Leveling</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#how-it-works">How it works</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#player-interaction">Player interaction</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#toplist">Toplist</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#leveling-as-a-player">Leveling as a player</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#management">Management</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../rewards/">Rewards</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../commands/">Commands</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">API</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../api-getting-started/">Getting started</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api-players/">Players</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api-rewards/">Rewards</a>
+                  </li>
+                  <li class="toctree-l1"><a class="" href="../javadoc/index.html">JavaDoc</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Integrations</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../integrations-placeholderapi/">PlaceholderAPI</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../integrations-cloudnet/">CloudNet</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">PlayerLevels</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Plugin usage</li>
+      <li class="breadcrumb-item active">Leveling</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="leveling">Leveling</h1>
+<p>One of the two major features of the plugin is leveling.</p>
+<h2 id="how-it-works">How it works</h2>
+<p>Players can earn XP. Using the xp formula, this xp is "transformed" into levels. If a player reaches enough xp, the player levels up.
+That's mostly everything about the leveling system.</p>
+<h2 id="player-interaction">Player interaction</h2>
+<p>Players can see their current leveling progress using the <code>/level</code>-command.<br />
+If enabled in config, players can also see the level of other players by doing <code>/level info &lt;player&gt;</code>.</p>
+<p>You can customize the messages of those outputs in the config.</p>
+<p>If the expansion is installed, you can also use placeholders using PlaceholderAPI to show players their levels.</p>
+<h2 id="toplist">Toplist</h2>
+<p>The plugin has a level toplist. Players can view the toplist using the <code>/level top</code> command.</p>
+<p>You can specify the length of the toplist in the configuration.</p>
+<p>If the expansion is installed, you can also show the toplist in placeholders.</p>
+<h2 id="leveling-as-a-player">Leveling as a player</h2>
+<p>The plugin has no built-in way for players to earn xp.
+This choice has been made on purpose, since this plugin is designed to be integrated into other plugins.</p>
+<p>To earn XP, other plugins like your minigames need to give XP to the players using the API.<br />
+If you are a developer who wants to integrate PlayerLevels into their plugin, read the API documentation.</p>
+<h2 id="management">Management</h2>
+<p>PlayerLevels has many management commands. Here are some, you will find all of them in the command reference:
+- Get player information: <code>/level manage players info &lt;player&gt;</code>
+- Set level: <code>/level manage players level set &lt;player&gt; &lt;value&gt;</code>
+- Set xp: <code>/level manage players xp set &lt;player&gt; &lt;value&gt;</code>
+- Give xp: <code>/level manage players xp give &lt;player&gt; &lt;amount&gt;</code></p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../installation/" class="btn btn-neutral float-left" title="Installation"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../rewards/" class="btn btn-neutral float-right" title="Rewards">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../installation/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../rewards/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

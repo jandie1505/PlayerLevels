@@ -15,6 +15,7 @@ nav:
       - Getting started: api-getting-started.md
       - Players: api-players.md
       - Rewards: api-rewards.md
+      - JavaDoc: javadoc/index.html
   - Integrations:
       - PlaceholderAPI: integrations-placeholderapi.md
       - CloudNet: integrations-cloudnet.md

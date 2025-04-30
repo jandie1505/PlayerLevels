@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://jandie1505.github.io/PlayerLevels/installation/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Installation - PlayerLevels</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Installation";
+        var mkdocs_page_input_path = "installation.md";
+        var mkdocs_page_url = "/PlayerLevels/installation/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> PlayerLevels
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Setup</span></p>
+              <ul class="current">
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Installation</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#requirements">Requirements</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#simple-database-setup">Simple database setup</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#next-steps">Next steps</a>
+    </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Plugin usage</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../leveling/">Leveling</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../rewards/">Rewards</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../commands/">Commands</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">API</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../api-getting-started/">Getting started</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api-players/">Players</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api-rewards/">Rewards</a>
+                  </li>
+                  <li class="toctree-l1"><a class="" href="../javadoc/index.html">JavaDoc</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Integrations</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../integrations-placeholderapi/">PlaceholderAPI</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../integrations-cloudnet/">CloudNet</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">PlayerLevels</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Setup</li>
+      <li class="breadcrumb-item active">Installation</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="setup-and-installation">Setup and Installation</h1>
+<h2 id="requirements">Requirements</h2>
+<ul>
+<li>One or multiple PaperMC (1.19+) servers.</li>
+<li>MariaDB (or MySQL) database.</li>
+</ul>
+<h2 id="installation">Installation</h2>
+<ol>
+<li>Download the plugin and put it into your <code>plugins</code> directory.</li>
+<li>(Re)start the server.</li>
+<li>Open <code>config.yml</code> and enter your database credentials. If you don't know how to do this, read the next chapter.</li>
+<li>Restart the server again or reload the config using <code>/levels debug reload config</code></li>
+<li>If you see no error in the console, the database connection should be established successfully. You can use <code>/levels debug database info</code> to check it if you want to make sure.</li>
+<li>Start using the plugin</li>
+</ol>
+<h2 id="simple-database-setup">Simple database setup</h2>
+<p>This guide is for Linux. If you use a Windows server and, you are on your own (and btw, you shouldn't use Windows for servers unless you are a masochist).</p>
+<ol>
+<li>Install MariaDB: <code>sudo apt install mariadb-server mariadb-client</code> or <code>sudo dnf install mariadb-server</code>.</li>
+<li>Let it start on OS startup: <code>sudo systemctl enable --now mariadb</code></li>
+<li>Start MariaDB setup: <code>sudo mariadb_secure_installation</code>.</li>
+<li>Answer the questions you're getting asked. Don't create security risks here. Disallow remote root login, select a password, remove test database, etc...</li>
+<li>Open MariaDB console: <code>sudo mariadb -u root</code>. As the root user on the OS, you can log into MariaDB without a root password.</li>
+<li>Create a database for PlayerLevels: <code>CREATE DATABASE playerlevels;</code></li>
+<li>Create a user for PlayerLevels: <code>CREATE USER 'db_playerlevels'@'localhost' IDENTIFIED BY 'your secure password'</code>. <strong>Do not use the root user for PlayerLevels!</strong></li>
+<li>Grant privileges: <code>GRANT ALL PRIVILEGES ON db_playerlevels TO 'db_playerlevels'@'localhost';</code> and <code>FLUSH PRIVILEGES;</code>.</li>
+<li>Enter the credentials. In this example, <code>db_playerlevels</code> is your user, <code>your secure password</code> your password, <code>3306</code> your port and <code>playerlevels</code> your database.</li>
+</ol>
+<p>If you are using MySQL, it should be mostly the same, but I would recommend you to use MariaDB since my plugin is developed against that.</p>
+<h2 id="next-steps">Next steps</h2>
+<ul>
+<li>Choose xp formula: You might not like the default xp formula, so change it.</li>
+<li>Add some rewards and remove the default one.</li>
+<li>Set server ids for your servers.</li>
+<li>Change the plugin messages or disable some by replacing the message string with <code>""</code>.</li>
+<li>Read the documentation to learn more about the plugin.</li>
+</ul>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href=".." class="btn btn-neutral float-left" title="Home"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../leveling/" class="btn btn-neutral float-right" title="Leveling">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href=".." style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../leveling/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

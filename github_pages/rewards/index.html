@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://jandie1505.github.io/PlayerLevels/rewards/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Rewards - PlayerLevels</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Rewards";
+        var mkdocs_page_input_path = "rewards.md";
+        var mkdocs_page_url = "/PlayerLevels/rewards/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> PlayerLevels
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Setup</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Plugin usage</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../leveling/">Leveling</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Rewards</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#how-it-works">How it works</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#components-of-a-reward">Components of a reward</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#all-rewards">All rewards</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#reward-id">Reward ID</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#reward-name">Reward Name</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#server-id">Server ID</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#reward-apply-type">Reward Apply-Type</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#description">Description</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#player-online-requirement">Player Online Requirement</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#reward-type-reward-executor">Reward Type (Reward Executor)</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#milestone-rewards">Milestone Rewards</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#level">Level</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#custom-condition">Custom Condition</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#interval-rewards">Interval Rewards</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#interval">Interval</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#start">Start</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#limit">Limit</a>
+    </li>
+        </ul>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#configuration">Configuration</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#milestone-reward">Milestone reward</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#interval-reward">Interval reward</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#reward-types">Reward types</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#default-types">Default types</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#command">Command</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#luckperms">LuckPerms</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#playerpoints">PlayerPoints</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#custom-rewards">Custom rewards</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#manage-rewards">Manage rewards</a>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../commands/">Commands</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">API</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../api-getting-started/">Getting started</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api-players/">Players</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api-rewards/">Rewards</a>
+                  </li>
+                  <li class="toctree-l1"><a class="" href="../javadoc/index.html">JavaDoc</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Integrations</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../integrations-placeholderapi/">PlaceholderAPI</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../integrations-cloudnet/">CloudNet</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">PlayerLevels</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Plugin usage</li>
+      <li class="breadcrumb-item active">Rewards</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="rewards">Rewards</h1>
+<p>The second of the two major features is the reward system.</p>
+<h2 id="how-it-works">How it works</h2>
+<p>Rewards are "actions" which are applied to a player when that player reaches a specific level.<br />
+There are several types of rewards, and more can be added using the API.<br />
+Rewards can either be applied a single time when reaching a specific level or multiple times in a specific interval.</p>
+<h2 id="components-of-a-reward">Components of a reward</h2>
+<p>This section explains what a reward consists of.</p>
+<h3 id="all-rewards">All rewards</h3>
+<p>Every reward has these components.</p>
+<h4 id="reward-id">Reward ID</h4>
+<p>This is the unique identifier of a reward.<br />
+It is not shown to the user and has to be unique.</p>
+<h4 id="reward-name">Reward Name</h4>
+<p>The name of the reward. This name is normally shown to the user when unlocking the reward or in a list of all rewards.</p>
+<h4 id="server-id">Server ID</h4>
+<p>The server ID on which the reward should unlock. Rewards then will only unlock on servers with this specific ID.<br />
+If there is no server ID set, the reward will unlock on all servers.</p>
+<p>This feature is intended for networks where not all plugins are available on all servers.</p>
+<p>Example:
+A player levels up on a server of Gamemode A.
+This levelup contains a reward for Gamemode B, but the plugin of Gamemode B is not available on the server of Gamemode A.
+If no server ID is set, giving the reward would fail.
+Therefore, you can set the server ID of that reward to the servers of Gamemode B.
+PlayerLevels will then wait giving the Player the reward until that player joins onto a server of Gamemode B.</p>
+<h4 id="reward-apply-type">Reward Apply-Type</h4>
+<p>The apply-type of a reward determines when a reward is applied.</p>
+<p>There are two apply types:
+- Milestone Reward: Those rewards will only be given once when the player reaches a specific level.
+- Interval rewards: Those rewards will be applied in a specific interval, with an optional staring and ending point.</p>
+<p>You will find out more about this in the next section.</p>
+<h4 id="description">Description</h4>
+<p>The reward description is provided by the reward type you have selected, but most of the reward types let you set as you want.<br />
+Some reward types allow the usage of placeholders in the description. This allows you for example the amount of points you just earned.</p>
+<p>If you are a developer, this is not a description text.
+This is a RewardDescriptionProvider, with which you can dynamically provide reward descriptions on a per-player basis.</p>
+<h4 id="player-online-requirement">Player Online Requirement</h4>
+<p>This sets if the player needs to be online for the reward can be given.</p>
+<p>It is mostly irrelevant because it is up to the reward type and players are not loaded when being offline under normal circumstances.<br />
+But this option exists, and now you know it.</p>
+<h4 id="reward-type-reward-executor">Reward Type (Reward Executor)</h4>
+<p>The reward type is the actual thing that is done when the player unlocks the reward.<br />
+You can find more information about this in the section about the default reward types.</p>
+<p>If you are a developer, this is not a reward type.
+It is a reward executor, which contains the code that is executed when the player unlocks the reward.</p>
+<h3 id="milestone-rewards">Milestone Rewards</h3>
+<p>Only milestone rewards have these components.</p>
+<h4 id="level">Level</h4>
+<p>The level where the milestone reward is applied.</p>
+<p>For example when the level of a milestone reward is set to 10 and a player reaches level 10, the reward is applied.<br />
+After this, the reward is not applied again (except the specific reward uses a custom condition).</p>
+<h4 id="custom-condition">Custom Condition</h4>
+<p>Milestone rewards can have custom conditions.
+Those custom conditions can determine unter which circumstances can be given again, even if the reward has already been given.</p>
+<p>Having this depends on the reward type you are using. Most reward types don't need this.</p>
+<p>If you are a developer, you can make use of this feature for your custom rewards.</p>
+<h3 id="interval-rewards">Interval Rewards</h3>
+<p>Only interval rewards have these components.</p>
+<h4 id="interval">Interval</h4>
+<p>The interval in which the reward is given to the player.</p>
+<p>For example, if the interval is set to 10, the reward will be given to players on level 11, 21, 31, 41, etc... (when the start is set to level 1).</p>
+<h4 id="start">Start</h4>
+<p>The level where the interval is started.</p>
+<p>For example, if you have a reward with an interval of 10 and the start is set to 20,
+the reward will be given the first time on level 20, and then on 30, 40, 50, etc...</p>
+<h4 id="limit">Limit</h4>
+<p>The level over which the reward is no longer applied.</p>
+<p>For example, if the interval is set to 10 and the limit to 50, the reward will only unlock on the levels 11, 21, 31 and 41, but NOT on 51, 61, etc...</p>
+<h2 id="configuration">Configuration</h2>
+<p>Rewards can be configured in the <code>rewards.yml</code> configuration file.</p>
+<h3 id="milestone-reward">Milestone reward</h3>
+<pre class="codehilite"><code class="language-yml">test_milestone_reward:      # &lt;-- The reward ID. Has to be unique.
+  name: Test Reward         # &lt;-- The reward name that is displayed to the players.     
+  apply_type: milestone     # &lt;-- The apply-type. In this case, it's 'milestone', because we want to add a milestone reward.
+  level: 10                 # &lt;-- The level the reward is applied on.
+  type: my_reward_type      # &lt;-- The reward type.
+  # [Reward-specific settings will come here]
+</code></pre>
+
+<h3 id="interval-reward">Interval reward</h3>
+<pre class="codehilite"><code class="language-yml">test_milestone_reward:      # &lt;-- The reward ID. Has to be unique.
+  name: Test Reward         # &lt;-- The reward name that is displayed to the players.     
+  apply_type: interval      # &lt;-- The apply-type. In this case, it's 'interval', because we want to add an interval reward.
+  start: 10                 # &lt;-- The start point of the intervals.
+  interval: 1               # &lt;-- The interval in which the reward is applied.
+  limit: -1                 # &lt;-- The limit after which the reward will no longer be applied.
+  type: my_reward_type      # &lt;-- The reward type.
+  # [Reward-specific settings will come here]
+</code></pre>
+
+<h2 id="reward-types">Reward types</h2>
+<h3 id="default-types">Default types</h3>
+<h4 id="command">Command</h4>
+<p>A command reward is the simplest reward type.<br />
+It just executes a command when the reward is applied.</p>
+<p>You can configure it like this:</p>
+<pre class="codehilite"><code class="language-yml">test_command_reward:
+  # [...]
+  type: command                                                                               # &lt;-- Set command as the reward type
+  command: &quot;say Reward: {reward_name}, Player: {player_name}, Level: {player_reward_level}&quot;   # &lt;-- The command to run
+  sender_type: console                                                                        # &lt;-- The sender type (console or player)
+  description: &quot;My wonderful reward description&quot;                                              # &lt;-- The reward description.
+</code></pre>
+
+<p>This reward type can be added as a milestone and as an interval reward.</p>
+<h4 id="luckperms">LuckPerms</h4>
+<p>This reward type gives a permission to the player when the reward is unlocked.</p>
+<p>You can configure it like this:</p>
+<pre class="codehilite"><code class="language-yml">test_luckperms_reward:
+  # [...]
+  type: luckperms                 # &lt;-- Set luckperms as the reward type.
+  permission: &quot;my_permission&quot;     # &lt;-- The permission that should be given to the player.
+  description: &quot;My Description&quot;   # &lt;-- The reward description.
+</code></pre>
+
+<p>This reward can only be added as a milestone reward.</p>
+<p>This reward uses a custom apply-condition.
+If the player has unlocked this reward, PlayerLevels will check if the player has the permission.
+If the player does not have the permission, it will be given (again), even if the player has unlocked the reward previously and not in this moment.</p>
+<h4 id="playerpoints">PlayerPoints</h4>
+<p>This reward type gives a player some points using PlayerPoints.</p>
+<p>You can configure it like this:</p>
+<pre class="codehilite"><code class="language-yml">test_playerpoints_reward:
+  # [...]
+  type: playerpoints                        # &lt;-- Use playerpoints as the reward type
+  formula: level * 10                       # &lt;-- The formula that determines how much points the player will get. Available Variables: level, xp
+  description: &quot;&lt;gray&gt;+ &lt;points&gt; points&quot;    # &lt;-- The reward description. Supports minimessage and the &lt;points&gt; placeholder.
+</code></pre>
+
+<p>This reward type can be added as a milestone and as an interval reward.</p>
+<h3 id="custom-rewards">Custom rewards</h3>
+<p>Other plugins can add custom rewards using the API.</p>
+<p>If a plugin registers a custom reward type, you can just configure it like the default rewards:</p>
+<pre class="codehilite"><code class="language-yml">test_custom_reward:
+  # [...]
+  type: my_custom_type    # &lt;-- Use the type id of the custom reward here
+  # [Options of the custom reward]
+</code></pre>
+
+<p>If you are a developer who wants to add a custom reward type, you can find out more in the developer documentation.</p>
+<h2 id="manage-rewards">Manage rewards</h2>
+<p>You can also manage rewards using a command. But it is not as powerful as the player management command.<br />
+Here are some examples:
+- List rewards: <code>/levels manage rewards list</code><br />
+- Get reward info: <code>/levels manage rewards info &lt;id&gt;</code>
+- Reload rewards.yml: <code>/levels manage rewards reload</code>
+- Enable/disable reward (not permanent, only for current server): <code>/levels rewards enable &lt;id&gt; true/false</code></p>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../leveling/" class="btn btn-neutral float-left" title="Leveling"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../commands/" class="btn btn-neutral float-right" title="Commands">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../leveling/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../commands/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

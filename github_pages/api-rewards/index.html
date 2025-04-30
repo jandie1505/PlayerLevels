@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://jandie1505.github.io/PlayerLevels/api-rewards/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Rewards - PlayerLevels</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Rewards";
+        var mkdocs_page_input_path = "api-rewards.md";
+        var mkdocs_page_url = "/PlayerLevels/api-rewards/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> PlayerLevels
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Setup</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Plugin usage</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../leveling/">Leveling</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../rewards/">Rewards</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../commands/">Commands</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">API</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../api-getting-started/">Getting started</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api-players/">Players</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Rewards</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#get-the-rewardsmanager">Get the RewardsManager</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#managing-rewards">Managing Rewards</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#getting-rewards">Getting rewards</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#adding-or-removing-rewards-directly">Adding or removing rewards directly</a>
+        <ul>
+    <li class="toctree-l4"><a class="reference internal" href="#removing">Removing</a>
+    </li>
+    <li class="toctree-l4"><a class="reference internal" href="#adding">Adding</a>
+    </li>
+        </ul>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#custom-reward-types-and-rewardregistry">Custom reward types and RewardRegistry</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#creating-a-custom-reward-type">Creating a custom reward type</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#rewardregistry">RewardRegistry</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                  </li>
+                  <li class="toctree-l1"><a class="" href="../javadoc/index.html">JavaDoc</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Integrations</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../integrations-placeholderapi/">PlaceholderAPI</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../integrations-cloudnet/">CloudNet</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">PlayerLevels</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">API</li>
+      <li class="breadcrumb-item active">Rewards</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="api-rewards">API: Rewards</h1>
+<p>This part of the API can be used to manage rewards.</p>
+<h3 id="get-the-rewardsmanager">Get the RewardsManager</h3>
+<p>Rewards are stored in the RewardsManager.<br />
+You can get the RewardsManager from the API object:</p>
+<pre class="codehilite"><code class="language-java">PlayerLevelsAPI api;
+RewardsManager manager = api.getRewardsManager();
+</code></pre>
+
+<h3 id="managing-rewards">Managing Rewards</h3>
+<h4 id="getting-rewards">Getting rewards</h4>
+<p>From the RewardsManager, you can get, create and delete rewards:</p>
+<pre class="codehilite"><code class="language-java">// Get all registered rewards
+Map&lt;String, Reward&gt; rewards = manager.getRewards();
+
+// Get one reward with a specific ID
+Reward reward = manager.getReward(&quot;my_reward&quot;);
+</code></pre>
+
+<h4 id="adding-or-removing-rewards-directly">Adding or removing rewards directly</h4>
+<p><strong>Adding or removing a reward directly is not recommended, since it can unexpected behavior.<br />
+<a href="#custom-reward-types-and-rewardregistry">If you are creating custom rewards, register a RewardCreator to the RewardsRegistry as described in another section below.</a></strong></p>
+<h5 id="removing">Removing</h5>
+<p>Removing a reward is easy:</p>
+<pre class="codehilite"><code class="language-java">manager.removeReward(&quot;my_reward&quot;);
+</code></pre>
+
+<h5 id="adding">Adding</h5>
+<p>Adding a reward directly is complicated and should be avoided. As mentioned above, use the RewardsRegistry.</p>
+<h6 id="1-rewardconfig">1. RewardConfig</h6>
+<p>First, you need a RewardConfig:</p>
+<pre class="codehilite"><code class="language-java">RewardConfig rewardConfig = new RewardConfig(&quot;my_reward&quot;, null, &quot;My Reward&quot;);
+</code></pre>
+
+<h6 id="2-rewarddata">2. RewardData</h6>
+<p>Then, you need a RewardData. And this is where it gets complicated.</p>
+<p>You can either completely create it on your own, or use a predefined reward.</p>
+<p>Creating RewardData manually:</p>
+<pre class="codehilite"><code class="language-java">RewardExecutor executor = (reward, leveler, level) -&gt; {
+    // What your reward should do when its applied
+};
+
+RewardCondition condition = null;
+RewardDescriptionProvider descriptionProvider = null;
+boolean requiresOnlinePlayer = true;
+
+// Create an interval reward data
+IntervalRewardData intervalData = new IntervalRewardData(executor, condition, descriptionProvider, true, 1, 1, -1);
+
+// Create a milestone reward
+MilestoneRewardData milestoneData = new MilestoneRewardData(executor, condition, descriptionProvider, true, 10);
+</code></pre>
+
+<p>Using a predefined RewardData:</p>
+<pre class="codehilite"><code class="language-java">MilestoneRewardData milestoneData = CommandReward.createMilestone(&quot;command&quot;, true, CommandReward.SenderType.CONSOLE, null, 1);
+IntervalRewardData intervalData = CommandReward.createInterval(&quot;command&quot;, true, CommandReward.SenderType.CONSOLE, 1, 1, -1);
+</code></pre>
+
+<h6 id="3-registering-the-reward">3. Registering the reward</h6>
+<p>If you have both your RewardConfig and RewardData, you can register your reward.</p>
+<pre class="codehilite"><code class="language-java">RewardsManager manager;
+manager.addMilestoneReward(rewardConfig, milestoneData);
+manager.addIntervalReward(rewardConfig, intervalData);
+</code></pre>
+
+<h3 id="custom-reward-types-and-rewardregistry">Custom reward types and RewardRegistry</h3>
+<p>Using the RewardRegistry and custom reward types is the recommended way for creating custom rewards.</p>
+<h4 id="creating-a-custom-reward-type">Creating a custom reward type</h4>
+<p>To create a custom reward type, you need to create a new class, import the necessary interfaces and implement their methods.</p>
+<p>A typical class looks like this:</p>
+<pre class="codehilite"><code class="language-java">public class MyCustomReward implements RewardExecutor, RewardDescriptionProvider {
+
+    // Here you create your reward functionality.
+    // You can also implement RewardCondition to add a reward custom condition.
+
+    private MyCustomReward() {
+        // Your constructor
+    }
+
+    @Override
+    public boolean onApply(@NotNull Reward reward, @NotNull Leveler leveler, int level) {
+        // Here comes your code which is executed when the reward is applied (given) to a player.
+        // Example:
+        Player player = Bukkit.getPlayer(leveler.getPlayerUUID());
+        if (player == null) return false;
+        player.sendRichMessage(&quot;&lt;gold&gt;You have received the following reward for reaching level &quot; + level + &quot;: &quot; + reward.getName());
+        return true;
+    }
+
+    @Override
+    public @Nullable Component getDescription(int level) {
+        // Here comes your code for getting the description which is most likely be displayed to the user when receiving the reward.
+        // Example:
+        return MiniMessage.miniMessage().deserialize(
+                &quot;Receiving a wonderful message for reaching level &lt;level&gt;&quot;,
+                TagResolver.resolver(&quot;level&quot;, Tag.inserting(Component.text(level)))
+        );
+    }
+
+    // Since your reward functionality is now implemented, you need methods for creating the RewardData.
+    // If your reward type only works as a MilestoneReward or IntervalReward, you can remove on of those methods.
+    // For example, if you have a custom reward condition (implementing RewardCondition), the reward should not be
+    // creatable as an IntervalReward for safety reasons.
+
+    // This is called when the reward is created as MilestoneReward
+    public static MilestoneRewardData createMilestone(int level) {
+        MyCustomReward reward = new MyCustomReward();
+        return new MilestoneRewardData(reward, null, reward, true, level);
+    }
+
+    // This is called when the reward is created as IntervalReward
+    public static IntervalRewardData createInterval(int start, int interval, int limit) {
+        MyCustomReward reward = new MyCustomReward();
+        return new IntervalRewardData(reward, null, reward, true, start, interval, limit);
+    }
+
+    // Now, the reward could be created and registered directly to the RewardManager.
+    // But as explained in the previous section, this is not a good idea.
+    // So we now need to create a RewardCreator which can then be registered to the RewardRegistry.
+    // The RewardCreator converts the yml config to a RewardData.
+
+    public static class Creator implements RewardCreator {
+
+        public Creator() {}
+
+        @Override
+        public @Nullable MilestoneRewardData createMilestoneReward(@NotNull DataStorage data) {
+            return createMilestone(data.optInt(&quot;level&quot;, 0));
+        }
+
+        @Override
+        public @Nullable IntervalRewardData createIntervalReward(@NotNull DataStorage data) {
+            return createInterval(data.optInt(&quot;start&quot;, 1), data.optInt(&quot;interval&quot;, 1), data.optInt(&quot;limit&quot;, -1));
+        }
+
+    }
+
+    // You also don't need to implement both methods here if your reward only supports Milestone or Interval.
+
+    // You have now created your custom reward type.
+    // To use it, you need to register it to the RewardRegistry.
+
+}
+</code></pre>
+
+<h4 id="rewardregistry">RewardRegistry</h4>
+<p>The RewardRegistry stores RewardCreators which are then converting the yml from the <code>rewards.yml</code> to a RewardData.</p>
+<p>You can use the RewardRegistry like that:</p>
+<pre class="codehilite"><code class="language-java">PlayerLevelsAPI api = PlayerLevelsAPIProvider.getApi();
+RewardsRegistry registry = api.getRewardsRegistry();
+
+registry.registerCreator(&quot;my_custom_reward&quot;, new MyCustomReward.Creator());
+</code></pre>
+
+<p>You can now create a reward with your custom reward type in the <code>rewards.yml</code>:</p>
+<pre class="codehilite"><code class="language-yml">test_milestone_reward:
+  name: Milestone Test
+  apply_type: milestone
+  type: my_custom_reward  # &lt;-- Your custom reward type
+  level: 10
+  # If you have added more attributes in your RewardCreator, you can add them here.
+</code></pre>
+
+<pre class="codehilite"><code class="language-yml">test_interval_reward:
+  name: Interval Test
+  apply_type: interval
+  type: my_custom_reward  # &lt;-- Your custom reward type
+  start: 1
+  interval: 1
+  limit: -1
+  # If you have added more attributes in your RewardCreator, you can add them here.
+</code></pre>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../api-players/" class="btn btn-neutral float-left" title="Players"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../integrations-placeholderapi/" class="btn btn-neutral float-right" title="PlaceholderAPI">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../api-players/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../integrations-placeholderapi/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><link rel="canonical" href="https://jandie1505.github.io/PlayerLevels/commands/" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Commands - PlayerLevels</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Commands";
+        var mkdocs_page_input_path = "commands.md";
+        var mkdocs_page_url = "/PlayerLevels/commands/";
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> PlayerLevels
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">Home</a>
+                </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Setup</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../installation/">Installation</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Plugin usage</span></p>
+              <ul class="current">
+                  <li class="toctree-l1"><a class="reference internal" href="../leveling/">Leveling</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../rewards/">Rewards</a>
+                  </li>
+                  <li class="toctree-l1 current"><a class="reference internal current" href="#">Commands</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#structure">Structure</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#player-commands">Player commands</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#management-commands">Management commands</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#players">Players</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#rewards">Rewards</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#debug-commands">Debug commands</a>
+    </li>
+    </ul>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">API</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../api-getting-started/">Getting started</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api-players/">Players</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../api-rewards/">Rewards</a>
+                  </li>
+                  <li class="toctree-l1"><a class="" href="../javadoc/index.html">JavaDoc</a>
+                  </li>
+              </ul>
+              <p class="caption"><span class="caption-text">Integrations</span></p>
+              <ul>
+                  <li class="toctree-l1"><a class="reference internal" href="../integrations-placeholderapi/">PlaceholderAPI</a>
+                  </li>
+                  <li class="toctree-l1"><a class="reference internal" href="../integrations-cloudnet/">CloudNet</a>
+                  </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">PlayerLevels</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+          <li class="breadcrumb-item">Plugin usage</li>
+      <li class="breadcrumb-item active">Commands</li>
+    <li class="wy-breadcrumbs-aside">
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="command-reference">Command Reference</h1>
+<p>The plugin has many commands. Here is an overview for all of them.</p>
+<h2 id="structure">Structure</h2>
+<p>This is the full command structure of the plugin:</p>
+<p><code>/levels</code></p>
+<ul>
+<li><code>info</code> (get level of other players)</li>
+<li><code>top</code> (show toplist)</li>
+<li><code>milestones</code> (show list of milestone rewards)</li>
+<li><code>manage</code> (management commands for moderators/admins)</li>
+<li><code>players</code> (manage players)<ul>
+<li><code>info</code> (get player info)</li>
+<li><code>level</code> (see/modify player level)</li>
+<li><code>xp</code> (see/modify player xp)</li>
+<li><code>rewards</code> (see/modify received rewards)</li>
+<li><code>cached-name</code> (see/reset cached name)</li>
+<li><code>sync</code> (sync with database)</li>
+<li><code>process</code> (update player's values)</li>
+<li><code>erase</code> (erase player from database)</li>
+</ul>
+</li>
+<li><code>rewards</code> (manage rewards)<ul>
+<li><code>info</code> (get info about reward)</li>
+<li><code>list</code> (show all rewards)</li>
+<li><code>enable</code> (enable/disable rewards)</li>
+<li><code>reload</code> (reload rewards)</li>
+</ul>
+</li>
+<li><code>debug</code> (debug commands for admins)</li>
+<li><code>cache</code> (modify the cache)</li>
+<li><code>config</code> (change config values)</li>
+<li><code>database</code> (manage database connection)</li>
+<li><code>messages</code> (change message values)</li>
+<li><code>server-info</code> (get server information)</li>
+<li><code>reload</code> (reload config/messages)</li>
+</ul>
+<p>As you can see, this is a huge number of commands. But you most likely only need a small amount of them.</p>
+<h2 id="player-commands">Player commands</h2>
+<p>These commands are for normal players:</p>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Permission</th>
+<th>Use case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/level</code></td>
+<td>none</td>
+<td>Show own leveling progress.</td>
+</tr>
+<tr>
+<td><code>/level info &lt;player&gt;</code></td>
+<td><code>playerlevels.command.info.view_other</code></td>
+<td>Show level of other players.</td>
+</tr>
+<tr>
+<td><code>/level top [page]</code></td>
+<td><code>playerlevels.command.toplist</code></td>
+<td>View the toplist.</td>
+</tr>
+<tr>
+<td><code>/level milestones</code></td>
+<td><code>playerlevels.command.rewards</code></td>
+<td>View a list of all milestones.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="management-commands">Management commands</h2>
+<h3 id="players">Players</h3>
+<p>These commands are there for managing players:</p>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Player Info</td>
+<td><code>/levels manage players info &lt;player&gt; [--use-cache]</code></td>
+</tr>
+<tr>
+<td>Manage level</td>
+<td><code>/levels manage players level (get &lt;player&gt;\|set &lt;level&gt; &lt;level&gt;) [--use-cache\|--push=(true\|false)\|--no-process]</code></td>
+</tr>
+<tr>
+<td>Manage XP</td>
+<td><code>/levels xp (get &lt;player&gt;\|set &lt;player&gt; &lt;xp&gt;\|give &lt;player&gt; &lt;xp&gt;\|take &lt;player&gt; &lt;xp&gt;) [--use-cache\|--push=(true\|false)\|--no-process]</code></td>
+</tr>
+<tr>
+<td>Manage player's received rewards</td>
+<td><code>/levels manage players rewards &lt;player&gt; (list\|get &lt;reward&gt;\|set &lt;reward&gt; (blocked\|level) &lt;value&gt;\|reset &lt;reward&gt;\|delete &lt;reward&gt;) [--use-cache\|--push=(true\|false)\|--no-process]</code></td>
+</tr>
+<tr>
+<td>Manage Cached Name</td>
+<td><code>/levels manage players cached-name &lt;player&gt; (get\|clear) [--use-cache\|--push=(true\|false)\|--no-process]</code></td>
+</tr>
+<tr>
+<td>Manually process player</td>
+<td><code>/levels manage players update &lt;player&gt; [--use-cache\|--push=(true\|false)]</code></td>
+</tr>
+<tr>
+<td>Manually sync player with database</td>
+<td><code>/levels manage players sync &lt;player&gt;</code></td>
+</tr>
+<tr>
+<td>Erase player from database</td>
+<td><code>/levels manage players erase &lt;player&gt;</code></td>
+</tr>
+</tbody>
+</table>
+<p>All those commands have the permission <code>playerlevels.manage_players</code>.</p>
+<p>You might have already noticed that those commands support some command options:</p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--use-cache</code></td>
+<td>Most management commands will synchronize with the database before doing their stuff. If you don't want that, use this option.</td>
+</tr>
+<tr>
+<td><code>--push=(true\|false)</code></td>
+<td>Most management commands will push their changes to the database immediately when they are done. If you don't want that, set this option to false.</td>
+</tr>
+<tr>
+<td><code>--no-process</code></td>
+<td>Most management commands will process (update) the player when they are done. Use this option if you don't want that.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="rewards">Rewards</h3>
+<p>Those commands are for there for managing rewards:</p>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>List rewards</td>
+<td><code>/levels manage rewards list</code></td>
+</tr>
+<tr>
+<td>Get reward info</td>
+<td><code>/levels manage rewards info &lt;id&gt;</code></td>
+</tr>
+<tr>
+<td>Reload rewards from <code>rewards.yml</code></td>
+<td><code>/levels manage rewards reload</code></td>
+</tr>
+<tr>
+<td>Enable/Disable reward</td>
+<td><code>/levels rewards enable &lt;id&gt; (true\|false)</code></td>
+</tr>
+</tbody>
+</table>
+<p>All those commands have the permission <code>playerlevels.manage_rewards</code>.</p>
+<h2 id="debug-commands">Debug commands</h2>
+<p>These commands are for debugging purposes:</p>
+<table>
+<thead>
+<tr>
+<th>Action</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Show and modify cache:</td>
+<td><code>/levels debug cache (list\|refresh\|drop &lt;player&gt; [--no-process\|--confirm]\|drop-all [--no-process\|--confirm])</code></td>
+</tr>
+<tr>
+<td>Modify config:</td>
+<td><code>/levels debug config (list [section]\|get &lt;key&gt;\|set &lt;key&gt; &lt;type&gt; &lt;value&gt;)</code></td>
+</tr>
+<tr>
+<td>Manage database connection:</td>
+<td><code>/levels debug database (connect\|disconnect\|info)</code></td>
+</tr>
+<tr>
+<td>Modify messages config:</td>
+<td><code>/levels debug messages (list [section]\|get &lt;key&gt;\|set &lt;key&gt; &lt;type&gt; &lt;value&gt;)</code></td>
+</tr>
+<tr>
+<td>Reload config from files:</td>
+<td><code>/levels debug reload (config\|messages&gt; [--clear=(true\|false)\|--merge-defaults=(true\|false)]</code></td>
+</tr>
+<tr>
+<td>View server info:</td>
+<td><code>/levels debug server-info</code></td>
+</tr>
+</tbody>
+</table>
+<p>The permission of those commands is <code>playerlevels.debug</code>.
+Don't use them if you don't know what you're doing.</p>
+<p>Overview of the available command options:</p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--no-process</code></td>
+<td>Same as in player management command.</td>
+</tr>
+<tr>
+<td><code>--confirm</code></td>
+<td>Confirms dangerous operations.</td>
+</tr>
+<tr>
+<td><code>--clear</code></td>
+<td>For reload command: Clears the config before merging the config file values into it.</td>
+</tr>
+<tr>
+<td><code>--merge-default=(true\|false)</code></td>
+<td>For reload command: If the default values should be merged into the config before merging the config file values into it.</td>
+</tr>
+</tbody>
+</table>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../rewards/" class="btn btn-neutral float-left" title="Rewards"><span class="icon icon-circle-arrow-left"></span> Previous</a>
+        <a href="../api-getting-started/" class="btn btn-neutral float-right" title="Getting started">Next <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+    
+      <span><a href="../rewards/" style="color: #fcfcfc">&laquo; Previous</a></span>
+    
+    
+      <span><a href="../api-getting-started/" style="color: #fcfcfc">Next &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
