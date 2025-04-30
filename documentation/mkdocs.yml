@@ -17,6 +17,7 @@ nav:
       - Rewards: api-rewards.md
   - Integrations:
       - PlaceholderAPI: integrations-placeholderapi.md
+      - CloudNet: integrations-cloudnet.md
 
 markdown_extensions:
   - toc

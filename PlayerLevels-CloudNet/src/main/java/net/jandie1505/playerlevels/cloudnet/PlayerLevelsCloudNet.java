@@ -12,6 +12,13 @@ public class PlayerLevelsCloudNet extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        try {
+            Class.forName("net.jandie1505.playerlevels.api.core.PlayerLevelsAPI");
+        } catch (ClassNotFoundException e) {
+            this.getLogger().log(Level.SEVERE, "PlayerLevels is not available");
+            return;
+        }
+
         PlayerLevelsAPI api = PlayerLevelsAPIProvider.getApi();
         if (api == null) return;
 
