@@ -3,3 +3,5 @@ name: PlayerLevels-CloudNet
 version: 1.0
 api-version: 1.19
 depend: ['PlayerLevels', 'CloudNet-Bridge']
+author: jandie1505
+website: https://jandie1505.github.io/PlayerLevels

@@ -27,3 +27,5 @@ permissions:
     default: op
     children: ['playerlevels.admin']
 softdepend: ['LuckPerms', 'PlayerPoints']
+author: jandie1505
+website: https://jandie1505.github.io/PlayerLevels
