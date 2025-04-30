@@ -4,6 +4,8 @@ import net.jandie1505.playerlevels.api.core.level.LevelingManager;
 import net.jandie1505.playerlevels.api.core.level.TopListManager;
 import net.jandie1505.playerlevels.api.core.reward.RewardsManager;
 import net.jandie1505.playerlevels.api.core.reward.RewardsRegistry;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * The main API interface of the PlayerLevels plugin.
@@ -38,5 +40,23 @@ public interface PlayerLevelsAPI {
      * @return TopListManager
      */
     TopListManager getTopListManager();
+
+    /**
+     * Returns the server id currently set for the plugin.
+     * @return server id
+     */
+    @NotNull String getServerId();
+
+    /**
+     * Returns the server id override.
+     * @return server id override
+     */
+    @Nullable String getServerIdOverride();
+
+    /**
+     * Set a server id override
+     * @param serverId server id
+     */
+    void setServerIdOverride(@Nullable String serverId);
 
 }

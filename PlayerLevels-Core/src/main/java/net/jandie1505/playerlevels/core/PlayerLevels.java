@@ -18,6 +18,7 @@ import net.jandie1505.playerlevels.core.rewards.types.CommandReward;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.Iterator;
@@ -33,6 +34,7 @@ public class PlayerLevels extends JavaPlugin implements PlayerLevelsAPI {
     private TopListManager topListManager;
     private RewardsRegistry rewardsRegistry;
     private PlayerLevelsCommand command;
+    @Nullable private String serverIdOverride;
 
     public PlayerLevels() {
         this.config = new DataStorage();
@@ -54,6 +56,7 @@ public class PlayerLevels extends JavaPlugin implements PlayerLevelsAPI {
         this.rewardsManager = new RewardsManager(this);
         this.topListManager = new TopListManager(this, this.databaseManager);
         this.command = new PlayerLevelsCommand(this);
+        this.serverIdOverride = null;
 
         this.getCommand("playerlevels").setExecutor(this.command);
         this.getCommand("playerlevels").setTabCompleter(this.command);
@@ -195,6 +198,8 @@ public class PlayerLevels extends JavaPlugin implements PlayerLevelsAPI {
 
     public @NotNull String getServerId() {
 
+        if (this.serverIdOverride != null) return this.serverIdOverride;
+
         String serverId = System.getProperty(this.getName() + ".server-id");
         if (serverId != null) return serverId;
 
@@ -202,6 +207,14 @@ public class PlayerLevels extends JavaPlugin implements PlayerLevelsAPI {
         if (serverId != null) return serverId;
 
         return Objects.requireNonNullElse(this.config.optString(ConfigKeys.SERVER_ID, ""), "");
+    }
+
+    public @Nullable String getServerIdOverride() {
+        return this.serverIdOverride;
+    }
+
+    public void setServerIdOverride(@Nullable String serverId) {
+        this.serverIdOverride = serverId;
     }
 
 }
