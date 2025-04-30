@@ -11,10 +11,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class DebugServerInfoSubcommand implements TabCompletingCommandExecutor {
+public class DebugInfoSubcommand implements TabCompletingCommandExecutor {
     @NotNull private final PlayerLevels plugin;
 
-    public DebugServerInfoSubcommand(@NotNull PlayerLevels plugin) {
+    public DebugInfoSubcommand(@NotNull PlayerLevels plugin) {
         this.plugin = plugin;
     }
 
@@ -26,6 +26,10 @@ public class DebugServerInfoSubcommand implements TabCompletingCommandExecutor {
             return true;
         }
 
+        sender.sendRichMessage(this.plugin.getPluginMeta().getName());
+        sender.sendRichMessage("<gray>Version: " + this.plugin.getPluginMeta().getVersion());
+        sender.sendRichMessage("<gray>Authors: " + this.plugin.getPluginMeta().getAuthors());
+        sender.sendRichMessage("<gray>Website: " + this.plugin.getPluginMeta().getWebsite());
         sender.sendRichMessage("<gray>Server ID: " + this.plugin.getServerId());
 
         return true;

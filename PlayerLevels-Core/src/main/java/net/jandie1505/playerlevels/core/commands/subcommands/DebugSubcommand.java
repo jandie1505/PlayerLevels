@@ -18,7 +18,7 @@ public class DebugSubcommand extends SubcommandCommand {
         this.addSubcommand("config", SubcommandEntry.of(new DebugConfigSubcommand(this.plugin)));
         this.addSubcommand("messages", SubcommandEntry.of(new DebugMessagesSubcommand(this.plugin)));
         this.addSubcommand("database", SubcommandEntry.of(new DebugDatabaseSubcommand(this.plugin)));
-        this.addSubcommand("server-info", SubcommandEntry.of(new DebugServerInfoSubcommand(this.plugin)));
+        this.addSubcommand("info", SubcommandEntry.of(new DebugInfoSubcommand(this.plugin)));
         this.addSubcommand("reload", SubcommandEntry.of(new DebugReloadSubcommand(this.plugin)));
     }
 

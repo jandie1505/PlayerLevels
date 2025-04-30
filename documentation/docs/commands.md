@@ -29,7 +29,7 @@ This is the full command structure of the plugin:
   - `config` (change config values)
   - `database` (manage database connection)
   - `messages` (change message values)
-  - `server-info` (get server information)
+  - `info` (get plugin information)
   - `reload` (reload config/messages)
   
 As you can see, this is a huge number of commands. But you most likely only need a small amount of them.
@@ -91,7 +91,7 @@ These commands are for debugging purposes:
 | Manage database connection: | `/levels debug database (connect\|disconnect\|info)`                                                               |
 | Modify messages config:     | `/levels debug messages (list [section]\|get <key>\|set <key> <type> <value>)`                                     |
 | Reload config from files:   | `/levels debug reload (config\|messages> [--clear=(true\|false)\|--merge-defaults=(true\|false)]`                  |
-| View server info:           | `/levels debug server-info`                                                                                        |
+| View plugin info:           | `/levels debug info`                                                                                        |
 
 The permission of those commands is `playerlevels.debug`.
 Don't use them if you don't know what you're doing.
