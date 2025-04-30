@@ -1,6 +1,6 @@
 main: net.jandie1505.playerlevels.cloudnet.PlayerLevelsCloudNet
 name: PlayerLevels-CloudNet
-version: 1.0
+version: 0.1
 api-version: 1.19
 depend: ['PlayerLevels', 'CloudNet-Bridge']
 author: jandie1505
