@@ -1,6 +1,6 @@
 main: net.jandie1505.playerlevels.core.PlayerLevels
 name: PlayerLevels
-version: 0.1
+version: ${version}
 api-version: 1.19
 commands:
   levels:

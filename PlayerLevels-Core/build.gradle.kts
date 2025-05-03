@@ -17,6 +17,12 @@ tasks.jar {
     archiveClassifier.set("original")
 }
 
+tasks.processResources {
+    filesMatching("plugin.yml") {
+        expand("version" to project.version)
+    }
+}
+
 tasks.shadowJar {
 
     // Set classifier
