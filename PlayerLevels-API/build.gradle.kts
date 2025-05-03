@@ -5,7 +5,7 @@ plugins {
 }
 
 dependencies {
-    implementation("net.chaossquad:mclib:master-3fdcf972520b59608457e3fe51f5224ec6d2045d")
+    implementation("net.chaossquad:mclib:main-e95d70f19fde050fe80a799f4f289c032bc3d07c")
     implementation("net.objecthunter:exp4j:0.4.8")
     compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
     compileOnly("net.luckperms:api:5.4")
