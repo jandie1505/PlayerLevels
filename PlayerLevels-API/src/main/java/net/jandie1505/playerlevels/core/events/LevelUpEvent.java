@@ -11,8 +11,8 @@ import org.jetbrains.annotations.NotNull;
 public class LevelUpEvent extends Event {
     @NotNull private static final HandlerList handlers = new HandlerList();
     @NotNull private final Leveler leveler;
-    private int oldLevel;
-    private int newLevel;
+    private final int oldLevel;
+    private final int newLevel;
 
     /**
      * Creates a new LevelUpEvent.

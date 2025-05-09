@@ -121,3 +121,49 @@ levelingManager.erasePlayerAsynchronously(playerId);
 
 It is recommended that the player is offline when you delete them,
 because if not, the plugin would just create a new Leveler instance.
+
+### Events
+#### LevelUpEvet
+The `LevelUpEvent` is called when a player has been leveled up.
+
+```java
+@EventHandler
+public void onLevelUp(LevelUpEvent event) {
+    Leveler leveler = event.getLeveler(); // The leveler which has leveled up
+    int oldLevel = event.getOldLevel(); // The level before the levelup.
+    int newLevel = event.getNewLevel(); // The new/current level
+}
+```
+
+#### RewardApplyEvent
+The `RewardApplyEvent` is called when a reward is applied, but before the reward is applied.  
+It can be used to manipulate if/how the reward is applied.
+
+```java
+@EventHandler
+public void onRewardApply(RewardApplyEvent event) {
+    
+    Leveler leveler = event.getLeveler(); // The leveler that receives the reward
+    Reward reward = event.getReward(); // The reward that is applied
+    int level = event.getLevel(); // The level the reward is applied for
+    
+    RewardApplyEvent.Result result = event.getResult(); // Returns the reward result
+    
+    event.setResult(RewardApplyEvent.Result.APPLY); // Apply the reward normally (default)
+    event.setResult(RewardApplyEvent.Result.APPLY_SKIP); // Apply the reward, but don't mark it as applied
+    event.setResult(RewardApplyEvent.Result.CANCEL_SKIP); // Do not apply the reward
+    event.setResult(RewardApplyEvent.Result.CANCEL_MARK_APPLIED); // Do not apply the reward, but mark it as applied
+    
+}
+```
+
+#### RewardAppliedEvent
+The `RewardAppliedEvent` is called when a reward has been applied successfully.
+
+```java
+public void onRewardApply(RewardAppliedEvent event) {
+    Leveler leveler = event.getLeveler(); // The leveler that receives the reward
+    Reward reward = event.getReward(); // The reward that is applied
+    int level = event.getLevel(); // The level the reward is applied for
+}
+```
