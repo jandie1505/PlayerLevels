@@ -79,6 +79,16 @@
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#deleting-a-player">Deleting a player</a>
     </li>
+    <li class="toctree-l2"><a class="reference internal" href="#events">Events</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#levelupevet">LevelUpEvet</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#rewardapplyevent">RewardApplyEvent</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#rewardappliedevent">RewardAppliedEvent</a>
+    </li>
+        </ul>
+    </li>
     </ul>
                   </li>
                   <li class="toctree-l1"><a class="reference internal" href="../api-rewards/">Rewards</a>
@@ -224,6 +234,45 @@ levelingManager.erasePlayerAsynchronously(playerId);
 
 <p>It is recommended that the player is offline when you delete them,
 because if not, the plugin would just create a new Leveler instance.</p>
+<h3 id="events">Events</h3>
+<h4 id="levelupevet">LevelUpEvet</h4>
+<p>The <code>LevelUpEvent</code> is called when a player has been leveled up.</p>
+<pre class="codehilite"><code class="language-java">@EventHandler
+public void onLevelUp(LevelUpEvent event) {
+    Leveler leveler = event.getLeveler(); // The leveler which has leveled up
+    int oldLevel = event.getOldLevel(); // The level before the levelup.
+    int newLevel = event.getNewLevel(); // The new/current level
+}
+</code></pre>
+
+<h4 id="rewardapplyevent">RewardApplyEvent</h4>
+<p>The <code>RewardApplyEvent</code> is called when a reward is applied, but before the reward is applied.<br />
+It can be used to manipulate if/how the reward is applied.</p>
+<pre class="codehilite"><code class="language-java">@EventHandler
+public void onRewardApply(RewardApplyEvent event) {
+
+    Leveler leveler = event.getLeveler(); // The leveler that receives the reward
+    Reward reward = event.getReward(); // The reward that is applied
+    int level = event.getLevel(); // The level the reward is applied for
+
+    RewardApplyEvent.Result result = event.getResult(); // Returns the reward result
+
+    event.setResult(RewardApplyEvent.Result.APPLY); // Apply the reward normally (default)
+    event.setResult(RewardApplyEvent.Result.APPLY_SKIP); // Apply the reward, but don't mark it as applied
+    event.setResult(RewardApplyEvent.Result.CANCEL_SKIP); // Do not apply the reward
+    event.setResult(RewardApplyEvent.Result.CANCEL_MARK_APPLIED); // Do not apply the reward, but mark it as applied
+
+}
+</code></pre>
+
+<h4 id="rewardappliedevent">RewardAppliedEvent</h4>
+<p>The <code>RewardAppliedEvent</code> is called when a reward has been applied successfully.</p>
+<pre class="codehilite"><code class="language-java">public void onRewardApply(RewardAppliedEvent event) {
+    Leveler leveler = event.getLeveler(); // The leveler that receives the reward
+    Reward reward = event.getReward(); // The reward that is applied
+    int level = event.getLevel(); // The level the reward is applied for
+}
+</code></pre>
               
             </div>
           </div><footer>
