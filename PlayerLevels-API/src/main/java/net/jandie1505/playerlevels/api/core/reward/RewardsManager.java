@@ -3,6 +3,7 @@ package net.jandie1505.playerlevels.api.core.reward;
 import net.jandie1505.playerlevels.core.rewards.IntervalRewardData;
 import net.jandie1505.playerlevels.core.rewards.MilestoneRewardData;
 import net.jandie1505.playerlevels.core.rewards.RewardConfig;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -23,6 +24,7 @@ public interface RewardsManager {
      * @return Milestone Reward
      */
     @SuppressWarnings("UnusedReturnValue")
+    @ApiStatus.Experimental
     @NotNull MilestoneReward addMilestoneReward(@NotNull RewardConfig config, @NotNull MilestoneRewardData data);
 
     /**
@@ -33,6 +35,7 @@ public interface RewardsManager {
      * @return Interval Reward
      */
     @SuppressWarnings("UnusedReturnValue")
+    @ApiStatus.Experimental
     @NotNull IntervalReward addIntervalReward(@NotNull RewardConfig config, @NotNull IntervalRewardData data);
 
     // ----- MANAGE REWARDS -----
