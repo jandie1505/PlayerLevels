@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -101,8 +102,9 @@ public final class Leveler implements net.jandie1505.playerlevels.api.core.level
 
     /**
      * Level up a player when the required amount of xp for the new level has been reached.
+     * @return LevelUpEvent or null if the player has not leveled up
      */
-    private void levelUp() {
+    private @Nullable LevelUpEvent levelUp() {
         final int levelAtStart = this.data.level();
         final double xpAtStart = this.data.xp();
 
@@ -116,20 +118,21 @@ public final class Leveler implements net.jandie1505.playerlevels.api.core.level
             requiredXP = this.manager.getXPForNextLevel(level, level + 1);
         }
 
-        if (level == levelAtStart) return;
+        if (level == levelAtStart) return null;
 
         this.data.level(level);
         this.data.xp(xp);
 
-        final int levelToPush = level;
+        final LevelUpEvent event = new LevelUpEvent(Leveler.this, levelAtStart, level);
 
         new BukkitRunnable() {
             @Override
             public void run() {
-                Bukkit.getServer().getPluginManager().callEvent(new LevelUpEvent(Leveler.this, levelAtStart, levelToPush));
+                Bukkit.getServer().getPluginManager().callEvent(event);
             }
         }.runTask(this.manager.getPlugin());
 
+        return event;
     }
 
     /**
