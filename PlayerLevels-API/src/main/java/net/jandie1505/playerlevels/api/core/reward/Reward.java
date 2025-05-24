@@ -39,19 +39,6 @@ public interface Reward {
     int getLimit();
 
     /**
-     * Returns if the upgrade is enabled.
-     * @return enabled
-     */
-    boolean isEnabled();
-
-    /**
-     * Enables/disables the upgrade.<br/>
-     * This will prevent the upgrade from applying to players.
-     * @param enabled enable
-     */
-    void setEnabled(boolean enabled);
-
-    /**
      * Name of the reward.
      * @return name
      */
@@ -72,5 +59,85 @@ public interface Reward {
      */
     @ApiStatus.Experimental
     @NotNull Component getDescription();
+
+    // ----- ENABLE/DISABLE -----
+
+    /**
+     * Returns if the upgrade is enabled.
+     * @return enabled
+     */
+    boolean isEnabled();
+
+    /**
+     * Enables/disables the upgrade.<br/>
+     * This will prevent the upgrade from applying to players.
+     * @param enabled enable
+     */
+    void setEnabled(boolean enabled);
+
+    // ----- INNER CLASSES -----
+
+    /**
+     * The "outcome" when a reward has been applied.<br/>
+     * Can be modified for rewards in {@link net.jandie1505.playerlevels.core.events.RewardApplyEvent}.
+     */
+    enum ApplyStatus {
+
+        /**
+         * The reward is applied normally.<br/>
+         * The default value.
+         */
+        APPLY(true, true),
+
+        /**
+         * The reward is applied, but not marked as applied.
+         */
+        APPLY_SKIP(true, false),
+
+        /**
+         * The reward is not applied and not marked as applied.<br/>
+         * This behavior is similar to when the player does not meet the requirement for the reward.
+         */
+        CANCEL_SKIP(false, false),
+
+        /**
+         * The reward is not applied, but marked as applied.<br/>
+         * This means the player will skip the reward (if the reward uses the default condition).
+         */
+        CANCEL_MARK_APPLIED(false, true);
+
+        private final boolean applied;
+        private final boolean markedAsApplied;
+
+        ApplyStatus(boolean applied, boolean markedAsApplied) {
+            this.applied = applied;
+            this.markedAsApplied = markedAsApplied;
+        }
+
+        /**
+         * Returns true if the reward is applied.
+         * @return reward applied
+         */
+        public boolean isApplied() {
+            return applied;
+        }
+
+        /**
+         * Returns true if the event is marked as applied.
+         * @return marked as successful
+         */
+        public boolean isMarkedAsApplied() {
+            return markedAsApplied;
+        }
+
+    }
+
+    /**
+     * The status of an applied reward.
+     * @param success If the reward has been applied successfully.
+     * @param status The status of the applied event.
+     * @param level The level the reward has been applied for.
+     */
+    record ApplyResult(boolean success, @NotNull ApplyStatus status, int level) {}
 
 }

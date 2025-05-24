@@ -13,18 +13,18 @@ public class RewardAppliedEvent extends Event {
     @NotNull private static final HandlerList handlers = new HandlerList();
     @NotNull private final Leveler leveler;
     @NotNull private final Reward reward;
-    private final int level;
+    @NotNull private final Reward.ApplyResult result;
 
     /**
-     * Creates an RewardAppliedEvent.
+     * Creates a RewardAppliedEvent.
      * @param leveler the leveler the reward is applied for
      * @param reward the reward that is applied
-     * @param level the level the reward is applied for
+     * @param result the result of the reward that has been applied
      */
-    public RewardAppliedEvent(@NotNull Leveler leveler, @NotNull Reward reward, int level) {
+    public RewardAppliedEvent(@NotNull Leveler leveler, @NotNull Reward reward, @NotNull Reward.ApplyResult result) {
         this.leveler = leveler;
         this.reward = reward;
-        this.level = level;
+        this.result = result;
     }
 
     /**
@@ -44,11 +44,11 @@ public class RewardAppliedEvent extends Event {
     }
 
     /**
-     * Returns the level the reward is applied for.
-     * @return level
+     * The "outcome" of the reward apply process.
+     * @return result
      */
-    public int getLevel() {
-        return level;
+    public @NotNull Reward.ApplyResult getResult() {
+        return result;
     }
 
     /**

@@ -72,8 +72,8 @@ public class AnnouncementHandler implements Listener {
                         ownMessage,
                         TagResolvers.leveler("leveler", event.getLeveler()),
                         TagResolvers.player("player", player),
-                        TagResolvers.reward("reward", milestone, new TagResolvers.RewardContext(event.getLevel())),
-                        TagResolver.resolver("level", Tag.inserting(Component.text(event.getLevel())))
+                        TagResolvers.reward("reward", milestone, new TagResolvers.RewardContext(event.getResult().level())),
+                        TagResolver.resolver("level", Tag.inserting(Component.text(event.getResult().level())))
                 );
             }
 
@@ -84,8 +84,8 @@ public class AnnouncementHandler implements Listener {
                             othersMessage,
                             TagResolvers.leveler("leveler", event.getLeveler()),
                             TagResolvers.player("player", player),
-                            TagResolvers.reward("reward", milestone, new TagResolvers.RewardContext(event.getLevel())),
-                            TagResolver.resolver("level", Tag.inserting(Component.text(event.getLevel())))
+                            TagResolvers.reward("reward", milestone, new TagResolvers.RewardContext(event.getResult().level())),
+                            TagResolver.resolver("level", Tag.inserting(Component.text(event.getResult().level())))
                     );
                 }
             }
@@ -97,8 +97,8 @@ public class AnnouncementHandler implements Listener {
                         ownMessage,
                         TagResolvers.leveler("leveler", event.getLeveler()),
                         TagResolvers.player("player", player),
-                        TagResolvers.reward("reward", reward, new TagResolvers.RewardContext(event.getLevel())),
-                        TagResolver.resolver("level", Tag.inserting(Component.text(event.getLevel())))
+                        TagResolvers.reward("reward", reward, new TagResolvers.RewardContext(event.getResult().level())),
+                        TagResolver.resolver("level", Tag.inserting(Component.text(event.getResult().level())))
                 );
             }
         }

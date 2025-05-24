@@ -5,7 +5,6 @@ import net.jandie1505.playerlevels.core.events.RewardApplyEvent;
 import net.jandie1505.playerlevels.core.leveler.Leveler;
 import net.jandie1505.playerlevels.core.leveler.ReceivedReward;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.ApiStatus;
@@ -83,7 +82,9 @@ public abstract class Reward implements net.jandie1505.playerlevels.api.core.rew
                     RewardApplyEvent event = new RewardApplyEvent(leveler, Reward.this, level);
                     Bukkit.getPluginManager().callEvent(event);
 
-                    if (event.getResult().isApplied()) {
+                    final ApplyStatus status = event.getResult();
+
+                    if (status.isApplied()) {
 
                         // The event is applied when the event result is either APPLY or APPLY_SKIP
 
@@ -115,14 +116,14 @@ public abstract class Reward implements net.jandie1505.playerlevels.api.core.rew
 
                     // SUCCESS
 
-                    if (event.getResult().isMarkedAsApplied()) {
+                    if (status.isMarkedAsApplied()) {
 
                         // The reward is marked successful when the event result is APPLY or CANCEL_MARK_APPLIED
 
                         Reward.this.onApplySuccess(leveler, level);
 
                         // Call applied event
-                        Bukkit.getPluginManager().callEvent(new RewardAppliedEvent(leveler, Reward.this, level));
+                        Bukkit.getPluginManager().callEvent(new RewardAppliedEvent(leveler, Reward.this, new ApplyResult(true, status, level)));
 
                     }
 
