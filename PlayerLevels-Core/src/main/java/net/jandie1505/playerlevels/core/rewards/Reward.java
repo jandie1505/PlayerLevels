@@ -72,7 +72,7 @@ public abstract class Reward implements net.jandie1505.playerlevels.api.core.rew
     private void applyLevels(@NotNull Leveler leveler) {
 
         int levelerLevel = leveler.getData().level();
-        for (int level = 1; level <= levelerLevel && (Reward.this.limit < 0 || level <= Reward.this.limit); level++) {
+        for (int level = 1; level <= levelerLevel && (this.limit < 0 || level <= this.limit); level++) {
             boolean continueLoop = this.applyLevel(leveler, level);
             if (!continueLoop) break;
         }
@@ -92,20 +92,20 @@ public abstract class Reward implements net.jandie1505.playerlevels.api.core.rew
 
         // Check for general apply conditions
         // If the general apply condition fails, the reward can't be applied for any level, so we can return here.
-        if (!Reward.this.isApplicable(leveler)) {
+        if (!this.isApplicable(leveler)) {
             return false;
         }
 
         // Continue with next level when current level does not apply.
         // This ensures that the event is applied for all levels that fulfill the condition between level 1 and the player's level.
-        if (!Reward.this.checkApplyCondition(leveler, level)) {
+        if (!this.checkApplyCondition(leveler, level)) {
             return true;
         }
 
         // APPLY REWARD
 
         // Call apply event before applying the reward
-        RewardApplyEvent event = new RewardApplyEvent(leveler, Reward.this, level);
+        RewardApplyEvent event = new RewardApplyEvent(leveler, this, level);
         Bukkit.getPluginManager().callEvent(event);
 
         final ApplyStatus status = event.getResult();
@@ -118,14 +118,14 @@ public abstract class Reward implements net.jandie1505.playerlevels.api.core.rew
 
             // Apply event and catch errors
             try {
-                success = Reward.this.executor.onApply(Reward.this, leveler, level);
+                success = this.executor.onApply(this, leveler, level);
             } catch (Exception e) {
-                Reward.this.getManager().getPlugin().getLogger().log(Level.WARNING, "Exception while applying reward " + Reward.this.id + " to player " + leveler.getPlayerUUID(), e);
+                this.getManager().getPlugin().getLogger().log(Level.WARNING, "Exception while applying reward " + this.id + " to player " + leveler.getPlayerUUID(), e);
                 return false;
             } catch (Throwable throwable) {
-                Reward.this.enabled = false;
-                Reward.this.getManager().getPlugin().getLogger().log(Level.SEVERE,
-                        "A throwable which is not an exception has been thrown in onApply from reward " + Reward.this.id + " to player " + leveler.getPlayerUUID() + " " +
+                this.enabled = false;
+                this.getManager().getPlugin().getLogger().log(Level.SEVERE,
+                        "A throwable which is not an exception has been thrown in onApply from reward " + this.id + " to player " + leveler.getPlayerUUID() + " " +
                                 "The reward has been disabled for safety reasons. DO NOT IGNORE THIS!",
                         throwable
                 );
@@ -134,7 +134,7 @@ public abstract class Reward implements net.jandie1505.playerlevels.api.core.rew
 
             // Do not mark the event as applied when it was unsuccessful
             if (!success) {
-                Reward.this.getManager().getPlugin().getLogger().log(Level.WARNING, "Failed to apply reward " + Reward.this.id + " to player " + leveler.getPlayerUUID() + ": Executor returned failure");
+                this.getManager().getPlugin().getLogger().log(Level.WARNING, "Failed to apply reward " + this.id + " to player " + leveler.getPlayerUUID() + ": Executor returned failure");
                 return false;
             }
 
@@ -150,10 +150,10 @@ public abstract class Reward implements net.jandie1505.playerlevels.api.core.rew
 
             // The reward is marked successful when the event result is APPLY or CANCEL_MARK_APPLIED
 
-            Reward.this.onApplySuccess(leveler, level);
+            this.onApplySuccess(leveler, level);
 
             // Call applied event
-            Bukkit.getPluginManager().callEvent(new RewardAppliedEvent(leveler, Reward.this, result));
+            Bukkit.getPluginManager().callEvent(new RewardAppliedEvent(leveler, this, result));
 
         }
 
