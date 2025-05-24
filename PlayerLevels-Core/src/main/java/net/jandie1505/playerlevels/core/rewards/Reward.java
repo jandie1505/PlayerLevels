@@ -112,11 +112,11 @@ public abstract class Reward implements net.jandie1505.playerlevels.api.core.rew
 
         if (status.isApplied()) {
 
-            // The event is applied when the event result is either APPLY or APPLY_SKIP
+            // The reward is applied when the event result is either APPLY or APPLY_SKIP
 
-            boolean success;
+            final boolean success;
 
-            // Apply event and catch errors
+            // Apply reward and catch errors
             try {
                 success = this.executor.onApply(this, leveler, level);
             } catch (Exception e) {
@@ -132,7 +132,7 @@ public abstract class Reward implements net.jandie1505.playerlevels.api.core.rew
                 return false;
             }
 
-            // Do not mark the event as applied when it was unsuccessful
+            // Return here to prevent the reward from getting marked as applied when it was not successful
             if (!success) {
                 this.getManager().getPlugin().getLogger().log(Level.WARNING, "Failed to apply reward " + this.id + " to player " + leveler.getPlayerUUID() + ": Executor returned failure");
                 return false;
