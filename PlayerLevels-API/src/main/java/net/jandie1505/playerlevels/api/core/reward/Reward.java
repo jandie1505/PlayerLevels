@@ -132,11 +132,4 @@ public interface Reward {
 
     }
 
-    /**
-     * The status of an applied reward.
-     * @param status The status of the applied event.
-     * @param level The level the reward has been applied for.
-     */
-    record ApplyResult(@NotNull ApplyStatus status, int level) {}
-
 }

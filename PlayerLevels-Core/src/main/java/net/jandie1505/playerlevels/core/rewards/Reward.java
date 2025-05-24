@@ -140,10 +140,6 @@ public abstract class Reward implements net.jandie1505.playerlevels.api.core.rew
 
         }
 
-        // RESULT
-
-        ApplyResult result = new ApplyResult(status, level);
-
         // SUCCESS
 
         if (status.isMarkedAsApplied()) {
@@ -153,7 +149,7 @@ public abstract class Reward implements net.jandie1505.playerlevels.api.core.rew
             this.onApplySuccess(leveler, level);
 
             // Call applied event
-            Bukkit.getPluginManager().callEvent(new RewardAppliedEvent(leveler, this, result));
+            Bukkit.getPluginManager().callEvent(new RewardAppliedEvent(leveler, this, status, level));
 
         }
 
