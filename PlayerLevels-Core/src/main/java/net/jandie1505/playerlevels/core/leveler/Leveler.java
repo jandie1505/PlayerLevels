@@ -58,6 +58,50 @@ public final class Leveler implements net.jandie1505.playerlevels.api.core.level
         return this.manager.getLeveler(this.playerUUID) == this;
     }
 
+    // ----- COMBINED METHODS -----
+
+    /**
+     * First calls {@link #sync()}, then {@link #process()}.<br/>
+     * Exists for {@link #syncAndProcessAsynchronously()}.
+     */
+    public void syncAndProcess() {
+        this.sync();
+        this.process();
+    }
+
+    /**
+     * First calls {@link #process()}, then {@link #sync()}.<br/>
+     * Exists for {@link #processAndSyncAsynchronously()}.
+     */
+    public void processAndSync() {
+        this.process();
+        this.sync();
+    }
+
+    /**
+     * Syncs the leveler with the database, then processes the updated data.
+     */
+    public void syncAndProcessAsynchronously() {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                Leveler.this.syncAndProcess();
+            }
+        }.runTaskAsynchronously(this.manager.getPlugin());
+    }
+
+    /**
+     * First processes the data of the leveler, then syncs it with the database.
+     */
+    public void processAndSyncAsynchronously() {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                Leveler.this.processAndSync();
+            }
+        }.runTaskAsynchronously(this.manager.getPlugin());
+    }
+
     // ----- MANAGE VALUES -----
 
     /**
