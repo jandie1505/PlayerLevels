@@ -27,7 +27,7 @@ public class ManagePlayersXPSubcommand extends ManagePlayersLevelerTemplateSubco
 
         if (args.args().length < 2) {
             this.onInvalidSyntax(sender, command, label, args);
-            return new Result(false);
+            return Result.doNothing();
         }
 
         try {
@@ -35,7 +35,7 @@ public class ManagePlayersXPSubcommand extends ManagePlayersLevelerTemplateSubco
             switch (args.args()[1].toLowerCase()) {
                 case "get" -> {
                     sender.sendMessage(Component.text("XP: " + leveler.getData().xp(), NamedTextColor.GRAY));
-                    return new Result(false);
+                    return Result.doNothing();
                 }
                 case "set" -> {
 
@@ -44,12 +44,11 @@ public class ManagePlayersXPSubcommand extends ManagePlayersLevelerTemplateSubco
                         if (value < 0) value = 0;
 
                         leveler.getData().xp(value);
-                        if (!args.hasOption("no-process")) leveler.processAsynchronously();
                         sender.sendMessage(Component.text("Updated xp to " + leveler.getData().xp(), NamedTextColor.GRAY));
-                        return new Result(true);
+                        return new Result(true, true);
                     } else {
                         sender.sendMessage(Component.text("You need to specify an amount of xp", NamedTextColor.RED));
-                        return new Result(false);
+                        return Result.doNothing();
                     }
 
                 }
@@ -60,12 +59,11 @@ public class ManagePlayersXPSubcommand extends ManagePlayersLevelerTemplateSubco
                         if (value < 0) value = 0;
 
                         leveler.getData().xp(value);
-                        if (!args.hasOption("no-process")) leveler.processAsynchronously();
                         sender.sendMessage(Component.text("Updated xp to " + leveler.getData().xp(), NamedTextColor.GRAY));
-                        return new Result(true);
+                        return new Result(true, true);
                     } else {
                         sender.sendMessage(Component.text("You need to specify an amount of xp", NamedTextColor.RED));
-                        return new Result(false);
+                        return Result.doNothing();
                     }
 
                 }
@@ -76,24 +74,23 @@ public class ManagePlayersXPSubcommand extends ManagePlayersLevelerTemplateSubco
                         if (value < 0) value = 0;
 
                         leveler.getData().xp(value);
-                        if (!args.hasOption("no-process")) leveler.processAsynchronously();
                         sender.sendMessage(Component.text("Updated xp to " + leveler.getData().xp(), NamedTextColor.GRAY));
-                        return new Result(true);
+                        return new Result(true, true);
                     } else {
                         sender.sendMessage(Component.text("You need to specify an amount of xp", NamedTextColor.RED));
-                        return new Result(false);
+                        return Result.doNothing();
                     }
 
                 }
                 default -> {
                     this.onInvalidSyntax(sender, command, label, args);
-                    return new Result(false);
+                    return Result.doNothing();
                 }
             }
 
         } catch (IllegalArgumentException e) {
             sender.sendMessage(Component.text("Illegal argument", NamedTextColor.RED));
-            return new Result(false);
+            return Result.doNothing();
         }
 
     }

@@ -34,13 +34,13 @@ public class ManagePlayersRewardsSubcommand extends ManagePlayersLevelerTemplate
                     sender.sendRichMessage("<gold>" + entry.getKey() + ": blocked=" + entry.getValue().blocked() + " level=" + entry.getValue().level() + " default=" + entry.getValue().isDefault());
                 }
 
-                return new Result(false);
+                return Result.doNothing();
             }
             case "get" -> {
 
                 if (args.args().length < 3) {
                     sender.sendRichMessage("<red>You need to specify a reward entry id");
-                    return new Result(false);
+                    return Result.doNothing();
                 }
 
                 String id = args.args()[2];
@@ -69,20 +69,19 @@ public class ManagePlayersRewardsSubcommand extends ManagePlayersLevelerTemplate
                 }
 
                 sender.sendRichMessage(message);
-                return new Result(false);
+                return Result.doNothing();
             }
             case "delete" -> {
 
                 if (args.args().length < 3) {
                     sender.sendRichMessage("<red>You need to specify a reward entry id");
-                    return new Result(false);
+                    return Result.doNothing();
                 }
 
                 String id = args.args()[2];
 
                 ReceivedReward receivedReward = leveler.getData().getReceivedReward(id);
                 leveler.getData().removeReceivedReward(id);
-                if (!args.hasOption("no-process")) leveler.processAsynchronously();
 
                 if (receivedReward != null) {
                     sender.sendRichMessage("<green>Successfully deleted reward entry id");
@@ -90,13 +89,13 @@ public class ManagePlayersRewardsSubcommand extends ManagePlayersLevelerTemplate
                     sender.sendRichMessage("<red>Reward entry does not exist");
                 }
 
-                return new Result(true);
+                return new Result(true, true);
             }
             case "reset" -> {
 
                 if (args.args().length < 3) {
                     sender.sendRichMessage("<red>You need to specify a reward entry id");
-                    return new Result(false);
+                    return Result.doNothing();
                 }
 
                 String id = args.args()[2];
@@ -104,19 +103,18 @@ public class ManagePlayersRewardsSubcommand extends ManagePlayersLevelerTemplate
                 ReceivedReward receivedReward = leveler.getData().getReceivedReward(id);
                 if (receivedReward == null) {
                     sender.sendRichMessage("<red>Reward entry does not exist");
-                    return new Result(false);
+                    return Result.doNothing();
                 }
 
                 receivedReward.reset();
-                if (!args.hasOption("no-process")) leveler.processAsynchronously();
                 sender.sendRichMessage("<green>Successfully reset reward entry");
-                return new Result(true);
+                return new Result(true, true);
             }
             case "set" -> {
 
                 if (args.args().length < 5) {
                     sender.sendRichMessage("<red>You need to specify a reward entry id, field and value");
-                    return new Result(false);
+                    return Result.doNothing();
                 }
 
                 String id = args.args()[2];
@@ -128,15 +126,13 @@ public class ManagePlayersRewardsSubcommand extends ManagePlayersLevelerTemplate
                     switch (args.args()[3]) {
                         case "blocked" -> {
                             receivedReward.blocked(Boolean.parseBoolean(args.args()[4]));
-                            if (!args.hasOption("no-process")) leveler.processAsynchronously();
                             sender.sendRichMessage("<green>Successfully updated reward entry");
-                            return new Result(true);
+                            return new Result(true, true);
                         }
                         case "level" -> {
                             receivedReward.level(Integer.parseInt(args.args()[4]));
-                            if (!args.hasOption("no-process")) leveler.processAsynchronously();
                             sender.sendRichMessage("<green>Successfully updated reward entry");
-                            return new Result(true);
+                            return new Result(true, true);
                         }
                         default -> sender.sendRichMessage("<red>Unknown field");
                     }
@@ -145,11 +141,11 @@ public class ManagePlayersRewardsSubcommand extends ManagePlayersLevelerTemplate
                     sender.sendRichMessage("<red>Illegal argument");
                 }
 
-                return new Result(false);
+                return Result.doNothing();
             }
             default -> {
                 sender.sendRichMessage("<red>Unknown subcommand");
-                return new Result(false);
+                return Result.doNothing();
             }
         }
 

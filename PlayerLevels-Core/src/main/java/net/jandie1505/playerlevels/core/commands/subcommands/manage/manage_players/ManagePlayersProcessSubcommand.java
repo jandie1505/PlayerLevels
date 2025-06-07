@@ -23,9 +23,9 @@ public class ManagePlayersProcessSubcommand extends ManagePlayersLevelerTemplate
 
     @Override
     protected Result onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, OptionParser.@NotNull Result args, @NotNull Leveler leveler) {
-        leveler.processAsynchronously();
+        args.options().remove("no-process");
         sender.sendRichMessage("<green>Scheduled processing player values");
-        return new Result(true);
+        return new Result(true, true);
     }
 
     @Override
