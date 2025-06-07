@@ -1,5 +1,6 @@
 package net.jandie1505.playerlevels.api.core.level;
 
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
@@ -50,6 +51,20 @@ public interface Leveler {
      * @throws IllegalStateException if an update is already in progress
      */
     CompletableFuture<SyncResult> syncAsynchronously();
+
+    /**
+     * Syncs the leveler with the database, then processes the updated data.<br/>
+     * This method exists because it removes the need of waiting for sync to finish to then call process.
+     */
+    @ApiStatus.Experimental
+    void syncAndProcessAsynchronously();
+
+    /**
+     * First processes the data of the leveler, then syncs it with the database.<br/>
+     * This method exists because it removes the need of waiting for process to finish to then call sync.
+     */
+    @ApiStatus.Experimental
+    void processAndSyncAsynchronously();
 
     // ----- INNER CLASSES -----
 

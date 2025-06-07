@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -57,6 +58,50 @@ public final class Leveler implements net.jandie1505.playerlevels.api.core.level
         return this.manager.getLeveler(this.playerUUID) == this;
     }
 
+    // ----- COMBINED METHODS -----
+
+    /**
+     * First calls {@link #sync()}, then {@link #process()}.<br/>
+     * Exists for {@link #syncAndProcessAsynchronously()}.
+     */
+    public void syncAndProcess() {
+        this.sync();
+        this.process();
+    }
+
+    /**
+     * First calls {@link #process()}, then {@link #sync()}.<br/>
+     * Exists for {@link #processAndSyncAsynchronously()}.
+     */
+    public void processAndSync() {
+        this.process();
+        this.sync();
+    }
+
+    /**
+     * Syncs the leveler with the database, then processes the updated data.
+     */
+    public void syncAndProcessAsynchronously() {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                Leveler.this.syncAndProcess();
+            }
+        }.runTaskAsynchronously(this.manager.getPlugin());
+    }
+
+    /**
+     * First processes the data of the leveler, then syncs it with the database.
+     */
+    public void processAndSyncAsynchronously() {
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                Leveler.this.processAndSync();
+            }
+        }.runTaskAsynchronously(this.manager.getPlugin());
+    }
+
     // ----- MANAGE VALUES -----
 
     /**
@@ -101,8 +146,9 @@ public final class Leveler implements net.jandie1505.playerlevels.api.core.level
 
     /**
      * Level up a player when the required amount of xp for the new level has been reached.
+     * @return LevelUpEvent or null if the player has not leveled up
      */
-    private void levelUp() {
+    private @Nullable LevelUpEvent levelUp() {
         final int levelAtStart = this.data.level();
         final double xpAtStart = this.data.xp();
 
@@ -116,20 +162,21 @@ public final class Leveler implements net.jandie1505.playerlevels.api.core.level
             requiredXP = this.manager.getXPForNextLevel(level, level + 1);
         }
 
-        if (level == levelAtStart) return;
+        if (level == levelAtStart) return null;
 
         this.data.level(level);
         this.data.xp(xp);
 
-        final int levelToPush = level;
+        final LevelUpEvent event = new LevelUpEvent(Leveler.this, levelAtStart, level);
 
         new BukkitRunnable() {
             @Override
             public void run() {
-                Bukkit.getServer().getPluginManager().callEvent(new LevelUpEvent(Leveler.this, levelAtStart, levelToPush));
+                Bukkit.getServer().getPluginManager().callEvent(event);
             }
         }.runTask(this.manager.getPlugin());
 
+        return event;
     }
 
     /**

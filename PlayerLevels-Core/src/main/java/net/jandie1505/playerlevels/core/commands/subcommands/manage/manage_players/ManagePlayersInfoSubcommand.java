@@ -28,7 +28,7 @@ public class ManagePlayersInfoSubcommand extends ManagePlayersLevelerTemplateSub
         sender.sendRichMessage("<gray>Level: " + leveler.getData().level());
         sender.sendRichMessage("<gray>XP: " + leveler.getData().xp());
         sender.sendRichMessage("<gray>Reward entries:" + leveler.getData().internalReceivedRewards().size());
-        return new Result(false);
+        return Result.doNothing();
     }
 
     @Override

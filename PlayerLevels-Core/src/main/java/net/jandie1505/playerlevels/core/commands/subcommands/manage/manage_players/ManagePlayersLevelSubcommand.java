@@ -27,7 +27,7 @@ public class ManagePlayersLevelSubcommand extends ManagePlayersLevelerTemplateSu
 
         if (args.args().length < 2) {
             this.onInvalidSyntax(sender, command, label, args);
-            return new Result(false);
+            return Result.doNothing();
         }
 
         try {
@@ -35,7 +35,7 @@ public class ManagePlayersLevelSubcommand extends ManagePlayersLevelerTemplateSu
             switch (args.args()[1].toLowerCase()) {
                 case "get" -> {
                     sender.sendMessage(Component.text("Level: " + leveler.getData().level(), NamedTextColor.GRAY));
-                    return new Result(false);
+                    return Result.doNothing();
                 }
                 case "set" -> {
 
@@ -43,28 +43,27 @@ public class ManagePlayersLevelSubcommand extends ManagePlayersLevelerTemplateSu
                         int level = Integer.parseInt(args.args()[2]);
                         if (level < 1) {
                             sender.sendMessage(Component.text("Level must be a positive (or zero) integer", NamedTextColor.RED));
-                            return new Result(false);
+                            return Result.doNothing();
                         }
 
                         leveler.getData().level(level);
-                        if (!args.hasOption("no-process")) leveler.processAsynchronously();
                         sender.sendMessage(Component.text("Updated level to " + leveler.getData().level(), NamedTextColor.GRAY));
-                        return new Result(true);
+                        return new Result(true, true);
                     } else {
                         sender.sendMessage(Component.text("You need to specify a level", NamedTextColor.RED));
-                        return new Result(false);
+                        return Result.doNothing();
                     }
 
                 }
                 default -> {
                     this.onInvalidSyntax(sender, command, label, args);
-                    return new Result(false);
+                    return Result.doNothing();
                 }
             }
 
         } catch (IllegalArgumentException e) {
             sender.sendRichMessage("<red>Illegal argument: " + e.getMessage());
-            return new Result(false);
+            return Result.doNothing();
         }
 
     }

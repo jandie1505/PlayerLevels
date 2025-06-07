@@ -27,7 +27,7 @@ public class ManagePlayersCachedNameSubcommand extends ManagePlayersLevelerTempl
 
         if (args.args().length < 2) {
             this.onInvalidSyntax(sender, command, label, args);
-            return new Result(false);
+            return Result.doNothing();
         }
 
         try {
@@ -35,22 +35,22 @@ public class ManagePlayersCachedNameSubcommand extends ManagePlayersLevelerTempl
             switch (args.args()[1].toLowerCase()) {
                 case "get" -> {
                     sender.sendMessage(Component.text("Cached Name: " + leveler.getData().cachedName(), NamedTextColor.GRAY));
-                    return new Result(false);
+                    return Result.doNothing();
                 }
                 case "clear" -> {
                     leveler.getData().cachedName(null);
                     sender.sendMessage(Component.text("Cleared cached name", NamedTextColor.GRAY));
-                    return new Result(true);
+                    return new Result(true, false);
                 }
                 default -> {
                     this.onInvalidSyntax(sender, command, label, args);
-                    return new Result(false);
+                    return Result.doNothing();
                 }
             }
 
         } catch (IllegalArgumentException e) {
             sender.sendRichMessage("<red>Illegal argument: " + e.getMessage());
-            return new Result(false);
+            return Result.doNothing();
         }
 
     }

@@ -14,6 +14,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Level;
 
 /**
  * Template command for simple leveler-requiring management commands
@@ -65,7 +66,16 @@ public abstract class ManagePlayersLevelerTemplateSubcommand implements TabCompl
                 return true;
             }
 
-            this.onCommand(sender, command, label, args, leveler);
+            Result result = this.onCommand(sender, command, label, args, leveler);
+            if (result == null) result = Result.doNothing();
+
+            if (result.processDataBeforeSync()) {
+                leveler.processAsynchronously();
+            }
+
+            // Here is no if (result.syncWithDatabase()) {...} because here, the cache is used.
+            // So the data should not be pushed.
+
         } else {
             this.loadLevelerWay(sender, command, label, args, playerUUID, pushToDatabase);
         }
@@ -78,10 +88,42 @@ public abstract class ManagePlayersLevelerTemplateSubcommand implements TabCompl
             @Override
             public void run() {
                 Result result = ManagePlayersLevelerTemplateSubcommand.this.onCommand(sender, command, label, args, leveler);
-                if (result == null) result = new Result(false);
-                if (pushToDatabase != null ? pushToDatabase : result.pushToDatabase()) ManagePlayersLevelerTemplateSubcommand.this.pushToDatabase(sender, command, label, args, leveler); // Push to database if enabled
+                if (result == null) result = Result.doNothing();
+
+                final Result finalResult = result;
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+
+                        // Process the leveler before the push if the command has it enabled in its result. This can be disabled by the user by specifying --no-process.
+                        if (finalResult.processDataBeforeSync() && !args.hasOption("no-process")) {
+                            ManagePlayersLevelerTemplateSubcommand.this.processPlayer(sender, command, label, args, leveler);
+                        }
+
+                        // Push to database if enabled (use --push=<value> if available, else use command default which is the value it returns as result)
+                        if (pushToDatabase != null ? pushToDatabase : finalResult.syncWithDatabase()) {
+                            ManagePlayersLevelerTemplateSubcommand.this.pushToDatabase(sender, command, label, args, leveler);
+                        }
+
+                    }
+                }.runTaskAsynchronously(ManagePlayersLevelerTemplateSubcommand.this.plugin);
             }
         }.runTask(this.plugin));
+    }
+
+    /**
+     * Processes the player and sends a message.<br/>
+     * Should be called asynchronously.
+     */
+    private void processPlayer(@NotNull final CommandSender sender, @NotNull final Command command, @NotNull final String label, @NotNull final OptionParser.Result args, @NotNull final Leveler leveler) {
+        leveler.process();
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                ManagePlayersLevelerTemplateSubcommand.this.onProcessFinished(sender, command, label, args, leveler);
+            }
+        }.runTask(this.plugin);
     }
 
     private void pushToDatabase(@NotNull final CommandSender sender, @NotNull final Command command, @NotNull final String label, @NotNull final OptionParser.Result args, @NotNull final Leveler leveler) {
@@ -139,6 +181,11 @@ public abstract class ManagePlayersLevelerTemplateSubcommand implements TabCompl
         sender.sendRichMessage("<red>Failed to push changes to the database");
     }
 
+    @ApiStatus.OverrideOnly
+    protected void onProcessFinished(@NotNull final CommandSender sender, @NotNull final Command command, @NotNull final String label, @NotNull final OptionParser.Result args, @NotNull final Leveler leveler) {
+        sender.sendRichMessage("<green>Leveler has been processed");
+    }
+
     // ----- TAB COMPLETION -----
 
     @Override
@@ -155,6 +202,18 @@ public abstract class ManagePlayersLevelerTemplateSubcommand implements TabCompl
 
     // ----- COMMAND RESULT -----
 
-    public record Result(boolean pushToDatabase) {}
+    /**
+     * The result a onCommand method of this template command returns.<br/>
+     * This controls if a leveler is processed, synced or both after the command has been executed.
+     * @param syncWithDatabase if the leveler is synced with the database
+     * @param processDataBeforeSync if the data is processed before it is synced with the database
+     */
+    public record Result(boolean syncWithDatabase, boolean processDataBeforeSync) {
+
+        public static @NotNull Result doNothing() {
+            return new Result(false, false);
+        }
+
+    }
 
 }

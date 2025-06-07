@@ -16,7 +16,7 @@ public class RewardApplyEvent extends Event implements Cancellable {
     @NotNull private final Leveler leveler;
     @NotNull private final Reward reward;
     private final int level;
-    @NotNull private Result result;
+    @NotNull private Reward.ApplyStatus result;
 
     /**
      * Creates an RewardApplyEvent.
@@ -28,7 +28,7 @@ public class RewardApplyEvent extends Event implements Cancellable {
         this.leveler = leveler;
         this.reward = reward;
         this.level = level;
-        this.result = Result.APPLY;
+        this.result = Reward.ApplyStatus.APPLY;
     }
 
     /**
@@ -59,7 +59,7 @@ public class RewardApplyEvent extends Event implements Cancellable {
      * Returns the current event result.
      * @return result
      */
-    public @NotNull Result getResult() {
+    public @NotNull Reward.ApplyStatus getResult() {
         return result;
     }
 
@@ -67,7 +67,7 @@ public class RewardApplyEvent extends Event implements Cancellable {
      * Sets a new event result.
      * @param result result
      */
-    public void setResult(@NotNull Result result) {
+    public void setResult(@NotNull Reward.ApplyStatus result) {
         this.result = result;
     }
 
@@ -85,12 +85,12 @@ public class RewardApplyEvent extends Event implements Cancellable {
     /**
      * Set the event cancelled or not.
      * @param cancelled cancel
-     * @deprecated Use {@link RewardApplyEvent#setResult(Result)}
+     * @deprecated Use {@link RewardApplyEvent#setResult(Reward.ApplyStatus)}
      */
     @Override
     @Deprecated
     public void setCancelled(boolean cancelled) {
-        this.result = cancelled ? Result.CANCEL_SKIP : Result.APPLY;
+        this.result = cancelled ? Reward.ApplyStatus.CANCEL_SKIP : Reward.ApplyStatus.APPLY;
     }
 
     /**
@@ -107,60 +107,6 @@ public class RewardApplyEvent extends Event implements Cancellable {
      */
     public static @NotNull HandlerList getHandlerList() {
         return handlers;
-    }
-
-    /**
-     * The event result.
-     */
-    public enum Result {
-
-        /**
-         * The reward is applied normally.<br/>
-         * The default value.
-         */
-        APPLY(true, true),
-
-        /**
-         * The reward is applied, but not marked as applied.
-         */
-        APPLY_SKIP(true, false),
-
-        /**
-         * The reward is not applied and not marked as applied.<br/>
-         * This behavior is similar to when the player does not meet the requirement for the reward.
-         */
-        CANCEL_SKIP(false, false),
-
-        /**
-         * The reward is not applied, but marked as applied.<br/>
-         * This means the player will skip the reward (if the reward uses the default condition).
-         */
-        CANCEL_MARK_APPLIED(false, true);
-
-        private final boolean applied;
-        private final boolean markedAsApplied;
-
-        Result(boolean applied, boolean markedAsApplied) {
-            this.applied = applied;
-            this.markedAsApplied = markedAsApplied;
-        }
-
-        /**
-         * Returns true if the reward is applied.
-         * @return reward applied
-         */
-        public boolean isApplied() {
-            return applied;
-        }
-
-        /**
-         * Returns true if the event is marked as applied.
-         * @return marked as successful
-         */
-        public boolean isMarkedAsApplied() {
-            return markedAsApplied;
-        }
-
     }
 
 }

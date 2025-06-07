@@ -1,6 +1,6 @@
 allprojects {
     group = "net.jandie1505"
-    version = "1.0-RELEASE"
+    version = "1.1-SNAPSHOT"
 
     repositories {
         mavenLocal()
