@@ -1,6 +1,7 @@
 package net.jandie1505.playerlevels.core.constants;
 
 public interface ConfigKeys {
+    String DATABASE_TYPE = "database.type";
     String DATABASE_HOST = "database.host";
     String DATABASE_NAME = "database.name";
     String DATABASE_USER = "database.user";

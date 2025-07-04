@@ -86,4 +86,9 @@ public class MariaDBDatabaseManager implements DatabaseManager {
         return new MariaDBDatabase(this);
     }
 
+    @Override
+    public boolean isAvailable() {
+        return this.dataSource != null;
+    }
+
 }

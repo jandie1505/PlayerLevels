@@ -8,6 +8,7 @@ public interface DefaultConfigValues {
     static @NotNull DataStorage getConfig() {
         DataStorage config = new DataStorage();
 
+        config.set(ConfigKeys.DATABASE_TYPE, "mariadb");
         config.set(ConfigKeys.DATABASE_HOST, "127.0.0.1");
         config.set(ConfigKeys.DATABASE_PORT, 3306);
         config.set(ConfigKeys.DATABASE_USER, "playerlevels");

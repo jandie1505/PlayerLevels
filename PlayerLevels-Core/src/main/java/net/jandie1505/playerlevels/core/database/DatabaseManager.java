@@ -9,4 +9,5 @@ public interface DatabaseManager {
     void shutdownDatabase();
     Connection getConnection();
     @NotNull Database getDatabase();
+    boolean isAvailable();
 }

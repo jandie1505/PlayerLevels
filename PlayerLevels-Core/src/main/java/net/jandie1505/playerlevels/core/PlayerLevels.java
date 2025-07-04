@@ -6,6 +6,7 @@ import net.jandie1505.playerlevels.api.core.PlayerLevelsAPI;
 import net.jandie1505.playerlevels.core.commands.PlayerLevelsCommand;
 import net.jandie1505.playerlevels.core.constants.ConfigKeys;
 import net.jandie1505.playerlevels.core.constants.DefaultConfigValues;
+import net.jandie1505.playerlevels.core.database.DatabaseManager;
 import net.jandie1505.playerlevels.core.database.mariadb.MariaDBDatabaseManager;
 import net.jandie1505.playerlevels.core.leveler.Leveler;
 import net.jandie1505.playerlevels.core.leveler.LevelingManager;
@@ -26,7 +27,7 @@ import java.util.logging.Level;
 public class PlayerLevels extends JavaPlugin implements PlayerLevelsAPI {
     @NotNull private final DataStorage config;
     @NotNull private final DataStorage messages;
-    private MariaDBDatabaseManager databaseManager;
+    private DatabaseManager databaseManager;
     private LevelingManager levelingManager;
     private RewardsManager rewardsManager;
     private TopListManager topListManager;
@@ -47,8 +48,15 @@ public class PlayerLevels extends JavaPlugin implements PlayerLevelsAPI {
         this.reloadConfig(true, true);
         this.reloadMessages(true, true);
 
-        this.databaseManager = new MariaDBDatabaseManager(this);
+        this.databaseManager = this.createDatabaseManager();
+        if (this.databaseManager == null) {
+            this.getLogger().severe("Invalid database type. Disabling plugin.");
+            this.getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
+
         this.databaseManager.setupDatabase();
+
         this.levelingManager = new LevelingManager(this, this.databaseManager.getDatabase());
         this.rewardsRegistry = new RewardsRegistry(this);
         this.rewardsManager = new RewardsManager(this);
@@ -161,6 +169,17 @@ public class PlayerLevels extends JavaPlugin implements PlayerLevelsAPI {
         }
     }
 
+    // ----- INIT DATABASE -----
+
+    private @Nullable DatabaseManager createDatabaseManager() {
+
+        return switch (this.config.optString(ConfigKeys.DATABASE_TYPE, "")) {
+            case "mariadb" -> new MariaDBDatabaseManager(this);
+            default -> null;
+        };
+
+    }
+
     // ----- OTHER -----
 
     public final @NotNull DataStorage config() {
@@ -190,7 +209,7 @@ public class PlayerLevels extends JavaPlugin implements PlayerLevelsAPI {
         return this.topListManager;
     }
 
-    public MariaDBDatabaseManager getDatabaseManager() {
+    public DatabaseManager getDatabaseManager() {
         return this.databaseManager;
     }
 
