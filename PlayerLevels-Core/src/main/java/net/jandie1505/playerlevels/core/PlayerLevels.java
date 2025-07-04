@@ -6,15 +6,13 @@ import net.jandie1505.playerlevels.api.core.PlayerLevelsAPI;
 import net.jandie1505.playerlevels.core.commands.PlayerLevelsCommand;
 import net.jandie1505.playerlevels.core.constants.ConfigKeys;
 import net.jandie1505.playerlevels.core.constants.DefaultConfigValues;
-import net.jandie1505.playerlevels.core.database.DatabaseManager;
+import net.jandie1505.playerlevels.core.database.mariadb.MariaDBDatabaseManager;
 import net.jandie1505.playerlevels.core.leveler.Leveler;
 import net.jandie1505.playerlevels.core.leveler.LevelingManager;
 import net.jandie1505.playerlevels.core.leveler.TopListManager;
 import net.jandie1505.playerlevels.core.messages.AnnouncementHandler;
-import net.jandie1505.playerlevels.core.rewards.RewardConfig;
 import net.jandie1505.playerlevels.core.rewards.RewardsManager;
 import net.jandie1505.playerlevels.core.rewards.RewardsRegistry;
-import net.jandie1505.playerlevels.core.rewards.types.CommandReward;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
@@ -28,7 +26,7 @@ import java.util.logging.Level;
 public class PlayerLevels extends JavaPlugin implements PlayerLevelsAPI {
     @NotNull private final DataStorage config;
     @NotNull private final DataStorage messages;
-    private DatabaseManager databaseManager;
+    private MariaDBDatabaseManager databaseManager;
     private LevelingManager levelingManager;
     private RewardsManager rewardsManager;
     private TopListManager topListManager;
@@ -49,12 +47,12 @@ public class PlayerLevels extends JavaPlugin implements PlayerLevelsAPI {
         this.reloadConfig(true, true);
         this.reloadMessages(true, true);
 
-        this.databaseManager = new DatabaseManager(this);
+        this.databaseManager = new MariaDBDatabaseManager(this);
         this.databaseManager.setupDatabase();
-        this.levelingManager = new LevelingManager(this, this.databaseManager);
+        this.levelingManager = new LevelingManager(this, this.databaseManager.getDatabase());
         this.rewardsRegistry = new RewardsRegistry(this);
         this.rewardsManager = new RewardsManager(this);
-        this.topListManager = new TopListManager(this, this.databaseManager);
+        this.topListManager = new TopListManager(this, this.databaseManager.getDatabase());
         this.command = new PlayerLevelsCommand(this);
         this.serverIdOverride = null;
 
@@ -192,7 +190,7 @@ public class PlayerLevels extends JavaPlugin implements PlayerLevelsAPI {
         return this.topListManager;
     }
 
-    public DatabaseManager getDatabaseManager() {
+    public MariaDBDatabaseManager getDatabaseManager() {
         return this.databaseManager;
     }
 
