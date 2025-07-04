@@ -1,5 +1,20 @@
 # CloudNet Integration
-The CloudNet Integration automatically sets the PlayerLevels server_id to the current task name.
+The CloudNet Integration automatically sets the PlayerLevels `server_id` to the current task name.
+
+## v1.2+
+Since version 1.2, CloudNet support is directly integrated into PlayerLevels-Core.
+Unlike before, you don't need to install additional plugins for it.
+
+You can enable the CloudNet integration in the `config.yml`:
+```yml
+# [...]
+integrations:
+  cloudnet: true
+```
+(It should be enabled by default when CloudNet-Bridge is detected).
+
+## Older versions
+For versions before 1.2, an extra plugin named `PlayerLevels-CloudNet` is required.
 
 ### Installation
 1. Download the PlayerLevels-CloudNet plugin.

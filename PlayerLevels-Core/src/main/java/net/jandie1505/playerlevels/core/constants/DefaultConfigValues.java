@@ -21,6 +21,7 @@ public interface DefaultConfigValues {
         config.set(ConfigKeys.PLAYER_COMMANDS_LOAD_PLAYERS, true);
         config.set(ConfigKeys.PLAYER_COMMANDS_DATABASE_RATE_LIMIT, 10);
         config.set(ConfigKeys.REMOVE_NON_EXISTENT_REWARD_ENTRIES, true);
+        config.set(ConfigKeys.INTEGRATIONS_CLOUDNET, true);
 
         return config;
     }

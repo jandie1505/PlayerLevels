@@ -7,13 +7,16 @@ import net.jandie1505.playerlevels.core.commands.PlayerLevelsCommand;
 import net.jandie1505.playerlevels.core.constants.ConfigKeys;
 import net.jandie1505.playerlevels.core.constants.DefaultConfigValues;
 import net.jandie1505.playerlevels.core.database.DatabaseManager;
+import net.jandie1505.playerlevels.core.integrations.CloudNetIntegration;
 import net.jandie1505.playerlevels.core.database.mariadb.MariaDBDatabaseManager;
 import net.jandie1505.playerlevels.core.leveler.Leveler;
 import net.jandie1505.playerlevels.core.leveler.LevelingManager;
 import net.jandie1505.playerlevels.core.leveler.TopListManager;
 import net.jandie1505.playerlevels.core.messages.AnnouncementHandler;
+import net.jandie1505.playerlevels.core.rewards.RewardConfig;
 import net.jandie1505.playerlevels.core.rewards.RewardsManager;
 import net.jandie1505.playerlevels.core.rewards.RewardsRegistry;
+import net.jandie1505.playerlevels.core.rewards.types.CommandReward;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
@@ -222,6 +225,11 @@ public class PlayerLevels extends JavaPlugin implements PlayerLevelsAPI {
 
         serverId = System.getenv(this.getName() + ".server-id");
         if (serverId != null) return serverId;
+
+        if (this.config.optBoolean(ConfigKeys.INTEGRATIONS_CLOUDNET, false)) {
+            serverId = CloudNetIntegration.getTaskId(this);
+            if (serverId != null) return serverId;
+        }
 
         return Objects.requireNonNullElse(this.config.optString(ConfigKeys.SERVER_ID, ""), "");
     }
