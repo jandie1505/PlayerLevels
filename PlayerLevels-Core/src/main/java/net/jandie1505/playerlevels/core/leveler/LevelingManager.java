@@ -2,7 +2,7 @@ package net.jandie1505.playerlevels.core.leveler;
 
 import net.jandie1505.playerlevels.core.PlayerLevels;
 import net.jandie1505.playerlevels.core.constants.ConfigKeys;
-import net.jandie1505.playerlevels.core.database.DatabaseSource;
+import net.jandie1505.playerlevels.core.database.Database;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 import org.bukkit.entity.Player;
@@ -14,26 +14,21 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.logging.Level;
 
 public class LevelingManager implements net.jandie1505.playerlevels.api.core.level.LevelingManager, Listener {
     @NotNull private final PlayerLevels plugin;
-    @NotNull private final DatabaseSource databaseSource;
+    @NotNull private final Database database;
     @NotNull private final ConcurrentHashMap<UUID, Leveler> cachedLevelers;
 
-    public LevelingManager(@NotNull PlayerLevels plugin, @NotNull DatabaseSource databaseSource) {
+    public LevelingManager(@NotNull PlayerLevels plugin, @NotNull Database database) {
         this.plugin = plugin;
-        this.databaseSource = databaseSource;
+        this.database = database;
         this.cachedLevelers = new ConcurrentHashMap<>();
 
-        this.createTable();
+        this.database.setupDatabase();
     }
 
     // ----- MANAGE -----
@@ -82,7 +77,7 @@ public class LevelingManager implements net.jandie1505.playerlevels.api.core.lev
         new BukkitRunnable() {
             @Override
             public void run() {
-                Leveler leveler = new Leveler(LevelingManager.this, playerUUID, databaseSource);
+                Leveler leveler = new Leveler(LevelingManager.this, playerUUID, database);
                 leveler.sync();
                 cachedLevelers.put(playerUUID, leveler);
                 future.complete(leveler);
@@ -141,27 +136,8 @@ public class LevelingManager implements net.jandie1505.playerlevels.api.core.lev
      * @return success
      */
     public boolean erasePlayer(@NotNull UUID playerUUID) {
-        String sql = "DELETE FROM playerlevels_players WHERE player_uuid = ?";
-
-        try (Connection connection = this.databaseSource.getConnection();
-             PreparedStatement statement = connection != null ? connection.prepareStatement(sql) : null
-        ) {
-
-            if (connection == null || statement == null) {
-                this.plugin.getLogger().warning("Failed to erase player " + playerUUID + ": connection is null");
-                return false;
-            }
-
-            statement.setString(1, playerUUID.toString());
-            statement.executeUpdate(); // Here, the DELETE is executed!
-
-            this.cachedLevelers.remove(playerUUID);
-            return true;
-
-        } catch (SQLException e) {
-            this.plugin.getLogger().log(Level.WARNING, "Failed to erase player " + playerUUID, e);
-            return false;
-        }
+        this.cachedLevelers.remove(playerUUID);
+        return this.database.deleteLeveler(playerUUID);
     }
 
     /**
@@ -197,39 +173,7 @@ public class LevelingManager implements net.jandie1505.playerlevels.api.core.lev
     }
 
     private @NotNull List<@NotNull UUID> findLevelerByNameSync(@NotNull String playerName) {
-
-        String sql = "SELECT player_uuid FROM playerlevels_players WHERE cached_name = ?";
-
-        try (
-                Connection connection = this.databaseSource.getConnection();
-                PreparedStatement statement = connection != null ? connection.prepareStatement(sql) : null;
-        ) {
-
-            if (connection == null || statement == null) {
-                this.plugin.getLogger().log(Level.WARNING, "Failed to find player " + playerName + ": connection is null");
-                return List.of();
-            }
-
-            statement.setString(1, playerName);
-
-            try (ResultSet rs = statement.executeQuery()) {
-                List<@NotNull UUID> list = new ArrayList<>();
-
-                while (rs.next()) {
-                    list.add(UUID.fromString(rs.getString("player_uuid")));
-                }
-
-                return list;
-            } catch (SQLException | IllegalArgumentException e) {
-                this.plugin.getLogger().log(Level.WARNING, "Failed to find player " + playerName + ": ", e);
-                return List.of();
-            }
-
-        } catch (SQLException e) {
-            this.plugin.getLogger().log(Level.SEVERE, "Failed to find leveler by player name " + playerName, e);
-            return List.of();
-        }
-
+        return this.database.findLevelerByNameSync(playerName);
     }
 
     // ----- TASKS -----
@@ -275,33 +219,6 @@ public class LevelingManager implements net.jandie1505.playerlevels.api.core.lev
     }
 
     // ----- UTILITIES -----
-
-    public void createTable() {
-
-        Connection connection = this.databaseSource.getConnection();
-        if (connection == null) {
-            this.plugin.getLogger().log(Level.WARNING, "Failed to create table: connection is null");
-            return;
-        }
-
-        String sql = "CREATE TABLE IF NOT EXISTS playerlevels_players (" +
-                "player_uuid VARCHAR(36) NOT NULL PRIMARY KEY," +
-                "data LONGTEXT NOT NULL," +
-                "update_id VARCHAR(36) NOT NULL," +
-                "last_updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP," +
-                "level INT GENERATED ALWAYS AS (JSON_UNQUOTE(JSON_EXTRACT(data, '$.level'))) PERSISTENT," +
-                "cached_name VARCHAR(64) GENERATED ALWAYS AS (JSON_UNQUOTE(JSON_EXTRACT(data, '$.name'))) PERSISTENT," +
-                "INDEX idx_level (level)," +
-                "INDEX idx_cached_name (cached_name)," +
-                "CONSTRAINT chk_json_valid CHECK (JSON_VALID(data))"+
-                ")";
-
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            this.plugin.getLogger().log(Level.WARNING, "Failed to create table", e);
-        }
-    }
 
     public double getXPForLevel(int level) throws NullPointerException, IllegalArgumentException, ArithmeticException {
 

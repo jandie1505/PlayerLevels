@@ -1,20 +1,14 @@
 package net.jandie1505.playerlevels.core.leveler;
 
 import net.jandie1505.playerlevels.core.constants.ConfigKeys;
-import net.jandie1505.playerlevels.core.database.DatabaseSource;
+import net.jandie1505.playerlevels.core.database.Database;
 import net.jandie1505.playerlevels.core.events.LevelUpEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.json.JSONException;
-import org.json.JSONObject;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -24,16 +18,16 @@ import java.util.logging.Level;
 public final class Leveler implements net.jandie1505.playerlevels.api.core.level.Leveler {
     @NotNull private final LevelingManager manager;
     @NotNull private final UUID playerUUID;
-    @NotNull private final DatabaseSource databaseSource;
+    @NotNull private final Database db;
     @NotNull private final AtomicBoolean databaseUpdateInProgress;
     @NotNull private final AtomicBoolean manageValuesInProgress;
     @NotNull private final LevelerData data;
     @NotNull private String updateId;
 
-    public Leveler(@NotNull LevelingManager manager, @NotNull UUID playerUUID, @NotNull DatabaseSource databaseSource) {
+    public Leveler(@NotNull LevelingManager manager, @NotNull UUID playerUUID, @NotNull Database db) {
         this.manager = manager;
         this.playerUUID = playerUUID;
-        this.databaseSource = databaseSource;
+        this.db = db;
         this.databaseUpdateInProgress = new AtomicBoolean(false);
         this.manageValuesInProgress = new AtomicBoolean(false);
         this.data = new LevelerData();
@@ -240,13 +234,9 @@ public final class Leveler implements net.jandie1505.playerlevels.api.core.level
             return SyncResult.ALREADY_IN_PROGRESS;
         }
 
-        try (Connection connection = this.databaseSource.getConnection()) {
-            if (connection == null) {
-                System.out.println("Error: No database connection available");
-                return SyncResult.ERROR;
-            }
+        try {
 
-            LevelDataPullResult pullResult = this.getDataFromDatabase(connection);
+            Database.LevelDataPullResult pullResult = this.db.getLevelDataFromDatabase(this.playerUUID);
 
             if (pullResult != null) {
                 // Current data is outdated, replace it with database data
@@ -259,7 +249,7 @@ public final class Leveler implements net.jandie1505.playerlevels.api.core.level
 
                 // Remote data is outdated, push changes
                 if (!this.data.equals(pullResult.data())) {
-                    this.updateDataInDatabase(connection);
+                    this.db.updateLevelDataInDatabase(this.playerUUID, this.data, this.updateId);
                     System.out.println("Remote outdated");
                     return SyncResult.REMOTE_OUTDATED_AVAIL;
                 }
@@ -271,109 +261,18 @@ public final class Leveler implements net.jandie1505.playerlevels.api.core.level
                     return SyncResult.REMOTE_MISSING_DEFAULT;
                 }
 
-                this.insertDataIntoDatabase(connection);
+                this.db.insertLevelDataIntoDatabase(this.playerUUID, this.data, this.updateId);
                 System.out.println("Remote not avail");
                 return SyncResult.REMOTE_OUTDATED_MISSING;
             }
 
             return SyncResult.UP_TO_DATE;
-        } catch (SQLException | JSONException e) {
-            System.out.println("Exception: ");
-            e.printStackTrace();
+        } catch (Exception e) {
+            this.manager.getPlugin().getLogger().log(Level.WARNING, "Exception syncing leveler data", e);
             return SyncResult.ERROR;
         } finally {
             this.databaseUpdateInProgress.set(false);
         }
     }
-
-    // ----- DATA SERIALIZATION -----
-
-    /**
-     * Updates the database record with the locally stored data.<br/>
-     * Only works if there is already an entry for this player.<br/>
-     * If not, use {@link Leveler#insertDataIntoDatabase(Connection)} <br/>
-     * Should only be called from {@link Leveler#sync()}.
-     * @param c connection
-     * @return {@link PreparedStatement#executeUpdate()} result
-     * @throws SQLException exception
-     */
-    private int updateDataInDatabase(Connection c) throws SQLException {
-        // Generate a new update id to invalidate the cached data on all other instances
-        this.updateId = UUID.randomUUID().toString();
-
-        // Update data
-        String updateSql = "UPDATE playerlevels_players SET data = ?, update_id = ? WHERE player_uuid = ?";
-
-        try (PreparedStatement updateStatement = c.prepareStatement(updateSql)) {
-
-            updateStatement.setString(1, this.data.toJSON().toString());
-            updateStatement.setString(2, this.updateId);
-            updateStatement.setString(3, this.playerUUID.toString());
-
-            return updateStatement.executeUpdate();
-        }
-    }
-
-    /**
-     * Inserts a new database record with the locally stored data.<br/>
-     * Only works if the player has no entry.<br/>
-     * If not, use {@link Leveler#updateDataInDatabase(Connection)}.<br/>
-     * Should only be called from {@link Leveler#sync()}.
-     * @param c connection
-     * @return {@link PreparedStatement#executeUpdate()} result
-     * @throws SQLException exception
-     */
-    private int insertDataIntoDatabase(Connection c) throws SQLException {
-
-        // Generate a new update id to invalidate the cached data on all other instances
-        this.updateId = UUID.randomUUID().toString();
-
-        // Insert data
-        String insertSql = "INSERT INTO playerlevels_players (player_uuid, data, update_id) VALUES (?, ?, ?)";
-
-        try (PreparedStatement insertStatement = c.prepareStatement(insertSql)) {
-
-            insertStatement.setString(1, this.playerUUID.toString());
-            insertStatement.setString(2, this.data.toJSON().toString());
-            insertStatement.setString(3, this.updateId);
-
-            return insertStatement.executeUpdate();
-        }
-    }
-
-    /**
-     * Pulls the current data from the database.
-     * @param c connection
-     * @return result
-     * @throws SQLException exception
-     * @throws JSONException when data json is invalid
-     */
-    private LevelDataPullResult getDataFromDatabase(Connection c) throws SQLException, JSONException {
-
-        String pullSql = "SELECT * FROM playerlevels_players WHERE player_uuid = ?";
-
-        try (PreparedStatement pullStatement = c.prepareStatement(pullSql)) {
-
-            pullStatement.setString(1, this.playerUUID.toString());
-
-            ResultSet pullResultSet = pullStatement.executeQuery();
-
-            if (pullResultSet.next()) {
-                String updateId = pullResultSet.getString("update_id");
-
-                return new LevelDataPullResult(
-                        LevelerData.fromJSON(new JSONObject(pullResultSet.getString("data"))),
-                        updateId
-                );
-            } else {
-                return null;
-            }
-
-        }
-    }
-
-    // ----- INNER CLASSES -----
-
-    private record LevelDataPullResult(@NotNull LevelerData data, @NotNull String updateId) {}
 
 }
