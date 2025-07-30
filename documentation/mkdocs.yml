@@ -1,16 +1,30 @@
 site_name: PlayerLevels
 site_url: https://jandie1505.github.io/PlayerLevels/
 theme:
-  name: readthedocs
+  name: material
+  logo: assets/logo.png
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+repo_url: https://github.com/jandie1505/PlayerLevels
 
 nav:
   - Home: index.md
   - Setup:
-    - Installation: installation.md
+      - Installation: installation.md
   - Plugin usage:
-    - Leveling: leveling.md
-    - Rewards: rewards.md
-    - Commands: commands.md
+      - Leveling: leveling.md
+      - Rewards: rewards.md
+      - Commands: commands.md
   - API:
       - Getting started: api-getting-started.md
       - Players: api-players.md
