@@ -4,7 +4,7 @@ plugins {
 }
 
 dependencies {
-    compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.21.8-R0.1-SNAPSHOT")
     implementation(project(":PlayerLevels-API"))
     implementation("net.chaossquad:mclib:main-e95d70f19fde050fe80a799f4f289c032bc3d07c")
     implementation("com.zaxxer:HikariCP:6.2.1")
