@@ -10,6 +10,7 @@ dependencies {
     implementation("com.zaxxer:HikariCP:6.2.1")
     implementation("org.json:json:20250107")
     implementation("org.mariadb.jdbc:mariadb-java-client:3.4.1")
+    implementation("org.postgresql:postgresql:42.7.7")
     implementation("net.objecthunter:exp4j:0.4.8")
     compileOnly("eu.cloudnetservice.cloudnet:wrapper-jvm-api:4.0.0-RC13")
     compileOnly("eu.cloudnetservice.cloudnet:platform-inject-api:4.0.0-RC13")

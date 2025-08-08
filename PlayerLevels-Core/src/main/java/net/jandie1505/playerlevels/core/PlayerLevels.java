@@ -7,13 +7,17 @@ import net.jandie1505.playerlevels.core.commands.PlayerLevelsCommand;
 import net.jandie1505.playerlevels.core.constants.ConfigKeys;
 import net.jandie1505.playerlevels.core.constants.DefaultConfigValues;
 import net.jandie1505.playerlevels.core.database.DatabaseManager;
+import net.jandie1505.playerlevels.core.database.postgres.PostgreSQLDatabaseManager;
 import net.jandie1505.playerlevels.core.integrations.CloudNetIntegration;
+import net.jandie1505.playerlevels.core.database.mariadb.MariaDBDatabaseManager;
 import net.jandie1505.playerlevels.core.leveler.Leveler;
 import net.jandie1505.playerlevels.core.leveler.LevelingManager;
 import net.jandie1505.playerlevels.core.leveler.TopListManager;
 import net.jandie1505.playerlevels.core.messages.AnnouncementHandler;
+import net.jandie1505.playerlevels.core.rewards.RewardConfig;
 import net.jandie1505.playerlevels.core.rewards.RewardsManager;
 import net.jandie1505.playerlevels.core.rewards.RewardsRegistry;
+import net.jandie1505.playerlevels.core.rewards.types.CommandReward;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
@@ -48,12 +52,19 @@ public class PlayerLevels extends JavaPlugin implements PlayerLevelsAPI {
         this.reloadConfig(true, true);
         this.reloadMessages(true, true);
 
-        this.databaseManager = new DatabaseManager(this);
+        this.databaseManager = this.createDatabaseManager();
+        if (this.databaseManager == null) {
+            this.getLogger().severe("Invalid database type. Disabling plugin.");
+            this.getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
+
         this.databaseManager.setupDatabase();
-        this.levelingManager = new LevelingManager(this, this.databaseManager);
+
+        this.levelingManager = new LevelingManager(this, this.databaseManager.getDatabase());
         this.rewardsRegistry = new RewardsRegistry(this);
         this.rewardsManager = new RewardsManager(this);
-        this.topListManager = new TopListManager(this, this.databaseManager);
+        this.topListManager = new TopListManager(this, this.databaseManager.getDatabase());
         this.command = new PlayerLevelsCommand(this);
         this.serverIdOverride = null;
 
@@ -160,6 +171,18 @@ public class PlayerLevels extends JavaPlugin implements PlayerLevelsAPI {
             this.getLogger().log(Level.WARNING, "Failed to load messages config. Using default values.", e);
             return false;
         }
+    }
+
+    // ----- INIT DATABASE -----
+
+    private @Nullable DatabaseManager createDatabaseManager() {
+
+        return switch (this.config.optString(ConfigKeys.DATABASE_TYPE, "")) {
+            case "mariadb" -> new MariaDBDatabaseManager(this);
+            case "postgresql" -> new PostgreSQLDatabaseManager(this);
+            default -> null;
+        };
+
     }
 
     // ----- OTHER -----
