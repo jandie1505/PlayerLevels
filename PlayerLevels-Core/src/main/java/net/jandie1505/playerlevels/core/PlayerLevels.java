@@ -7,6 +7,7 @@ import net.jandie1505.playerlevels.core.commands.PlayerLevelsCommand;
 import net.jandie1505.playerlevels.core.constants.ConfigKeys;
 import net.jandie1505.playerlevels.core.constants.DefaultConfigValues;
 import net.jandie1505.playerlevels.core.database.DatabaseManager;
+import net.jandie1505.playerlevels.core.database.postgres.PostgreSQLDatabaseManager;
 import net.jandie1505.playerlevels.core.integrations.CloudNetIntegration;
 import net.jandie1505.playerlevels.core.database.mariadb.MariaDBDatabaseManager;
 import net.jandie1505.playerlevels.core.leveler.Leveler;
@@ -178,6 +179,7 @@ public class PlayerLevels extends JavaPlugin implements PlayerLevelsAPI {
 
         return switch (this.config.optString(ConfigKeys.DATABASE_TYPE, "")) {
             case "mariadb" -> new MariaDBDatabaseManager(this);
+            case "postgresql" -> new PostgreSQLDatabaseManager(this);
             default -> null;
         };
 

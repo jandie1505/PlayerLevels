@@ -7,6 +7,7 @@ import net.jandie1505.playerlevels.core.constants.MessageKeys;
 import net.jandie1505.playerlevels.core.constants.Permissions;
 import net.jandie1505.playerlevels.core.database.DatabaseManager;
 import net.jandie1505.playerlevels.core.database.mariadb.MariaDBDatabaseManager;
+import net.jandie1505.playerlevels.core.database.postgres.PostgreSQLDatabaseManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.command.Command;
@@ -64,6 +65,15 @@ public class DebugDatabaseSubcommand implements TabCompletingCommandExecutor {
                 if (manager instanceof MariaDBDatabaseManager mariaDBDatabaseManager) {
 
                     HikariDataSource source = mariaDBDatabaseManager.getDataSource();
+
+                    if (source != null) {
+                        message = message.appendNewline()
+                                .append(Component.text("URL: " + source.getJdbcUrl(), NamedTextColor.GRAY)).appendNewline()
+                                .append(Component.text("Username: " + source.getUsername(), NamedTextColor.GRAY));
+                    }
+                } else if (manager instanceof PostgreSQLDatabaseManager postgreSQLDatabaseManager) {
+
+                    HikariDataSource source = postgreSQLDatabaseManager.getDataSource();
 
                     if (source != null) {
                         message = message.appendNewline()
