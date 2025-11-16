@@ -68,7 +68,7 @@ public class InfoSubcommand implements TabCompletingCommandExecutor {
             return;
         }
 
-        sender.sendRichMessage(this.plugin.messages().optString(MessageKeys.INFO_OWN, ""), TagResolvers.leveler("leveler", leveler));
+        sender.sendRichMessage(this.plugin.messages().optString(MessageKeys.INFO_OWN, ""), TagResolvers.leveler("leveler", leveler), TagResolvers.level("level", leveler.getData().level()));
     }
 
     // ----- OTHER PLAYER INFO -----
